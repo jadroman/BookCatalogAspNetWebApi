@@ -10,6 +10,7 @@ namespace BookCatalogAPI.Models
     {
         public static void SeedDatabase(BookCatalogContext context)
         {
+            //proba
             context.Database.Migrate();
             if (context.Books.Count() == 0 && context.Categories.Count() == 0)
             {
