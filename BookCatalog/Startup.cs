@@ -33,7 +33,7 @@ namespace BookCatalog
         public void ConfigureServices(IServiceCollection services)
         {
             services.ConfigureCors();
-            services.ConfigureDbContext(Configuration["ConnectionStrings:BookCatalogConnection"]);
+            services.ConfigureDbContext(Configuration);
             //services.AddDbContext<BookCatalogContext>(opt =>
             //      opt.UseSqlServer(Configuration["ConnectionStrings:BookCatalogConnection"]));
             services.ConfigureLoggerService();

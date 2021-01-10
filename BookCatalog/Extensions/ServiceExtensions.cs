@@ -2,6 +2,7 @@
 using Contracts;
 using LoggerService;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -23,9 +24,9 @@ namespace BookCatalogAPI.Extensions
             });
         }
 
-        public static void ConfigureDbContext(this IServiceCollection services, string conString)
+        public static void ConfigureDbContext(this IServiceCollection services, IConfiguration config)
         {
-            services.AddDbContext<BookCatalogContext>(opt => opt.UseSqlServer(conString));
+            services.AddDbContext<BookCatalogContext>(opt => opt.UseSqlServer(config["ConnectionStrings:BookCatalogConnection"]));
         }
 
         public static void ConfigureLoggerService(this IServiceCollection services)
