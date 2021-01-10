@@ -37,6 +37,6 @@ msbuild.wrn
 .vs/
 
 # Logs
-internal_logs/
+internalLogs/
 logs/
 

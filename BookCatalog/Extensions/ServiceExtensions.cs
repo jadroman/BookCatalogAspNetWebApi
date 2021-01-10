@@ -1,5 +1,6 @@
-﻿using BookCatalogAPI.Models;
-using Contracts;
+﻿using Contracts;
+using Contracts.Interfaces.Logger;
+using Infrastructure;
 using LoggerService;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;

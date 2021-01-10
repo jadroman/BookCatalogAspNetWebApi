@@ -1,5 +1,5 @@
 using BookCatalogAPI.Extensions;
-using BookCatalogAPI.Models;
+using Infrastructure;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;

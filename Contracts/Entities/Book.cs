@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace BookCatalogAPI.Models
+namespace Contracts.Entities
 {
     public class Book
     {
