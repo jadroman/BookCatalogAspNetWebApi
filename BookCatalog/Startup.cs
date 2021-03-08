@@ -1,3 +1,4 @@
+using AutoMapper;
 using BookCatalogAPI.Extensions;
 using Infrastructure;
 using Microsoft.AspNetCore.Builder;
@@ -36,7 +37,9 @@ namespace BookCatalog
             services.ConfigureDbContext(Configuration);
             //services.AddDbContext<BookCatalogContext>(opt =>
             //      opt.UseSqlServer(Configuration["ConnectionStrings:BookCatalogConnection"]));
-            services.ConfigureLoggerService();
+            services.ConfigureLoggerService(); 
+            services.ConfigureRepositories(); 
+            services.AddAutoMapper(typeof(Startup));
             services.AddControllers();
         }
 

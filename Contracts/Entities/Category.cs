@@ -13,6 +13,6 @@ namespace Contracts.Entities
         [Required(ErrorMessage = "Category name is required")]
         public string Name { get; set; }
 
-        public virtual ICollection<Book> Books { get; set; }
+        public virtual IEnumerable<Book> Books { get; set; }
     }
 }

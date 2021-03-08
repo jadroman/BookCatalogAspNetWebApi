@@ -1,6 +1,8 @@
 ﻿using Contracts;
 using Contracts.Interfaces.Logger;
+using Contracts.Interfraces.Infrastructure;
 using Infrastructure;
+using Infrastructure.Repositories;
 using LoggerService;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -33,6 +35,12 @@ namespace BookCatalogAPI.Extensions
         public static void ConfigureLoggerService(this IServiceCollection services)
         {
             services.AddSingleton<ILoggerManager, LoggerManager>();
+        }
+
+        public static void ConfigureRepositories(this IServiceCollection services)
+        {
+            services.AddScoped<IBookRepository, BookRepository>();
+            services.AddScoped<ICategoryRepository, CategoryRepository>();
         }
     }
 }

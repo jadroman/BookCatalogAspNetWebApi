@@ -8,5 +8,7 @@ namespace Contracts.Interfraces.Infrastructure
 {
     public interface ICategoryRepository : IRepositoryBase<Category>
     {
+        IEnumerable<Category> GetAllCategories();
+        Category GetCategoryById(long catId);
     }
 }

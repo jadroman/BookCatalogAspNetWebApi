@@ -34,6 +34,16 @@ namespace Infrastructure
                     {
                         Category = ct3,
                         Title = "LOR"
+                    },
+                    new Book
+                    {
+                        Category = ct3,
+                        Title = "The hobbit"
+                    },
+                    new Book
+                    {
+                        Category = ct3,
+                        Title = "Narnia"
                     });
 
                 context.SaveChanges();

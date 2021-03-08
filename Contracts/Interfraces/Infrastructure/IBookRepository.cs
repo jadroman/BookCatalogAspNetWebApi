@@ -8,5 +8,7 @@ namespace Contracts.Interfraces.Infrastructure
 {
     public interface IBookRepository : IRepositoryBase<Book>
     {
+        IEnumerable<Book> GetAllBooks();
+        Book GetBookById(long bookId);
     }
 }

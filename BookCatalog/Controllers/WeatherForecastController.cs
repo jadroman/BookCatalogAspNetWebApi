@@ -1,5 +1,6 @@
 ﻿using Contracts;
 using Contracts.Interfaces.Logger;
+using Contracts.Interfraces.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -20,15 +21,19 @@ namespace BookCatalog.Controllers
 
 
         private readonly ILoggerManager _logger;
+        private ICategoryRepository _categoryRepository;
 
-        public WeatherForecastController(ILoggerManager logger)
+        public WeatherForecastController(ILoggerManager logger, ICategoryRepository categoryRepository)
         {
             _logger = logger;
+            _categoryRepository = categoryRepository;
         }
 
         [HttpGet]
         public IEnumerable<WeatherForecast> Get()
         {
+            var sfCat = _categoryRepository.FindByCondition(c => c.Name.Equals("SF"));
+
             _logger.LogInfo("Here is info message from the controller.");
             _logger.LogDebug("Here is debug message from the controller.");
             _logger.LogWarn("Here is warn message from the controller.");
