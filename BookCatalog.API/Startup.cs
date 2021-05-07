@@ -2,6 +2,7 @@ using AutoMapper;
 using BookCatalogAPI.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -30,7 +31,7 @@ namespace BookCatalog
             services.ConfigureServices();
             services.AddAutoMapper(typeof(Startup));
             services.AddControllers().AddNewtonsoftJson(options =>
-            options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
             );
         }
 
@@ -42,6 +43,9 @@ namespace BookCatalog
             }
 
             app.UseHttpsRedirection();
+
+            app.UseStaticFiles();
+            app.UseCors("CorsPolicy");
 
             app.UseRouting();
 

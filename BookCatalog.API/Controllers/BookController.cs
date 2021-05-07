@@ -28,7 +28,6 @@ namespace BookCatalogAPI.Controllers
 
         public IActionResult Index()
         {
-            _logger.LogError("hello");
             return Ok();
         }
     }
