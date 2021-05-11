@@ -25,12 +25,27 @@ namespace BookCatalogAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> GetAllBooks()
         {
             var books = await _bookService.GetAllBooks();
             var bookResult = _mapper.Map<IEnumerable<BookBindingModel>>(books);
 
             return Ok(bookResult);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetBookById(int? id)
+        {
+            var book = await _bookService.GetBookById(id.Value);
+            if (book == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                var bookResult = _mapper.Map<BookBindingModel>(book);
+                return Ok(bookResult);
+            }
         }
     }
 }
