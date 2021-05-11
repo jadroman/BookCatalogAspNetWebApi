@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using BookCatalog.Contracts.BindingModels.Book;
+using BookCatalog.Contracts.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,8 +12,8 @@ namespace BookCatalogAPI
     {
         public MappingProfile()
         {
-            //CreateMap<Category, CategoryDTO>();
-            //CreateMap<Book, BookDTO>();
+            CreateMap<Category, CategoryBindingModel>();
+            CreateMap<Book, BookBindingModel>();
         }
     }
 }

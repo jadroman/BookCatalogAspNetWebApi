@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using BookCatalog.Contracts.BindingModels.Book;
 using BookCatalog.Contracts.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -23,11 +24,13 @@ namespace BookCatalogAPI.Controllers
             _mapper = mapper;
         }
 
-
-        public IActionResult Index()
+        [HttpGet]
+        public async Task<IActionResult> Index()
         {
+            var books = await _bookService.GetAllBooks();
+            var bookResult = _mapper.Map<IEnumerable<BookBindingModel>>(books);
 
-            return Ok();
+            return Ok(bookResult);
         }
     }
 }

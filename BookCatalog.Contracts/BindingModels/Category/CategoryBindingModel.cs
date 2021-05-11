@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BookCatalog.Contracts.BindingModels.Category
+namespace BookCatalog.Contracts.BindingModels.Book
 {
-    public class CategoryDetailsBindingModel
+    public class CategoryBindingModel
     {
-        public int? Id { get; set; }
+        public int Id { get; set; }
         public string Name { get; set; }
     }
 }

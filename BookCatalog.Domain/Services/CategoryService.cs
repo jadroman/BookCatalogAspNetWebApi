@@ -11,7 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Linq.Dynamic.Core;
 using System.Linq;
-using BookCatalog.Contracts.BindingModels.Category;
+using BookCatalog.Contracts.BindingModels.Book;
 
 namespace BookCatalog.Domain.Services
 {
@@ -47,7 +47,7 @@ namespace BookCatalog.Domain.Services
             return category;
         }
 
-        public async Task<int> SaveCategory(CategoryEditBindingModel categoryBinding)
+        public async Task<int> SaveCategory(CategoryBindingModel categoryBinding)
         {
             var category = new Category
             {

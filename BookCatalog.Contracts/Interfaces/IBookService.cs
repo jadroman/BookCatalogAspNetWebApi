@@ -8,8 +8,9 @@ namespace BookCatalog.Contracts.Interfaces
 {
     public interface IBookService
     {
+        Task<List<Book>> GetAllBooks();
         Task<Book> GetBookById(int id);
-        Task<int> SaveBook(BookEditBindingModel book);
+        Task<int> SaveBook(BookBindingModel book);
         Task<int> DeleteBook(Book book);
         Task<List<Category>> GetAllCategories();
     }

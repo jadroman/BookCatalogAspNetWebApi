@@ -21,9 +21,15 @@ namespace BookCatalog.Domain.Services
             _context = context;
         }
 
+
+        public Task<List<Book>> GetAllBooks()
+        {
+            return _context.Books.AsNoTracking().ToListAsync();
+        }
+
         public Task<int> CountAllBooks()
         {
-            return  _context.Books.AsNoTracking().CountAsync();
+            return _context.Books.AsNoTracking().CountAsync();
         }
 
 
@@ -36,7 +42,7 @@ namespace BookCatalog.Domain.Services
             return book;
         }
 
-        public async Task<int> SaveBook(BookEditBindingModel bookBinding)
+        public async Task<int> SaveBook(BookBindingModel bookBinding)
         {
             var book = new Book
             {

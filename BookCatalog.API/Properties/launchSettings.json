@@ -13,7 +13,7 @@
       "commandName": "IISExpress",
       "launchUrl": "bookCatalog",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Production"
+        "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
     "BookCatalog": {

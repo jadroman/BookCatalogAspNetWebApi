@@ -1,5 +1,5 @@
 ﻿using BookCatalog.Contracts.BindingModels;
-using BookCatalog.Contracts.BindingModels.Category;
+using BookCatalog.Contracts.BindingModels.Book;
 using BookCatalog.Contracts.Entities;
 using BookCatalog.Contracts.Helpers;
 using Microsoft.EntityFrameworkCore;
@@ -14,7 +14,7 @@ namespace BookCatalog.Contracts.Interfaces
     public interface ICategoryService
     {
         Task<Category> GetCategoryById(int id);
-        Task<int> SaveCategory(CategoryEditBindingModel category);
+        Task<int> SaveCategory(CategoryBindingModel category);
         Task<Result<int>> DeleteCategory(Category category);
         Task<Category> GetCategoryByIdWithBooks(int id);
     }
