@@ -14,13 +14,11 @@ namespace BookCatalogAPI.Controllers
     [ApiController]
     public class BookController : ControllerBase
     {
-        private readonly ILogger<BookController> _logger;
         private readonly IBookService _bookService;
         private IMapper _mapper;
 
-        public BookController(ILogger<BookController> logger, IBookService bookService, IMapper mapper)
+        public BookController(IBookService bookService, IMapper mapper)
         {
-            _logger = logger;
             _bookService = bookService;
             _mapper = mapper;
         }
@@ -28,6 +26,7 @@ namespace BookCatalogAPI.Controllers
 
         public IActionResult Index()
         {
+
             return Ok();
         }
     }

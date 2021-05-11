@@ -26,7 +26,8 @@ namespace BookCatalog
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.ConfigureCors();
+            services.ConfigureCors(); 
+            services.ConfigureIISIntegration();
             services.ConfigureDbContext(Configuration);
             services.ConfigureServices();
             services.AddAutoMapper(typeof(Startup));
@@ -41,8 +42,10 @@ namespace BookCatalog
             {
                 app.UseDeveloperExceptionPage();
             }
-
-            app.UseHttpsRedirection();
+            else
+            {
+                app.UseExceptionHandler("/api/Error");
+            }
 
             app.UseStaticFiles();
             app.UseCors("CorsPolicy");

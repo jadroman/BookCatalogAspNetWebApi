@@ -1,6 +1,7 @@
 ﻿using BookCatalog.Contracts.Interfaces;
 using BookCatalog.DAL;
 using BookCatalog.Domain.Services;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -35,6 +36,13 @@ namespace BookCatalogAPI.Extensions
             services.AddScoped<IBookService, BookService>();
             services.AddScoped<IBookService, BookService>();
             services.AddScoped<IBookCatalogContext, BookCatalogContext>();
+        }
+        public static void ConfigureIISIntegration(this IServiceCollection services)
+        {
+            services.Configure<IISOptions>(options =>
+            {
+
+            });
         }
     }
 }
