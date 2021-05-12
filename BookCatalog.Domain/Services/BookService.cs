@@ -1,6 +1,4 @@
-﻿
-using BookCatalog.Contracts.Entities;
-using BookCatalog.Contracts.Helpers;
+﻿using BookCatalog.Contracts.Entities;
 using BookCatalog.Contracts.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -8,7 +6,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq.Dynamic.Core;
 using System.Linq;
-using BookCatalog.Contracts.BindingModels.Book;
 
 namespace BookCatalog.Domain.Services
 {
@@ -42,21 +39,18 @@ namespace BookCatalog.Domain.Services
             return book;
         }
 
-        public async Task<int> SaveBook(BookBindingModel bookBinding)
-        {
-            var book = new Book
-            {
-                Id = bookBinding.Id,
-                Author = bookBinding.Author,
-                Title = bookBinding.Title,
-                Category = await _context.Categories.FirstOrDefaultAsync(c=>c.Id == bookBinding.Category.Id),
-                Collection = bookBinding.Collection,
-                Note = bookBinding.Note,
-                Publisher = bookBinding.Publisher,
-                Read = bookBinding.Read,
-                Year = bookBinding.Year
-            };
 
+        public async Task<Category> GetCategoryById(int id)
+        {
+            var category = await _context.Categories
+                 .AsNoTracking()
+                 .FirstOrDefaultAsync(c => c.Id == id);
+
+            return category;
+        }
+
+        public async Task<int> SaveBook(Book book)
+        {
             if (book.Id == 0)
             {
                 await _context.Books.AddAsync(book);

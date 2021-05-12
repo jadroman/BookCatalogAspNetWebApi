@@ -10,8 +10,9 @@ namespace BookCatalog.Contracts.Interfaces
     {
         Task<List<Book>> GetAllBooks();
         Task<Book> GetBookById(int id);
-        Task<int> SaveBook(BookBindingModel book);
+        Task<int> SaveBook(Book book);
         Task<int> DeleteBook(Book book);
         Task<List<Category>> GetAllCategories();
+        Task<Category> GetCategoryById(int id);
     }
 }

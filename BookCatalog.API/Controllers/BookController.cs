@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BookCatalog.Contracts.BindingModels.Book;
+using BookCatalog.Contracts.Entities;
 using BookCatalog.Contracts.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -33,7 +34,7 @@ namespace BookCatalogAPI.Controllers
             return Ok(bookResult);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id}", Name = "BookById")]
         public async Task<IActionResult> GetBookById(int? id)
         {
             var book = await _bookService.GetBookById(id.Value);
@@ -47,5 +48,50 @@ namespace BookCatalogAPI.Controllers
                 return Ok(bookResult);
             }
         }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateBook([FromBody] BookEditBindingModel book)
+        {
+            if (book == null)
+            {
+                return BadRequest("Book object is null");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("Invalid book object");
+            }
+
+            var bookEntity = _mapper.Map<Book>(book);
+
+            await _bookService.SaveBook(bookEntity);
+
+            var createdBook = _mapper.Map<BookBindingModel>(bookEntity);
+
+            return CreatedAtRoute("BookById", new { id = createdBook.Id }, createdBook);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateBook(int id, [FromBody] BookEditBindingModel book)
+        {
+            if (book == null)
+            {
+                return BadRequest("Book object is null");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("Invalid model object");
+            }
+
+            var bookEntity = await _bookService.GetBookById(id);
+
+            _mapper.Map(book, bookEntity);
+
+            await _bookService.SaveBook(bookEntity);
+
+            return NoContent();
+        }
+
     }
 }

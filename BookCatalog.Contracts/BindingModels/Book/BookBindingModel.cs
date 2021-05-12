@@ -16,6 +16,7 @@ namespace BookCatalog.Contracts.BindingModels.Book
         public string Note { get; set; }
         public string Collection { get; set; }
         public bool Read { get; set; }
+        public int? CategoryId { get; set; }
         public CategoryBindingModel Category { get; set; }
     }
 }

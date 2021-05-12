@@ -51,7 +51,7 @@ namespace BookCatalog.Domain.Services
         {
             var category = new Category
             {
-                Id = categoryBinding.Id,
+                Id = categoryBinding.Id.Value,
                 Name = categoryBinding.Name
             };
 
