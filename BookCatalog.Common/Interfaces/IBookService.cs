@@ -1,14 +1,14 @@
-﻿using BookCatalog.Contracts.BindingModels.Book;
-using BookCatalog.Contracts.Entities;
-using BookCatalog.Contracts.Helpers;
+﻿using BookCatalog.Common.BindingModels.Book;
+using BookCatalog.Common.Entities;
+using BookCatalog.Common.Helpers;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace BookCatalog.Contracts.Interfaces
+namespace BookCatalog.Common.Interfaces
 {
     public interface IBookService
     {
-        Task<List<Book>> GetAllBooks();
+        Task<PagedList<Book>> GetBooks(BookParameters bookParameters);
         Task<Book> GetBookById(int id);
         Task<int> SaveBook(Book book);
         Task<int> DeleteBook(Book book);

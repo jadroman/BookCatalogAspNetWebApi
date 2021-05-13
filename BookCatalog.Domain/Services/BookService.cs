@@ -1,11 +1,12 @@
-﻿using BookCatalog.Contracts.Entities;
-using BookCatalog.Contracts.Interfaces;
+﻿using BookCatalog.Common.Entities;
+using BookCatalog.Common.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq.Dynamic.Core;
 using System.Linq;
+using BookCatalog.Common.Helpers;
 
 namespace BookCatalog.Domain.Services
 {
@@ -18,10 +19,12 @@ namespace BookCatalog.Domain.Services
             _context = context;
         }
 
-
-        public Task<List<Book>> GetAllBooks()
+        public Task<PagedList<Book>> GetBooks(BookParameters bookParameters)
         {
-            return _context.Books.AsNoTracking().ToListAsync();
+            var books = _context.Books.Where(b => b.Year >= bookParameters.MinYear && 
+                                                b.Year <= bookParameters.MaxYear).OrderBy(on => on.Title).AsNoTracking();
+
+            return PagedList<Book>.ToPagedList(books, bookParameters.PageNumber, bookParameters.PageSize);
         }
 
         public Task<int> CountAllBooks()

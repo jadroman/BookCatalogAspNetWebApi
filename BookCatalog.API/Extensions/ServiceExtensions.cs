@@ -1,4 +1,4 @@
-﻿using BookCatalog.Contracts.Interfaces;
+﻿using BookCatalog.Common.Interfaces;
 using BookCatalog.DAL;
 using BookCatalog.Domain.Services;
 using Microsoft.AspNetCore.Builder;

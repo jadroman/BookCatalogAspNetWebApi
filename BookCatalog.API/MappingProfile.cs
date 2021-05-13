@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using BookCatalog.Contracts.BindingModels.Book;
-using BookCatalog.Contracts.Entities;
+using BookCatalog.Common.BindingModels.Book;
+using BookCatalog.Common.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -1,16 +1,18 @@
 ﻿using AutoMapper;
-using BookCatalog.Contracts.BindingModels.Book;
-using BookCatalog.Contracts.Entities;
-using BookCatalog.Contracts.Interfaces;
+using BookCatalog.Common.BindingModels.Book;
+using BookCatalog.Common.Entities;
+using BookCatalog.Common.Helpers;
+using BookCatalog.Common.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace BookCatalogAPI.Controllers
+namespace BookCatalog.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -26,9 +28,27 @@ namespace BookCatalogAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllBooks()
+        public async Task<IActionResult> GetBooks([FromQuery] BookParameters bookParameters)
         {
-            var books = await _bookService.GetAllBooks();
+            if (!bookParameters.ValidYearRange)
+            {
+                return BadRequest("Max year cannot be less than min year.");
+            }
+
+            var books = await _bookService.GetBooks(bookParameters);
+
+            var metadata = new
+            {
+                books.TotalCount,
+                books.PageSize,
+                books.CurrentPage,
+                books.TotalPages,
+                books.HasNext,
+                books.HasPrevious
+            };
+
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
+
             var bookResult = _mapper.Map<IEnumerable<BookBindingModel>>(books);
 
             return Ok(bookResult);

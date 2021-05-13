@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.30804.86
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookCatalog.API", "BookCatalog.API\BookCatalog.API.csproj", "{6D8C4BE1-1867-4982-84CA-E3AC652A361E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookCatalog.Contracts", "BookCatalog.Contracts\BookCatalog.Contracts.csproj", "{73E78917-E0DD-4EE5-B691-D9BB1A30D827}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookCatalog.Common", "BookCatalog.Common\BookCatalog.Common.csproj", "{73E78917-E0DD-4EE5-B691-D9BB1A30D827}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookCatalog.DAL", "BookCatalog.DAL\BookCatalog.DAL.csproj", "{8EA468EF-3548-42F0-BEC5-B4E6B09AE277}"
 EndProject
