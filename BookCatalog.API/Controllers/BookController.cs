@@ -93,5 +93,17 @@ namespace BookCatalogAPI.Controllers
             return NoContent();
         }
 
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteBook(int id)
+        {
+            var book = await _bookService.GetBookById(id);
+            if (book == null)
+            {
+                return NotFound();
+            }
+            await _bookService.DeleteBook(book);
+
+            return NoContent();
+        }
     }
 }
