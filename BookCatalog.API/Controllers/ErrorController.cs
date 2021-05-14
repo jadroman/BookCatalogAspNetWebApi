@@ -19,6 +19,7 @@ namespace BookCatalog.API.Controllers
             _logger = logger;
         }
 
+        [HttpGet]
         public IActionResult Index()
         {
             string errorText = "An unexpected error occurred. Sorry for the inconvenience.";

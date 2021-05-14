@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using System.Linq.Dynamic.Core;
 using System.Linq;
 using BookCatalog.Common.Helpers;
+using System.Reflection;
+using System.Text;
 
 namespace BookCatalog.Domain.Services
 {
@@ -21,9 +23,15 @@ namespace BookCatalog.Domain.Services
 
         public Task<PagedList<Book>> GetBooks(BookParameters bookParameters)
         {
-            var books = _context.Books.Where(b => b.Year >= bookParameters.MinYear && 
-                                                b.Year <= bookParameters.MaxYear).OrderBy(on => on.Title).AsNoTracking();
+            // 1. Filter all results
+            var books = Filter(bookParameters);
 
+            // 2. Search for specific
+            Search(ref books, bookParameters);
+
+            Sort<Book>(ref books, bookParameters.OrderBy);
+
+            // 3. Do paging of the final results
             return PagedList<Book>.ToPagedList(books, bookParameters.PageNumber, bookParameters.PageSize);
         }
 
@@ -82,6 +90,62 @@ namespace BookCatalog.Domain.Services
         public Task<List<Category>> GetAllCategories()
         {
             return _context.Categories.OrderBy(b=>b.Name).AsNoTracking().ToListAsync();
+        }
+
+        private void Search(ref IQueryable<Book> books, BookParameters bookParameters)
+        {
+            if (!books.Any() || string.IsNullOrWhiteSpace(bookParameters.SearchTerm))
+                return;
+
+            books = books.Where(o => o.Title.ToLower().Contains(bookParameters.SearchTerm.Trim().ToLower()) ||
+                                     o.Author.ToLower().Contains(bookParameters.SearchTerm.Trim().ToLower()));
+        }
+
+        private IQueryable<Book> Filter(BookParameters bookParameters)
+        {
+            return _context.Books.Where(b => b.Year >= bookParameters.MinYear &&
+                                                b.Year <= bookParameters.MaxYear).OrderBy(on => on.Title)
+                                                    .AsNoTracking();
+        }
+
+        private void Sort<T>(ref IQueryable<T> entities, string orderByQueryString)
+        {
+            if (!entities.Any())
+                return;
+
+            if (string.IsNullOrWhiteSpace(orderByQueryString))
+            {
+                return;
+            }
+
+            var entityParams = orderByQueryString.Trim().Split(',');
+            var propertyInfos = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
+            var entityQueryBuilder = new StringBuilder();
+
+            foreach (var param in entityParams)
+            {
+                if (string.IsNullOrWhiteSpace(param))
+                    continue;
+
+                var propertyFromQueryName = param.Split(" ")[0];
+                var objectProperty = propertyInfos.FirstOrDefault(pi => pi.Name.Equals(propertyFromQueryName, StringComparison.InvariantCultureIgnoreCase));
+
+                if (objectProperty == null)
+                    continue;
+
+                var sortingOrder = param.EndsWith(" desc") ? "descending" : "ascending";
+
+                entityQueryBuilder.Append($"{objectProperty.Name.ToString()} {sortingOrder}, ");
+            }
+
+            var entityQuery = entityQueryBuilder.ToString().TrimEnd(',', ' ');
+
+            if (string.IsNullOrWhiteSpace(entityQuery))
+            {
+                return;
+            }
+
+            entities = entities.OrderBy(entityQuery);
         }
     }
 }
