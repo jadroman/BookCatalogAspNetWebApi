@@ -135,7 +135,7 @@ namespace BookCatalog.Domain.Services
 
                 var sortingOrder = param.EndsWith(" desc") ? "descending" : "ascending";
 
-                entityQueryBuilder.Append($"{objectProperty.Name.ToString()} {sortingOrder}, ");
+                entityQueryBuilder.Append($"{objectProperty.Name} {sortingOrder}, ");
             }
 
             var entityQuery = entityQueryBuilder.ToString().TrimEnd(',', ' ');
