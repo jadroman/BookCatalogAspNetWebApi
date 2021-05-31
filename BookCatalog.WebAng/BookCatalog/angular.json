@@ -7,7 +7,7 @@
       "projectType": "application",
       "schematics": {
         "@schematics/angular:application": {
-          "strict": true
+          "strict": false
         }
       },
       "root": "",
@@ -27,9 +27,15 @@
               "src/assets"
             ],
             "styles": [
+              "./node_modules/bootstrap/dist/css/bootstrap.min.css",
+              "./node_modules/jqueryui/jquery-ui.min.css",
               "src/styles.css"
             ],
-            "scripts": []
+            "scripts": [
+              "./node_modules/jquery/dist/jquery.min.js", 
+              "./node_modules/bootstrap/dist/js/bootstrap.min.js",
+              "./node_modules/jqueryui/jquery-ui.min.js"
+            ]
           },
           "configurations": {
             "production": {
@@ -94,9 +100,9 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.css"
             ],
-            "scripts": []
+            "scripts": [   
+            ]
           }
         }
       }
