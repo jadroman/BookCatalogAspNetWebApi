@@ -89,7 +89,7 @@ namespace BookCatalog.Domain.Services
 
         public Task<List<Category>> GetAllCategories()
         {
-            return _context.Categories.OrderBy(b=>b.Name).AsNoTracking().ToListAsync();
+            return _context.Categories.OrderBy(c => c.Name).AsNoTracking().ToListAsync();
         }
 
         private void Search(ref IQueryable<Book> books, BookParameters bookParameters)

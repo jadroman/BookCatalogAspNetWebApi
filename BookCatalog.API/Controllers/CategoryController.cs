@@ -1,4 +1,8 @@
 ﻿using AutoMapper;
+using BookCatalog.Common.BindingModels.Book;
+using BookCatalog.Common.BindingModels.Category;
+using BookCatalog.Common.Entities;
+using BookCatalog.Common.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -12,11 +16,95 @@ namespace BookCatalog.API.Controllers
     [ApiController]
     public class CategoryController : ControllerBase
     {
+        private readonly ICategoryService _categoryService;
         private IMapper _mapper;
-        public CategoryController(IMapper mapper)
+
+        public CategoryController(ICategoryService categoryService, IMapper mapper)
         {
+            _categoryService = categoryService;
             _mapper = mapper;
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetAllCategories()
+        {
+            var categories = await _categoryService.GetAllCategories();
+
+            var categoryResult = _mapper.Map<IEnumerable<CategoryBindingModel>>(categories);
+
+            return Ok(categoryResult);
+        }
+
+        [HttpGet("{id}", Name = "CategoryById")]
+        public async Task<IActionResult> GetCategoryById(int? id)
+        {
+            var category = await _categoryService.GetCategoryById(id.Value);
+            if (category == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                var categoryResult = _mapper.Map<CategoryBindingModel>(category);
+                return Ok(categoryResult);
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateCategory([FromBody] CategoryEditBindingModel category)
+        {
+            if (category == null)
+            {
+                return BadRequest("Category object is null");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("Invalid category object");
+            }
+
+            var categoryEntity = _mapper.Map<Category>(category);
+
+            await _categoryService.SaveCategory(categoryEntity);
+
+            var createdCategory = _mapper.Map<CategoryBindingModel>(categoryEntity);
+
+            return CreatedAtRoute("CategoryById", new { id = createdCategory.Id }, createdCategory);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateCategory(int id, [FromBody] CategoryEditBindingModel category)
+        {
+            if (category == null)
+            {
+                return BadRequest("Category object is null");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("Invalid model object");
+            }
+
+            var categoryEntity = await _categoryService.GetCategoryById(id);
+
+            _mapper.Map(category, categoryEntity);
+
+            await _categoryService.SaveCategory(categoryEntity);
+
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteCategory(int id)
+        {
+            var category = await _categoryService.GetCategoryById(id);
+            if (category == null)
+            {
+                return NotFound();
+            }
+            await _categoryService.DeleteCategory(category);
+
+            return NoContent();
+        }
     }
 }

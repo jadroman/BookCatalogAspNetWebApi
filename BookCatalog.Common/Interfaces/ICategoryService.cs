@@ -13,8 +13,9 @@ namespace BookCatalog.Common.Interfaces
     public interface ICategoryService
     {
         Task<Category> GetCategoryById(int id);
-        Task<int> SaveCategory(CategoryBindingModel category);
+        Task<int> SaveCategory(Category category);
         Task<Result<int>> DeleteCategory(Category category);
         Task<Category> GetCategoryByIdWithBooks(int id);
+        Task<List<Category>> GetAllCategories();
     }
 }

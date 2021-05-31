@@ -24,6 +24,11 @@ namespace BookCatalog.Domain.Services
             _context = context;
         }
 
+        public Task<List<Category>> GetAllCategories()
+        {
+            return _context.Categories.OrderBy(c => c.Name).AsNoTracking().ToListAsync();
+        }
+
         public Task<int> CountAllCategories()
         {
             return  _context.Categories.AsNoTracking().CountAsync();
@@ -47,14 +52,8 @@ namespace BookCatalog.Domain.Services
             return category;
         }
 
-        public async Task<int> SaveCategory(CategoryBindingModel categoryBinding)
+        public async Task<int> SaveCategory(Category category)
         {
-            var category = new Category
-            {
-                Id = categoryBinding.Id.Value,
-                Name = categoryBinding.Name
-            };
-
             if (category.Id == 0)
             {
                 await _context.Categories.AddAsync(category);
