@@ -10,7 +10,7 @@ export class HomeComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-    this.homeText = "wellcome to book catalog app";
+    this.homeText = "welcome to book catalog app";
   }
 
 }
