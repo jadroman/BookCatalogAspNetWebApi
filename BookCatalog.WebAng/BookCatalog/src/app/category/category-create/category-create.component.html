@@ -1,0 +1,37 @@
+<div class="container-fluid">
+    <form [formGroup]="categoryForm" autocomplete="off" novalidate (ngSubmit)="createCategory(categoryForm.value)">
+      <div class="form-horizontal card card-body bg-light mb-2 mt-2">
+   
+        <div class="form-group row">
+          <label for="name" class="control-label col-md-2">Name of the category: </label>
+          <div class="col-md-5">
+            <input type="text" formControlName="name" id="name" class="form-control" />
+          </div>
+          <div class="col-md-5">
+            <em *ngIf="isInvalid('name') && hasError('name', 'required')">Name is required</em>
+            <em *ngIf="isInvalid('name') && hasError('name', 'maxlength')">Maximum allowed length is 60 characters.</em>
+          </div>
+        </div>
+   
+        <br><br>
+   
+        <div class="form-group row">
+            <div class="offset-5 col-md-1">
+                <button type="submit" class="btn btn-info" [disabled]="!categoryForm.valid">Save</button>
+            </div>
+            <div class="col-md-1">
+                <button type="button" class="btn btn-danger" (click)="redirectToCategoryList()">Cancel</button>
+            </div>
+        </div>
+        
+      </div>
+    </form>
+   
+    <app-success-modal [modalHeaderText]="'Success message'" 
+    [modalBodyText]="'Action completed successfully'" [okButtonText]="'OK'" 
+    (redirectOnOK)="redirectToCategoryList()"></app-success-modal>
+   
+    <app-error-modal [modalHeaderText]="'Error message'" 
+    [modalBodyText]="errorMessage" [okButtonText]="'OK'"></app-error-modal>
+   
+  </div>
