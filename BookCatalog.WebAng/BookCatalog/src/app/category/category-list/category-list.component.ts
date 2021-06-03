@@ -35,4 +35,9 @@ export class CategoryListComponent implements OnInit {
     this.router.navigate([detailsUrl]); 
   }
 
+  public redirectToUpdatePage = (id: any) => {
+    const updateUrl: string = `/category/update/${id}`;
+    this.router.navigate([updateUrl]);
+  }
+
 }
