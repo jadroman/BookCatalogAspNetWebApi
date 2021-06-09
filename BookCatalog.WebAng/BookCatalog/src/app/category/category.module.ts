@@ -7,6 +7,7 @@ import { CategoryCreateComponent } from './category-create/category-create.compo
 import { ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from '../shared/shared.module';
 import { CategoryUpdateComponent } from './category-update/category-update.component';
+import { CategoryDeleteComponent } from './category-delete/category-delete.component';
 
 
 
@@ -15,7 +16,8 @@ import { CategoryUpdateComponent } from './category-update/category-update.compo
     CategoryListComponent,
     CategoryDetailsComponent,
     CategoryCreateComponent,
-    CategoryUpdateComponent
+    CategoryUpdateComponent,
+    CategoryDeleteComponent
   ],
   imports: [
     CommonModule,
@@ -25,7 +27,8 @@ import { CategoryUpdateComponent } from './category-update/category-update.compo
       { path: 'list', component: CategoryListComponent },
       { path: 'create', component: CategoryCreateComponent },
       { path: 'details/:id', component: CategoryDetailsComponent },
-      { path: 'update/:id', component: CategoryUpdateComponent }
+      { path: 'update/:id', component: CategoryUpdateComponent },
+      { path: 'delete/:id', component: CategoryDeleteComponent }
     ]),
     ReactiveFormsModule
   ]

@@ -24,7 +24,9 @@
             <td>
               <button type="button" id="update" class="btn btn-success" (click)="redirectToUpdatePage(category.id)">Update</button>
             </td>
-            <td><button type="button" id="delete" class="btn btn-danger">Delete</button></td>
+            <td>
+              <button type="button" id="delete" class="btn btn-danger" (click)="redirectToDeletePage(category.id)">Delete</button>
+            </td>
           </tr>
         </tbody>
       </table>

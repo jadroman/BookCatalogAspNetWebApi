@@ -40,4 +40,8 @@ export class CategoryListComponent implements OnInit {
     this.router.navigate([updateUrl]);
   }
 
+  public redirectToDeletePage = (id: any) => { 
+    const deleteUrl: string = `/category/delete/${id}`; 
+    this.router.navigate([deleteUrl]); 
+  }
 }
