@@ -8,8 +8,8 @@ import { EnvironmentUrlService } from './environment-url.service';
 export class RepositoryService {
   constructor(private http: HttpClient, private envUrl: EnvironmentUrlService) { }
   
-  public getData = (route: string) => {
-    return this.http.get(this.createCompleteRoute(route, this.envUrl.urlAddress));
+  public getData = (route: string, params?: any) => {
+    return this.http.get(this.createCompleteRoute(route, this.envUrl.urlAddress), { params });
   }
  
   public create = (route: string, body: any) => {

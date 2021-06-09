@@ -8,6 +8,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from '../shared/shared.module';
 import { CategoryUpdateComponent } from './category-update/category-update.component';
 import { CategoryDeleteComponent } from './category-delete/category-delete.component';
+import { NgxPaginationModule } from 'ngx-pagination';
 
 
 
@@ -30,7 +31,8 @@ import { CategoryDeleteComponent } from './category-delete/category-delete.compo
       { path: 'update/:id', component: CategoryUpdateComponent },
       { path: 'delete/:id', component: CategoryDeleteComponent }
     ]),
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgxPaginationModule
   ]
 })
 export class CategoryModule { }
