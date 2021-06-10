@@ -19,7 +19,10 @@ namespace BookCatalog.Common.Helpers
         public bool ValidYearRange => MaxYear > MinYear;
 
         // searching
-        public string SearchTerm { get; set; }
+        public string Title { get; set; }
+        public string Note { get; set; }
+        public string Author { get; set; }
+
         public string OrderBy { get; set; }
     }
 }

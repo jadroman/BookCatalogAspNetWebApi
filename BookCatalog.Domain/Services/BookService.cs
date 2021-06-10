@@ -21,6 +21,11 @@ namespace BookCatalog.Domain.Services
             _context = context;
         }
 
+        /// <summary>
+        /// Gets Books by params
+        /// </summary>
+        /// <param name="bookParameters">eg. ".../book?pageNumber=1&pageSize=500&orderBy=title desc&minYear=2000&maxYear=2005&title=the"</param>
+        /// <returns></returns>
         public Task<PagedList<Book>> GetBooks(BookParameters bookParameters)
         {
             // 1. Filter all results
@@ -29,9 +34,10 @@ namespace BookCatalog.Domain.Services
             // 2. Search for specific
             Search(ref books, bookParameters);
 
-            Sort<Book>(ref books, bookParameters.OrderBy);
+            // 3. sort by params
+            Sort(ref books, bookParameters.OrderBy);
 
-            // 3. Do paging of the final results
+            // 4. Do paging of the final results
             return PagedList<Book>.ToPagedList(books, bookParameters.PageNumber, bookParameters.PageSize);
         }
 
@@ -94,11 +100,17 @@ namespace BookCatalog.Domain.Services
 
         private void Search(ref IQueryable<Book> books, BookParameters bookParameters)
         {
-            if (!books.Any() || string.IsNullOrWhiteSpace(bookParameters.SearchTerm))
+            if (!books.Any())
                 return;
 
-            books = books.Where(o => o.Title.ToLower().Contains(bookParameters.SearchTerm.Trim().ToLower()) ||
-                                     o.Author.ToLower().Contains(bookParameters.SearchTerm.Trim().ToLower()));
+            if (!string.IsNullOrWhiteSpace(bookParameters.Title))
+                books = books.Where(o => o.Title.ToLower().Contains(bookParameters.Title.Trim().ToLower()));
+
+            if (!string.IsNullOrWhiteSpace(bookParameters.Note))
+                books = books.Where(o => o.Note.ToLower().Contains(bookParameters.Note.Trim().ToLower()));
+
+            if (!string.IsNullOrWhiteSpace(bookParameters.Author))
+                books = books.Where(o => o.Author.ToLower().Contains(bookParameters.Author.Trim().ToLower()));
         }
 
         private IQueryable<Book> Filter(BookParameters bookParameters)

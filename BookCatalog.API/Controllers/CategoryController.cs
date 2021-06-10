@@ -2,9 +2,11 @@
 using BookCatalog.Common.BindingModels.Book;
 using BookCatalog.Common.BindingModels.Category;
 using BookCatalog.Common.Entities;
+using BookCatalog.Common.Helpers;
 using BookCatalog.Common.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,9 +28,21 @@ namespace BookCatalog.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllCategories()
+        public async Task<IActionResult> GetAllCategories([FromQuery] CategoryParameters categoryParameters)
         {
-            var categories = await _categoryService.GetAllCategories();
+            var categories = await _categoryService.GetCategories(categoryParameters);
+
+            var metadata = new
+            {
+                categories.TotalCount,
+                categories.PageSize,
+                categories.CurrentPage,
+                categories.TotalPages,
+                categories.HasNext,
+                categories.HasPrevious
+            };
+
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
 
             var categoryResult = _mapper.Map<IEnumerable<CategoryBindingModel>>(categories);
 
