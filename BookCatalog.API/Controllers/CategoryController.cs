@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -44,7 +45,9 @@ namespace BookCatalog.API.Controllers
 
             Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
 
-            var categoryResult = _mapper.Map<IEnumerable<CategoryBindingModel>>(categories);
+            var categoryResult = _mapper.Map<IEnumerable<CategoryBindingModel>> (categories);
+            
+
 
             return Ok(categoryResult);
         }

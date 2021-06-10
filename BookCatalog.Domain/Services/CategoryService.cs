@@ -31,8 +31,7 @@ namespace BookCatalog.Domain.Services
         /// <returns></returns>
         public Task<PagedList<Category>> GetCategories(CategoryParameters categoryParameters)
         {
-            var categories = _context.Categories.OrderBy(on => on.Name)
-                                                    .AsNoTracking();
+            var categories = _context.Categories.AsNoTracking();
 
             // 1. Search for specific
             Search(ref categories, categoryParameters);

@@ -8,7 +8,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from '../shared/shared.module';
 import { CategoryUpdateComponent } from './category-update/category-update.component';
 import { CategoryDeleteComponent } from './category-delete/category-delete.component';
-import { NgxPaginationModule } from 'ngx-pagination';
+import { NgxPaginationModule, PaginationControlsComponent, PaginationControlsDirective } from 'ngx-pagination';
 
 
 

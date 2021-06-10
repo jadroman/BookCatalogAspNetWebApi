@@ -28,8 +28,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
       { path: '500', component: InternalServerComponent },
       { path: '', redirectTo: '/home', pathMatch: 'full' },
       { path: '**', redirectTo: '/404', pathMatch: 'full'}
-    ]),
-    NgxPaginationModule
+    ])
   ],
   providers: [],
   bootstrap: [AppComponent]

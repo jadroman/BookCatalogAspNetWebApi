@@ -17,7 +17,13 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let category of categories">
+          <tr *ngFor="
+          let category of categories | paginate : {
+            itemsPerPage: pageSize,
+            currentPage: page,
+            totalItems: count
+          }
+          ">
             <td>{{category.name}}</td>
             <td><button type="button" id="details" class="btn btn-light"
                 (click)="getCategoryDetails(category.id)">Details</button></td>
@@ -40,4 +46,10 @@
       (pageChange)="handlePageChange($event)"
     ></pagination-controls>
   </div>
+    Items per Page:
+    <select (change)="handlePageSizeChange($event)">
+      <option *ngFor="let size of pageSizes" [ngValue]="size">
+        {{ size }}
+      </option>
+    </select>
 </div>

@@ -23,7 +23,7 @@ export class CategoryDetailsComponent implements OnInit {
     let apiUrl: string = `api/category/${id}`;
     this.repository.getData(apiUrl)
     .subscribe(res => {
-      this.category = res as Category;
+      //this.category = res as Category;
     },
     (error) =>{
       this.errorHandler.handleError(error);

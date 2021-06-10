@@ -10,7 +10,7 @@ import { RepositoryService } from 'src/app/shared/services/repository.service';
   styleUrls: ['./category-list.component.css']
 })
 export class CategoryListComponent implements OnInit {
-  public categories: Category[] | undefined; 
+  public categories: Category[] = []; 
   public errorMessage: string = '';
 
   currentIndex = -1;
@@ -30,7 +30,7 @@ export class CategoryListComponent implements OnInit {
     let params: any = {};
 
     if (page) {
-      params[`PageNumber`] = page;
+      params[`PageNumber`] = page - 1;
     }
 
     if (pageSize) {
@@ -55,9 +55,10 @@ export class CategoryListComponent implements OnInit {
     const params = this.getRequestParams(this.page, this.pageSize);
     let apiAddress: string = "api/category";
     this.repository.getData(apiAddress, params)
-      .subscribe(res => {
-        this.categories = res as Category[];
-        this.count = 952;
+      .subscribe((res:any) => {
+        this.categories = res.body as Category[];
+        console.log(res.headers.get('X-Pagination'));
+        this.count = 17
       },
       (error) => {
         this.errorHandler.handleError(error);
@@ -79,4 +80,5 @@ export class CategoryListComponent implements OnInit {
     const deleteUrl: string = `/category/delete/${id}`; 
     this.router.navigate([deleteUrl]); 
   }
+  
 }
