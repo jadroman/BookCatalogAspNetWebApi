@@ -9,6 +9,8 @@ import { SharedModule } from '../shared/shared.module';
 import { CategoryUpdateComponent } from './category-update/category-update.component';
 import { CategoryDeleteComponent } from './category-delete/category-delete.component';
 import { NgxPaginationModule, PaginationControlsComponent, PaginationControlsDirective } from 'ngx-pagination';
+import { NgxSpinnerModule } from 'ngx-spinner';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 
 
@@ -32,7 +34,8 @@ import { NgxPaginationModule, PaginationControlsComponent, PaginationControlsDir
       { path: 'delete/:id', component: CategoryDeleteComponent }
     ]),
     ReactiveFormsModule,
-    NgxPaginationModule
+    NgxPaginationModule,  
+    NgxSpinnerModule
   ]
 })
 export class CategoryModule { }

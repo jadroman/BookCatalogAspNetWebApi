@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { NgxSpinnerService } from 'ngx-spinner';
 import { Category } from 'src/app/interfaces/category.model';
 import { ErrorHandlerService } from 'src/app/shared/services/error-handler.service';
 import { RepositoryService } from 'src/app/shared/services/repository.service';
@@ -19,7 +20,8 @@ export class CategoryListComponent implements OnInit {
   pageSize = 5;
   pageSizes = [5, 10, 15];
 
-  constructor(private repository: RepositoryService, private errorHandler: ErrorHandlerService, private router: Router) { }
+  constructor(private repository: RepositoryService, private errorHandler: ErrorHandlerService, 
+    private router: Router, private SpinnerService: NgxSpinnerService) { }
 
   ngOnInit(): void {
     this.getAllCategories();
@@ -52,6 +54,7 @@ export class CategoryListComponent implements OnInit {
   }
 
   public getAllCategories = () => {
+    this.SpinnerService.show(); 
     const params = this.getRequestParams(this.page, this.pageSize);
     let apiAddress: string = "api/category";
     this.repository.getData(apiAddress, params)
@@ -59,10 +62,12 @@ export class CategoryListComponent implements OnInit {
         const { items, totalCount } = res.body;
         this.categories = items as Category[];
         this.count = totalCount;
+        this.SpinnerService.hide(); 
       },
       (error) => {
         this.errorHandler.handleError(error);
         this.errorMessage = this.errorHandler.errorMessage;
+        this.SpinnerService.hide();
       })
   }
 
