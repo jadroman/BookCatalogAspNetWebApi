@@ -16,8 +16,8 @@ export class CategoryListComponent implements OnInit {
   currentIndex = -1;
   page = 1;
   count = 0;
-  pageSize = 3;
-  pageSizes = [3, 6, 9];
+  pageSize = 5;
+  pageSizes = [5, 10, 15];
 
   constructor(private repository: RepositoryService, private errorHandler: ErrorHandlerService, private router: Router) { }
 
@@ -56,9 +56,9 @@ export class CategoryListComponent implements OnInit {
     let apiAddress: string = "api/category";
     this.repository.getData(apiAddress, params)
       .subscribe((res:any) => {
-        this.categories = res.body as Category[];
-        console.log(res.headers.get('X-Pagination'));
-        this.count = 17
+        const { items, totalCount } = res.body;
+        this.categories = items as Category[];
+        this.count = totalCount;
       },
       (error) => {
         this.errorHandler.handleError(error);
