@@ -1,10 +1,11 @@
 ﻿using BookCatalog.Common.Entities;
 using BookCatalog.Common.Interfaces;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 namespace BookCatalog.DAL
 {
-    public class BookCatalogContext : DbContext, IBookCatalogContext
+    public class BookCatalogContext : IdentityDbContext<User>, IBookCatalogContext
     {
         public BookCatalogContext(DbContextOptions<BookCatalogContext> options) : base(options)
         {
@@ -16,6 +17,7 @@ namespace BookCatalog.DAL
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<Book>().ToTable("Book");
             modelBuilder.Entity<Category>().ToTable("Category");
 
