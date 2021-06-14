@@ -65,8 +65,8 @@ export class CategoryListComponent implements OnInit {
         this.SpinnerService.hide(); 
       },
       (error) => {
-        this.errorHandler.handleError(error);
-        this.errorMessage = this.errorHandler.errorMessage;
+        /* this.errorHandler.handleError(error);
+        this.errorMessage = this.errorHandler.errorMessage; */
         this.SpinnerService.hide();
       })
   }

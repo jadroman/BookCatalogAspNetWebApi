@@ -27,8 +27,8 @@ export class CategoryDetailsComponent implements OnInit {
       this.category = res.body as Category;
     },
     (error) =>{
-      this.errorHandler.handleError(error);
-      this.errorMessage = this.errorHandler.errorMessage;
+      /* this.errorHandler.handleError(error);
+      this.errorMessage = this.errorHandler.errorMessage; */
     })
   }
 

@@ -36,8 +36,8 @@ export class CategoryUpdateComponent implements OnInit {
           this.categoryForm.patchValue(this.category);
         },
         (error) => {
-          this.errorHandler.handleError(error);
-          this.errorMessage = this.errorHandler.errorMessage;
+          /* this.errorHandler.handleError(error);
+          this.errorMessage = this.errorHandler.errorMessage; */
         })
     }
 
@@ -74,8 +74,8 @@ export class CategoryUpdateComponent implements OnInit {
           $('#successModal').modal();
         },
         (error => {
-          this.errorHandler.handleError(error);
-          this.errorMessage = this.errorHandler.errorMessage;
+          /* this.errorHandler.handleError(error);
+          this.errorMessage = this.errorHandler.errorMessage; */
         })
       )
     }

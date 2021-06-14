@@ -10,11 +10,19 @@
       <ul class="navbar-nav mr-auto">
         <li class="nav-item">
           <a class="nav-link" [routerLink]="['/category']" routerLinkActive="active" 
-      [routerLinkActiveOptions]="{exact: true}"> Categories </a>
+            [routerLinkActiveOptions]="{exact: true}"> Categories </a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="#">Books </a>
         </li>
       </ul>
+      <form class="form-inline my-2 my-lg-0">
+        <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+          <li class="nav-item">
+            <a class="nav-link"[routerLink]="['/authentication/register']" routerLinkActive="active" 
+              [routerLinkActiveOptions]="{exact: true}">Register</a>
+          </li>
+        </ul>
+      </form>
     </div>
 </nav>

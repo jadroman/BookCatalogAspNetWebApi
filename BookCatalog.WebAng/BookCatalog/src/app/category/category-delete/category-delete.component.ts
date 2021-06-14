@@ -30,8 +30,8 @@ constructor(private repository: RepositoryService, private errorHandler: ErrorHa
         //this.category = res as Category;
       },
       (error) => {
-        this.errorHandler.handleError(error);
-        this.errorMessage = this.errorHandler.errorMessage;
+        /* this.errorHandler.handleError(error);
+        this.errorMessage = this.errorHandler.errorMessage; */
       })
   }
   
@@ -47,8 +47,8 @@ constructor(private repository: RepositoryService, private errorHandler: ErrorHa
         $('#successModal').modal();
       },
       (error) => {
-        this.errorHandler.handleError(error);
-        this.errorMessage = this.errorHandler.errorMessage;
+        /* this.errorHandler.handleError(error);
+        this.errorMessage = this.errorHandler.errorMessage; */
       })
   }
 }

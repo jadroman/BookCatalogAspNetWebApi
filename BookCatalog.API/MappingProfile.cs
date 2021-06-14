@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BookCatalog.Common.BindingModels.Book;
 using BookCatalog.Common.BindingModels.Category;
+using BookCatalog.Common.BindingModels.Registration;
 using BookCatalog.Common.Entities;
 using System;
 using System.Collections.Generic;
@@ -15,8 +16,10 @@ namespace BookCatalogAPI
         {
             CreateMap<Category, CategoryBindingModel>();
             CreateMap<Book, BookBindingModel>();
-            CreateMap<BookEditBindingModel, Book>(); 
+            CreateMap<BookEditBindingModel, Book>();
             CreateMap<CategoryEditBindingModel, Category>();
+            CreateMap<UserBindingModel, User>()
+                .ForMember(u => u.UserName, opt => opt.MapFrom(x => x.Email));
         }
     }
 }

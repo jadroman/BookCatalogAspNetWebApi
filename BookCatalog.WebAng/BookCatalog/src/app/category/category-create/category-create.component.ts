@@ -47,9 +47,9 @@ export class CategoryCreateComponent implements OnInit {
         $('#successModal').modal();
       },
         (error => {
-          $('#errorModal').modal();
+          /* $('#errorModal').modal();
           this.errorHandler.handleError(error);
-          this.errorMessage = this.errorHandler.errorMessage;
+          this.errorMessage = this.errorHandler.errorMessage; */
         })
       )
   }
