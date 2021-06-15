@@ -10,6 +10,12 @@ import { NotFoundComponent } from './error-pages/not-found/not-found.component';
 import { InternalServerComponent } from './error-pages/internal-server/internal-server.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ErrorHandlerService } from './shared/services/error-handler.service';
+import { JwtModule } from '@auth0/angular-jwt';
+
+export function tokenGetter() {
+  return localStorage.getItem("token");
+}
+
 
 @NgModule({
   declarations: [
@@ -31,6 +37,13 @@ import { ErrorHandlerService } from './shared/services/error-handler.service';
       { path: '', redirectTo: '/home', pathMatch: 'full' },
       { path: '**', redirectTo: '/404', pathMatch: 'full'}
     ]),
+    JwtModule.forRoot({
+      config: {
+        tokenGetter: tokenGetter,
+        whitelistedDomains: ["localhost:5001"],
+        blacklistedRoutes: []
+      }
+    }),
     BrowserAnimationsModule
   ],
   providers: [

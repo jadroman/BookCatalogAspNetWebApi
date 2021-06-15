@@ -32,12 +32,24 @@ export class ErrorHandlerService implements HttpInterceptor {
     }
     else if(error.status === 404){
       return this.handle404Error(error)
+    }  
+    else if(error.status === 401) {
+      return this.handleUnauthorized(error);
     }
     else{
       return 'unknown error';
     }
   }
- 
+  
+  private handleUnauthorized = (error: HttpErrorResponse) => {
+    if(this._router.url === '/authentication/login') {
+      return 'Authentication failed. Wrong Username or Password';
+    }
+    else {
+      this._router.navigate(['/authentication/login']);
+      return error.message;
+    }
+  }
   /* private handle500Error = (error: HttpErrorResponse) => {
     this.createErrorMessage(error);
     this._router.navigate(['/500']);

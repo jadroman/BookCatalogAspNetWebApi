@@ -1,4 +1,4 @@
-export interface UserBinding {
+export interface UserForRegistrationBinding {
     firstName: string;
     lastName: string;
     email: string;

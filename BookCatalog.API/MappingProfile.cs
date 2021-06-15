@@ -18,7 +18,7 @@ namespace BookCatalogAPI
             CreateMap<Book, BookBindingModel>();
             CreateMap<BookEditBindingModel, Book>();
             CreateMap<CategoryEditBindingModel, Category>();
-            CreateMap<UserBindingModel, User>()
+            CreateMap<UserForRegistrationBindingModel, User>()
                 .ForMember(u => u.UserName, opt => opt.MapFrom(x => x.Email));
         }
     }

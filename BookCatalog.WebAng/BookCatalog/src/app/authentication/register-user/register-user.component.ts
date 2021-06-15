@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { UserBinding } from 'src/app/interfaces/user/UserBinding.model';
+import { Router } from '@angular/router';
+import { UserForRegistrationBinding } from 'src/app/interfaces/user/userForRegistrationBinding.model';
 import { PasswordConfirmationValidatorService } from 'src/app/shared/custom-validators/password-confirmation-validator.service';
 import { AuthenticationService } from 'src/app/shared/services/authentication.service';
 
@@ -15,7 +16,8 @@ export class RegisterUserComponent implements OnInit {
   public showError!: boolean;
 
   constructor(private _authService: AuthenticationService, 
-              private _passConfValidator: PasswordConfirmationValidatorService) { }
+              private _passConfValidator: PasswordConfirmationValidatorService,
+              private _router: Router) { }
 
   ngOnInit(): void {
     this.registerForm = new FormGroup({
@@ -41,7 +43,7 @@ export class RegisterUserComponent implements OnInit {
   public registerUser = (registerFormValue: any) => {    
     this.showError = false;
     const formValues = { ...registerFormValue };
-    const user: UserBinding = {
+    const user: UserForRegistrationBinding = {
       firstName: formValues.firstName,
       lastName: formValues.lastName,
       email: formValues.email,
@@ -50,7 +52,7 @@ export class RegisterUserComponent implements OnInit {
     };
     this._authService.registerUser("api/accounts/registration", user)
     .subscribe(_ => {
-      console.log("Successful registration");
+      this._router.navigate(["/authentication/login"]);
     },
     error => {      
       this.errorMessage = error;

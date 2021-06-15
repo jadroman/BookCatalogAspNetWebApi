@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace BookCatalog.Common.BindingModels.Registration
 {
-    public class UserBindingModel
+    public class UserForRegistrationBindingModel
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
