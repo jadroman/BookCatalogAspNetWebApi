@@ -10,7 +10,6 @@ import { CategoryUpdateComponent } from './category-update/category-update.compo
 import { CategoryDeleteComponent } from './category-delete/category-delete.component';
 import { NgxPaginationModule, PaginationControlsComponent, PaginationControlsDirective } from 'ngx-pagination';
 import { NgxSpinnerModule } from 'ngx-spinner';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 
 

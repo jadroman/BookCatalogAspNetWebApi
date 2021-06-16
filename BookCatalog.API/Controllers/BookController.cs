@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using BookCatalog.Common.BindingModels;
 using BookCatalog.Common.BindingModels.Book;
 using BookCatalog.Common.Entities;
 using BookCatalog.Common.Helpers;
@@ -49,7 +50,16 @@ namespace BookCatalog.API.Controllers
 
             Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
 
-            var bookResult = _mapper.Map<IEnumerable<BookBindingModel>>(books);
+            var bookResult = new PagedBindingEntity<BookBindingModel>
+            {
+                Items = _mapper.Map<IEnumerable<BookBindingModel>>(books),
+                CurrentPage = books.CurrentPage,
+                TotalCount = books.TotalCount,
+                TotalPages = books.TotalPages,
+                HasNext = books.HasNext,
+                HasPrevious = books.HasPrevious,
+                PageSize = books.PageSize
+            };
 
             return Ok(bookResult);
         }

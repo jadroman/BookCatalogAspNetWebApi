@@ -10,10 +10,11 @@
       <ul class="navbar-nav mr-auto">
         <li class="nav-item">
           <a class="nav-link" [routerLink]="['/category']" routerLinkActive="active" 
-            [routerLinkActiveOptions]="{exact: true}"> Categories </a>
+            [routerLinkActiveOptions]="{exact: true}">Categories</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Books </a>
+          <a class="nav-link" [routerLink]="['/book']" routerLinkActive="active" 
+          [routerLinkActiveOptions]="{exact: true}">Books</a>
         </li>
       </ul>
       <form class="form-inline my-2 my-lg-0">

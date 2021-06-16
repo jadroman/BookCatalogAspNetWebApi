@@ -31,8 +31,12 @@ export function tokenGetter() {
     HttpClientModule,
     RouterModule.forRoot([
       { path: 'home', component: HomeComponent },
-      { path: 'category', loadChildren: () => import('./category/category.module').then(m => m.CategoryModule), canActivate: [AuthGuard]  },
-      { path: 'authentication', loadChildren: () => import('./authentication/authentication.module').then(m => m.AuthenticationModule) },
+      { path: 'category', loadChildren: () => 
+                import('./category/category.module').then(m => m.CategoryModule), canActivate: [AuthGuard]  },
+      { path: 'book', loadChildren: () => 
+                import('./book/book.module').then(m => m.BookModule)/* , canActivate: [AuthGuard] */  },
+      { path: 'authentication', loadChildren: () => 
+                import('./authentication/authentication.module').then(m => m.AuthenticationModule) },
       { path: '404', component : NotFoundComponent},
       { path: '500', component: InternalServerComponent },
       { path: '', redirectTo: '/home', pathMatch: 'full' },
