@@ -11,6 +11,7 @@ import { InternalServerComponent } from './error-pages/internal-server/internal-
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ErrorHandlerService } from './shared/services/error-handler.service';
 import { JwtModule } from '@auth0/angular-jwt';
+import { AuthGuard } from './shared/guards/auth.guard';
 
 export function tokenGetter() {
   return localStorage.getItem("token");
@@ -30,7 +31,7 @@ export function tokenGetter() {
     HttpClientModule,
     RouterModule.forRoot([
       { path: 'home', component: HomeComponent },
-      { path: 'category', loadChildren: () => import('./category/category.module').then(m => m.CategoryModule) },
+      { path: 'category', loadChildren: () => import('./category/category.module').then(m => m.CategoryModule), canActivate: [AuthGuard]  },
       { path: 'authentication', loadChildren: () => import('./authentication/authentication.module').then(m => m.AuthenticationModule) },
       { path: '404', component : NotFoundComponent},
       { path: '500', component: InternalServerComponent },
@@ -39,7 +40,7 @@ export function tokenGetter() {
     ]),
     JwtModule.forRoot({
       config: {
-        tokenGetter: tokenGetter,
+        tokenGetter: tokenGetter, 
         whitelistedDomains: ["localhost:5001"],
         blacklistedRoutes: []
       }
