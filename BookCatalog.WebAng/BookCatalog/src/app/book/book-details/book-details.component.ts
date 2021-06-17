@@ -1,18 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NgxSpinnerService } from 'ngx-spinner';
-import { Category } from 'src/app/interfaces/category.model';
+import { Book } from 'src/app/interfaces/book/book.model';
 import { ErrorHandlerService } from 'src/app/shared/services/error-handler.service';
 import { RepositoryService } from 'src/app/shared/services/repository.service';
 
 @Component({
-  selector: 'app-category-details',
-  templateUrl: './category-details.component.html',
-  styleUrls: ['./category-details.component.css']
+  selector: 'app-book-details',
+  templateUrl: './book-details.component.html',
+  styleUrls: ['./book-details.component.css']
 })
-export class CategoryDetailsComponent implements OnInit {
+export class BookDetailsComponent implements OnInit {
 
-  public category!: Category;
+  public book!: Book;
   public errorMessage: string = '';
   constructor(private repository: RepositoryService, private router: Router, 
               private activeRoute: ActivatedRoute, private errorHandler: ErrorHandlerService) { }
@@ -21,10 +20,10 @@ export class CategoryDetailsComponent implements OnInit {
   }
   getOwnerDetails = () => {
     let id: string = this.activeRoute.snapshot.params['id'];
-    let apiUrl: string = `api/category/${id}`;
+    let apiUrl: string = `api/book/${id}`;
     this.repository.getData(apiUrl)
     .subscribe(res => {
-      this.category = res.body as Category;
+      this.book = res.body as Book;
     },
     (error) =>{
       /* this.errorHandler.handleError(error);

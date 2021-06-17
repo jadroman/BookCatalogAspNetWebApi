@@ -6,12 +6,14 @@ import { SharedModule } from '../shared/shared.module';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { ReactiveFormsModule } from '@angular/forms';
+import { BookDetailsComponent } from './book-details/book-details.component';
 
 
 
 @NgModule({
   declarations: [
-    BookListComponent
+    BookListComponent,
+    BookDetailsComponent
   ],
   imports: [
     CommonModule,
@@ -19,9 +21,9 @@ import { ReactiveFormsModule } from '@angular/forms';
     CommonModule,
     RouterModule.forChild([
       { path: '', component: BookListComponent },
-      { path: 'list', component: BookListComponent }
+      { path: 'list', component: BookListComponent },
+      { path: 'details/:id', component: BookDetailsComponent }
       /* { path: 'create', component: CategoryCreateComponent },
-      { path: 'details/:id', component: CategoryDetailsComponent },
       { path: 'update/:id', component: CategoryUpdateComponent },
       { path: 'delete/:id', component: CategoryDeleteComponent } */
     ]),

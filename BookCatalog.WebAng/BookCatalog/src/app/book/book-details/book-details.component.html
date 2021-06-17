@@ -1,0 +1,67 @@
+<div class="card card-body bg-light mb-2 mt-2">
+    <div class="row">
+      <div class="col-md-3">
+        <strong>Title:</strong>
+      </div>
+      <div class="col-md-3">
+        {{book.title}}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-3">
+        <strong>Year:</strong>
+      </div>
+      <div class="col-md-3">
+        {{book.year}}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-3">
+        <strong>Publisher:</strong>
+      </div>
+      <div class="col-md-3">
+        {{book.publisher}}
+      </div>
+    </div>
+  <div class="row">
+    <div class="col-md-3">
+      <strong>Author:</strong>
+    </div>
+    <div class="col-md-3">
+      {{book.author}}
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-3">
+      <strong>Category:</strong>
+    </div>
+    <div class="col-md-3">
+      {{book.category.name}}
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-3">
+      <strong>Note:</strong>
+    </div>
+    <div class="col-md-3">
+        {{book.note}}
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-3">
+      <strong>Collection:</strong>
+    </div>
+    <div class="col-md-3">
+      {{book.collection}}
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-3">
+      <strong>Read:</strong>
+    </div>
+    <div class="col-md-3">
+        <div *ngIf="book.read; else elseBlock">Yes</div>
+        <ng-template #elseBlock>No</ng-template>
+    </div>
+  </div>
+</div>

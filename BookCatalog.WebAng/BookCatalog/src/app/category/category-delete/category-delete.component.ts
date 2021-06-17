@@ -27,7 +27,7 @@ constructor(private repository: RepositoryService, private errorHandler: ErrorHa
   
     this.repository.getData(categoryByIdUrl)
       .subscribe(res => {
-        //this.category = res as Category;
+        this.category = res.body as Category;
       },
       (error) => {
         /* this.errorHandler.handleError(error);
