@@ -7,8 +7,8 @@
                     <input type="text" formControlName="name" id="name" class="form-control" />
                 </div>
                 <div class="col-md-5">
-                    <em *ngIf="validateControl('name') && hasError('name', 'required')">Name is required</em>
-                    <em *ngIf="validateControl('name') && hasError('name', 'maxlength')">Maximum allowed length is 60
+                    <em *ngIf="isInvalid('name') && hasError('name', 'required')">Name is required</em>
+                    <em *ngIf="isInvalid('name') && hasError('name', 'maxlength')">Maximum allowed length is 60
                         characters.</em>
                 </div>
             </div>

@@ -7,13 +7,15 @@ import { NgxSpinnerModule } from 'ngx-spinner';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { ReactiveFormsModule } from '@angular/forms';
 import { BookDetailsComponent } from './book-details/book-details.component';
+import { BookUpdateComponent } from './book-update/book-update.component';
 
 
 
 @NgModule({
   declarations: [
     BookListComponent,
-    BookDetailsComponent
+    BookDetailsComponent,
+    BookUpdateComponent
   ],
   imports: [
     CommonModule,
@@ -22,9 +24,9 @@ import { BookDetailsComponent } from './book-details/book-details.component';
     RouterModule.forChild([
       { path: '', component: BookListComponent },
       { path: 'list', component: BookListComponent },
-      { path: 'details/:id', component: BookDetailsComponent }
+      { path: 'details/:id', component: BookDetailsComponent },
+      { path: 'update/:id', component: BookUpdateComponent }
       /* { path: 'create', component: CategoryCreateComponent },
-      { path: 'update/:id', component: CategoryUpdateComponent },
       { path: 'delete/:id', component: CategoryDeleteComponent } */
     ]),
     ReactiveFormsModule,

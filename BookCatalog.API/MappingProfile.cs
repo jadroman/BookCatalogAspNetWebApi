@@ -15,6 +15,7 @@ namespace BookCatalogAPI
         public MappingProfile()
         {
             CreateMap<Category, CategoryBindingModel>();
+            CreateMap<CategoryBindingModel, Category>();
             CreateMap<Book, BookBindingModel>();
             CreateMap<BookEditBindingModel, Book>();
             CreateMap<CategoryEditBindingModel, Category>();

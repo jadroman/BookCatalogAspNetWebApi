@@ -41,7 +41,7 @@ export class CategoryUpdateComponent implements OnInit {
         })
     }
 
-    public validateControl = (controlName: string) => {
+    public isInvalid = (controlName: string) => {
       if (this.categoryForm.controls[controlName].invalid && this.categoryForm.controls[controlName].touched)
         return true;
     
