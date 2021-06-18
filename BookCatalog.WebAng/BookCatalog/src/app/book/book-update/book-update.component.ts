@@ -33,7 +33,6 @@ export class BookUpdateComponent implements OnInit {
       });
     
       this.getBookById();
-      this.getCategories();
     }
     
     private getBookById = () => {
@@ -45,6 +44,7 @@ export class BookUpdateComponent implements OnInit {
         .subscribe(res => {
           this.book = res.body as Book;
           this.bookForm.patchValue(this.book);
+          this.getCategories();
         },
         (error) => {
           /* this.errorHandler.handleError(error);
