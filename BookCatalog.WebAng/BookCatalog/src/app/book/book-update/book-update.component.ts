@@ -24,11 +24,11 @@ export class BookUpdateComponent implements OnInit {
       this.bookForm = new FormGroup({
         title: new FormControl('', [Validators.required, Validators.maxLength(200)]),
         author: new FormControl('', [Validators.maxLength(56)]),
-        year: new FormControl('', [Validators.maxLength(4)]),
+        year: new FormControl('', [Validators.max((new Date()).getFullYear())]),
         publisher: new FormControl('', [Validators.maxLength(56)]),
         collection: new FormControl('', [Validators.maxLength(56)]),
         read: new FormControl('', []),
-        selectedCategory: new FormControl('', []),
+        category: new FormControl('', []),
         note: new FormControl('', [Validators.maxLength(1000)])
       });
     
@@ -60,7 +60,7 @@ export class BookUpdateComponent implements OnInit {
         .subscribe(res => {
           this.categories = res.body.items as Category[];
           this.bookForm.patchValue({
-            selectedCategory:  this.book?.category.id
+            category:  (this.book?.category != null) ? this.book?.category.id : 0
           });
         },
         (error) => {
@@ -101,7 +101,7 @@ export class BookUpdateComponent implements OnInit {
       this.book!.read = bookFormValue.read;
       this.book!.year = bookFormValue.year;
       this.book!.collection = bookFormValue.collection;
-      this.book!.category = this.categories.find(c => c.id == bookFormValue.selectedCategory) as Category;
+      this.book!.category = this.categories.find(c => c.id == bookFormValue.category) as Category;
     
       let apiUrl = `api/book/${this.book?.id}`;
       this.repository.update(apiUrl, this.book)
