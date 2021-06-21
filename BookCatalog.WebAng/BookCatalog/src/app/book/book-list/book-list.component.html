@@ -1,58 +1,71 @@
 <div class="row">
-    <div class="offset-10 col-md-2">
-      <a [routerLink]="['/book/create']">Create book</a>
-    </div>
+  <div class="offset-10 col-md-2">
+    <a [routerLink]="['/book/create']">Create book</a>
   </div>
-  <br>
-  <div class="row">
-    <div class="col-md-12">
-      <div class="table-responsive">
-        <table class="table table-striped">
-          <thead>
-            <tr>
-              <th>Book title</th>
-              <th></th>
-              <th></th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="
+</div>
+<div class="row">
+  <div style="margin-left: 15px;" class="col-md-7">
+    <form autocomplete="off" [formGroup]="searchForm" novalidate (ngSubmit)="searchBooks(searchForm.value)">
+      <span>
+        Search by
+      </span>
+      <select formControlName="searchBy" style="margin-left: 10px;" name="searchBy" id="searchBy" class="align-middle">
+        <option value="title">Title</option>
+        <option value="author">Author</option>
+      </select>
+      <input formControlName="searchTerm" style="margin-left: 10px;" type="text" name="searchTerm" id="searchTerm" class="align-middle" />
+      <button style="margin-left: 10px;" type="submit" class="btn btn-primary btn-sm align-middle" [disabled]="false">Search</button>
+    </form>
+  </div>
+</div>
+<br>
+<div class="row">
+  <div class="col-md-12">
+    <div class="table-responsive">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Book title</th>
+            <th></th>
+            <th></th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="
             let book of books | paginate : {
               itemsPerPage: pageSize,
               currentPage: page,
               totalItems: count
             }
             ">
-              <td>{{book.title}}</td>
-              <td><button type="button" id="details" class="btn btn-light"
-                  (click)="getBookDetails(book.id)">Details</button></td>
-              <td>
-                <button type="button" id="update" class="btn btn-success" (click)="redirectToUpdatePage(book.id)">Update</button>
-              </td>
-              <td>
-                <button type="button" id="delete" class="btn btn-danger" (click)="redirectToDeletePage(book.id)">Delete</button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        <ngx-spinner size="medium" type="ball-spin-clockwise" [fullScreen]="false">
-          <p class="loading">Please Wait...</p>
-        </ngx-spinner>
-      </div>
+            <td>{{book.title}}</td>
+            <td><button type="button" id="details" class="btn btn-light btn-sm"
+                (click)="getBookDetails(book.id)">Details</button></td>
+            <td>
+              <button type="button" id="update" class="btn btn-success btn-sm"
+                (click)="redirectToUpdatePage(book.id)">Update</button>
+            </td>
+            <td>
+              <button type="button" id="delete" class="btn btn-danger btn-sm"
+                (click)="redirectToDeletePage(book.id)">Delete</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <ngx-spinner size="medium" type="ball-spin-clockwise" [fullScreen]="false">
+        <p class="loading">Please Wait...</p>
+      </ngx-spinner>
     </div>
-    <div class="col-md-12">
-      <pagination-controls
-        previousLabel="Prev"
-        nextLabel="Next"
-        [responsive]="true"
-        (pageChange)="handlePageChange($event)"
-      ></pagination-controls>
-    </div>
-      Items per Page:
-      <select (change)="handlePageSizeChange($event)">
-        <option *ngFor="let size of pageSizes" [ngValue]="size">
-          {{ size }}
-        </option>
-      </select>
   </div>
+  <div class="col-md-12">
+    <pagination-controls previousLabel="Prev" nextLabel="Next" [responsive]="true"
+      (pageChange)="handlePageChange($event)"></pagination-controls>
+  </div>
+  Items per Page:
+  <select (change)="handlePageSizeChange($event)">
+    <option *ngFor="let size of pageSizes" [ngValue]="size">
+      {{ size }}
+    </option>
+  </select>
+</div>

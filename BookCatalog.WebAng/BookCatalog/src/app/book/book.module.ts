@@ -9,6 +9,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { BookDetailsComponent } from './book-details/book-details.component';
 import { BookUpdateComponent } from './book-update/book-update.component';
 import { BookCreateComponent } from './book-create/book-create.component';
+import { BookDeleteComponent } from './book-delete/book-delete.component';
 
 
 
@@ -17,7 +18,8 @@ import { BookCreateComponent } from './book-create/book-create.component';
     BookListComponent,
     BookDetailsComponent,
     BookUpdateComponent,
-    BookCreateComponent
+    BookCreateComponent,
+    BookDeleteComponent
   ],
   imports: [
     CommonModule,
@@ -28,9 +30,8 @@ import { BookCreateComponent } from './book-create/book-create.component';
       { path: 'list', component: BookListComponent },
       { path: 'details/:id', component: BookDetailsComponent },
       { path: 'update/:id', component: BookUpdateComponent },
-      { path: 'create', component: BookCreateComponent }
-      /* 
-      { path: 'delete/:id', component: CategoryDeleteComponent } */
+      { path: 'create', component: BookCreateComponent },
+      { path: 'delete/:id', component: BookDeleteComponent }
     ]),
     ReactiveFormsModule,
     NgxPaginationModule,  

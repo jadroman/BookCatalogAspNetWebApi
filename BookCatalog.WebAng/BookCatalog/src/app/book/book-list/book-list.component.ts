@@ -4,6 +4,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { ErrorHandlerService } from 'src/app/shared/services/error-handler.service';
 import { RepositoryService } from 'src/app/shared/services/repository.service';
 import { Router } from '@angular/router';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-book-list',
@@ -14,22 +15,48 @@ export class BookListComponent implements OnInit {
 
   public books: Book[] = []; 
   public errorMessage: string = '';
+  public searchForm!: FormGroup;
 
   currentIndex = -1;
   page = 1;
   count = 0;
   pageSize = 5;
+  title = '';
+  author = '';
   pageSizes = [5, 10, 15];
 
   constructor(private repository: RepositoryService, private errorHandler: ErrorHandlerService, 
     private router: Router, private SpinnerService: NgxSpinnerService) { }
 
   ngOnInit(): void {
+    this.searchForm = new FormGroup({
+      searchTerm: new FormControl('', [Validators.maxLength(200)]),
+      searchBy:new FormControl('', [])
+    });
+
+    this.searchForm.patchValue({
+      searchBy:  "title"
+    });
+
     this.getAllBooks();
   }
 
+  public searchBooks = (searchFormValue: any) => { 
 
-  getRequestParams(page: number, pageSize: number): any {
+    if(searchFormValue.searchBy === "title"){
+      this.author = '';
+      this.title = searchFormValue.searchTerm;
+    }
+
+    else if(searchFormValue.searchBy === "author")  {
+      this.title = '';
+      this.author = searchFormValue.searchTerm;
+    }
+
+    this.getAllBooks();
+  }
+
+  getRequestParams(page: number, pageSize: number, title?: string, author?: string): any {
     let params: any = {};
 
     if (page) {
@@ -38,6 +65,14 @@ export class BookListComponent implements OnInit {
 
     if (pageSize) {
       params[`PageSize`] = pageSize;
+    }
+    
+    if (title) {
+      params[`title`] = title;
+    }
+
+    if (author) {
+      params[`author`] = author;
     }
 
     return params;
@@ -56,7 +91,7 @@ export class BookListComponent implements OnInit {
 
   public getAllBooks = () => {
     this.SpinnerService.show(); 
-    const params = this.getRequestParams(this.page, this.pageSize);
+    const params = this.getRequestParams(this.page, this.pageSize, this.title, this.author);
     let apiAddress: string = "api/book";
     this.repository.getData(apiAddress, params)
       .subscribe((res:any) => {
