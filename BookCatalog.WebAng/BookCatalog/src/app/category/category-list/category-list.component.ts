@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Category } from 'src/app/interfaces/category.model';
@@ -13,26 +14,49 @@ import { RepositoryService } from 'src/app/shared/services/repository.service';
 export class CategoryListComponent implements OnInit {
   public categories: Category[] = []; 
   public errorMessage: string = '';
+  public searchForm!: FormGroup;
 
   currentIndex = -1;
   page = 1;
   count = 0;
   pageSize = 5;
+  name = '';
   pageSizes = [5, 10, 15];
 
   constructor(private repository: RepositoryService, private errorHandler: ErrorHandlerService, 
     private router: Router, private SpinnerService: NgxSpinnerService) { }
 
   ngOnInit(): void {
+    this.searchForm = new FormGroup({
+      searchTerm: new FormControl('', [Validators.maxLength(200)]),
+      searchBy:new FormControl('', [])
+    });
+    
+    this.searchForm.patchValue({
+      searchBy:  "name"
+    });
+    
     this.getAllCategories();
   }
 
+  public searchCategories = (searchFormValue: any) => { 
 
-  getRequestParams(page: number, pageSize: number): any {
+    if(searchFormValue.searchBy === "name"){
+      this.name = searchFormValue.searchTerm;
+    }
+
+    this.getAllCategories();
+  }
+
+  getRequestParams(page: number, pageSize: number, name?: string): any {
     let params: any = {};
 
     if (page) {
       params[`PageNumber`] = page - 1;
+    }
+
+    if (name) {
+      params[`name`] = name;
     }
 
     if (pageSize) {
@@ -55,7 +79,7 @@ export class CategoryListComponent implements OnInit {
 
   public getAllCategories = () => {
     this.SpinnerService.show(); 
-    const params = this.getRequestParams(this.page, this.pageSize);
+    const params = this.getRequestParams(this.page, this.pageSize, this.name);
     let apiAddress: string = "api/category";
     this.repository.getData(apiAddress, params)
       .subscribe((res:any) => {

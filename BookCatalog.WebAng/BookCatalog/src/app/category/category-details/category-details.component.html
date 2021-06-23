@@ -1,10 +1,17 @@
-<div class="card card-body bg-light mb-2 mt-2">
+<div class="card card-body bg-light">
   <div class="row">
-    <div class="col-md-2">
+    <div class="col-md-auto">
       <strong>Name:</strong>
     </div>
-    <div class="col-md-4">
+  </div>
+  <div class="row">
+    <div class="col-md-auto">
       {{category.name}}
     </div>
   </div>
+</div>
+<div class="row">
+    <div class="col-md-auto" style="margin-top: 15px;">
+      <button type="button" class="btn btn-info" (click)="redirectToCategoryList()">return to list</button>
+    </div>
 </div>

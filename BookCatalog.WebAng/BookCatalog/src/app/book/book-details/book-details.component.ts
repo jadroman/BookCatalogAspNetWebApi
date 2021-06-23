@@ -15,9 +15,11 @@ export class BookDetailsComponent implements OnInit {
   public errorMessage: string = '';
   constructor(private repository: RepositoryService, private router: Router, 
               private activeRoute: ActivatedRoute, private errorHandler: ErrorHandlerService) { }
+
   ngOnInit() {
     this.getOwnerDetails()
   }
+
   getOwnerDetails = () => {
     let id: string = this.activeRoute.snapshot.params['id'];
     let apiUrl: string = `api/book/${id}`;
@@ -31,4 +33,7 @@ export class BookDetailsComponent implements OnInit {
     })
   }
 
+  public redirectToBookList = () => {
+    this.router.navigate(['/book/list']);
+  }
 }

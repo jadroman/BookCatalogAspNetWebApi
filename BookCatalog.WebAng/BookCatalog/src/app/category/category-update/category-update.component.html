@@ -1,32 +1,31 @@
 <div class="container-fluid">
     <form [formGroup]="categoryForm" autocomplete="off" novalidate (ngSubmit)="updateCategory(categoryForm.value)">
-        <div class="form-horizontal card card-body bg-light mb-2 mt-2">
+        <div class="card card-body bg-light">
             <div class="form-group">
-                <label for="name" class="control-label col-md-2">Name of category: </label>
-                <div class="col-md-5">
-                    <input type="text" formControlName="name" id="name" class="form-control" />
+                <div class="row">
+                    <div class="col-sm-auto">
+                        <label for="name" class="control-label">Name: </label>
+                    </div>
                 </div>
-                <div class="col-md-5">
-                    <em *ngIf="isInvalid('name') && hasError('name', 'required')">Name is required</em>
-                    <em *ngIf="isInvalid('name') && hasError('name', 'maxlength')">Maximum allowed length is 60
-                        characters.</em>
+                <div class="row">
+                    <div class="col-sm-auto">
+                        <input type="text" formControlName="name" id="name" class="form-control" />
+                        <em *ngIf="isInvalid('name') && hasError('name', 'required')">Name is required</em>
+                        <em *ngIf="isInvalid('name') && hasError('name', 'maxlength')">Maximum allowed length is 60 characters.</em>
+                    </div>
                 </div>
             </div>
-            <br><br>
             <div class="form-group">
-                <div class="col-md-offset-5 col-md-1">
-                    <button type="submit" class="btn btn-info" [disabled]="!categoryForm.valid">Update</button>
-                </div>
-                <div class="col-md-1">
-                    <button type="button" class="btn btn-danger" (click)="redirectToCategoryList()">Cancel</button>
+                <div class="row">
+                    <div class="col-sm-auto">
+                        <button type="button" class="btn btn-danger" (click)="redirectToCategoryList()">Cancel</button>
+                    </div>
+                    <div class="col-sm-auto">
+                        <button type="submit" class="btn btn-info" [disabled]="!categoryForm.valid">Update</button>
+                    </div>
                 </div>
             </div>
 
         </div>
     </form>
-    <app-success-modal [modalHeaderText]="'Success message'" [modalBodyText]="'Action completed successfully'"
-        [okButtonText]="'OK'" (redirectOnOK)="redirectToCategoryList()"></app-success-modal>
-
-    <app-error-modal [modalHeaderText]="'Error message'" [modalBodyText]="errorMessage" [okButtonText]="'OK'">
-    </app-error-modal>
 </div>
