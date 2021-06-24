@@ -1,3 +1,11 @@
+
+<div class="row  text-center">
+  <div class="col-sm-12">
+    <div *ngIf="showError" class="alert alert-danger" role="alert">
+      <span [innerHTML]="errorMessage"></span>
+    </div>
+  </div>
+</div>
 <div class="row">
   <div style="margin-left: 15px;margin-top: 20px;margin-bottom: 20px;" class="col-md-12">
     <form autocomplete="off" [formGroup]="searchForm" novalidate (ngSubmit)="searchCategories(searchForm.value)">
@@ -37,10 +45,12 @@
             <td style="width:10%"><button type="button" id="details" class="btn btn-light"
                 (click)="getCategoryDetails(category.id)">Details</button></td>
             <td style="width:10%">
-              <button type="button" id="update" class="btn btn-success" (click)="redirectToUpdatePage(category.id)">Update</button>
+              <button type="button" id="update" class="btn btn-success"
+                (click)="redirectToUpdatePage(category.id)">Update</button>
             </td>
             <td style="width:10%">
-              <button type="button" id="delete" class="btn btn-danger" (click)="redirectToDeletePage(category.id)">Delete</button>
+              <button type="button" id="delete" class="btn btn-danger"
+                (click)="redirectToDeletePage(category.id)">Delete</button>
             </td>
           </tr>
         </tbody>
@@ -52,18 +62,20 @@
 
     </div>
   </div>
-  <div class="col-md-12">
-    <pagination-controls
-      previousLabel="Prev"
-      nextLabel="Next"
-      [responsive]="true"
-      (pageChange)="handlePageChange($event)"
-    ></pagination-controls>
+</div>
+<div class="row">
+  <div class="col-md-12" style="text-align: center;">
+    <pagination-controls previousLabel="Prev" nextLabel="Next" [responsive]="true"
+      (pageChange)="handlePageChange($event)"></pagination-controls>
   </div>
+</div>
+<div class="row">
+  <div class="col-md-12" style="text-align: center;">
     Items per Page:
     <select (change)="handlePageSizeChange($event)">
       <option *ngFor="let size of pageSizes" [ngValue]="size">
         {{ size }}
       </option>
     </select>
+  </div>
 </div>

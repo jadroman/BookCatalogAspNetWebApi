@@ -54,8 +54,9 @@ export class RegisterUserComponent implements OnInit {
     .subscribe(_ => {
       this._router.navigate(["/authentication/login"]);
     },
-    error => {      
-      this.errorMessage = error;
+    (error) => {      
+      // log the error
+      this.errorMessage = "Unexpected error occurred, sorry for the inconvenience";
       this.showError = true;
     })
   }

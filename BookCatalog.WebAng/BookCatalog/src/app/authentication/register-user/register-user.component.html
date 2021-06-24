@@ -1,55 +1,83 @@
 <div class="card">
-    <div class="card-body">
-        <h1 class="card-title">Register</h1>
-        <div *ngIf="showError" class="alert alert-danger" role="alert">
-            <span [innerHTML]="errorMessage"></span>
+    <div class="row  text-center">
+        <div class="col-sm-12">
+            <div *ngIf="showError" class="alert alert-danger" role="alert">
+                <span [innerHTML]="errorMessage"></span>
+            </div>
         </div>
+    </div>
+    <div class="card-body col d-flex justify-content-center">
         <form [formGroup]="registerForm" autocomplete="off" novalidate (ngSubmit)="registerUser(registerForm.value)">
-            <div class="form-group row">
-                <label for="firstName" class="col-form-label col-sm-2">First Name:</label>
-                <div class="col-md-5">
-                    <input type="text" id="firstName" formControlName="firstName" class="form-control" />
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-sm-auto">
+                        <label for="firstName">First Name:</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-auto">
+                        <input type="text" id="firstName" formControlName="firstName" class="form-control" />
+                    </div>
                 </div>
             </div>
-            <div class="form-group row">
-                <label for="lastName" class="col-form-label col-sm-2">Last Name:</label>
-                <div class="col-md-5">
-                    <input type="text" id="lastName" formControlName="lastName" class="form-control" />
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-sm-auto">
+                        <label for="lastName">Last Name:</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-auto">
+                        <input type="text" id="lastName" formControlName="lastName" class="form-control" />
+                    </div>
                 </div>
             </div>
-            <div class="form-group row">
-                <label for="email" class="col-form-label col-sm-2">Email:</label>
-                <div class="col-md-5">
-                    <input type="email" id="email" formControlName="email" class="form-control" />
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-sm-auto">
+                        <label for="email">Email:</label>
+                    </div>
                 </div>
-                <div class="col-md-5">
-                    <em *ngIf="isInvalid('email') && hasError('email', 'email')">Please provide a valid email</em>
-                    <em *ngIf="isInvalid('email') && hasError('email', 'required')">Email is required</em>
-                </div>
-            </div>
-            <div class="form-group row">
-                <label for="password" class="col-form-label col-sm-2">Password:</label>
-                <div class="col-md-5">
-                    <input type="password" id="password" formControlName="password" class="form-control" />
-                </div>
-                <div class="col-md-5">
-                    <em *ngIf="isInvalid('password') && hasError('password', 'required')">Password is required</em>
+                <div class="row">
+                    <div class="col-sm-auto">
+                        <input type="email" id="email" formControlName="email" class="form-control" />
+                        <em *ngIf="isInvalid('email') && hasError('email', 'email')">Please provide a valid email</em>
+                        <em *ngIf="isInvalid('email') && hasError('email', 'required')">Email is required</em>
+                    </div>
                 </div>
             </div>
-            <div class="form-group row">
-                <label for="confirm" class="col-form-label col-sm-2">Confirm Password:</label>
-                <div class="col-md-5">
-                    <input type="password" id="confirm" formControlName="confirm" class="form-control" />
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-sm-auto">
+                        <label for="password">Password:</label>
+                    </div>
                 </div>
-                <div class="col-md-5">
-                    <em *ngIf="isInvalid('confirm') && hasError('confirm', 'required')">Confirmation is required</em>
-                    <em *ngIf="hasError('confirm', 'mustMatch')">Passwords must match</em>
+                <div class="row">
+                    <div class="col-sm-auto">
+                        <input type="password" id="password" formControlName="password" class="form-control" />
+                        <em *ngIf="isInvalid('password') && hasError('password', 'required')">Password is required</em>
+                    </div>
                 </div>
             </div>
-            <br>
-            <div class="form-group row">
-                <div class="col-md-1">          
-                    <button type="submit" class="btn btn-info" [disabled]="!registerForm.valid">Register</button>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-sm-auto">
+                        <label for="confirm">Confirm Password:</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-auto">
+                        <input type="password" id="confirm" formControlName="confirm" class="form-control" />
+                        <em *ngIf="isInvalid('confirm') && hasError('confirm', 'required')">Confirmation is required</em>
+                        <em *ngIf="hasError('confirm', 'mustMatch')">Passwords must match</em>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-sm-auto">
+                        <button type="submit" class="btn btn-info" [disabled]="!registerForm.valid">Register</button>
+                    </div>
                 </div>
             </div>
         </form>

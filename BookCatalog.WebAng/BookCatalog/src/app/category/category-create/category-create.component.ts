@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CategoryForCreation } from 'src/app/interfaces/category-for-creation.mode';
-import { ErrorHandlerService } from 'src/app/shared/services/error-handler.service';
 import { RepositoryService } from 'src/app/shared/services/repository.service';
 
 @Component({
@@ -13,12 +12,16 @@ import { RepositoryService } from 'src/app/shared/services/repository.service';
 export class CategoryCreateComponent implements OnInit {
   public errorMessage: string = '';
   public categoryForm!: FormGroup;
-  constructor(private repository: RepositoryService, private errorHandler: ErrorHandlerService, private router: Router) { }
+  public showError!: boolean;
+
+  constructor(private repository: RepositoryService, private router: Router) { }
+
   ngOnInit() {
     this.categoryForm = new FormGroup({
       name: new FormControl('', [Validators.required, Validators.maxLength(60)])
     });
   }
+
   public isInvalid = (controlName: string) => {
     if (this.categoryForm.controls[controlName].invalid && this.categoryForm.controls[controlName].touched)
       return true;
@@ -44,12 +47,12 @@ export class CategoryCreateComponent implements OnInit {
     const apiUrl = 'api/category';
     this.repository.create(apiUrl, category)
       .subscribe(res => {
-        $('#successModal').modal();
+        this.redirectToCategoryList();
       },
         (error => {
-          /* $('#errorModal').modal();
-          this.errorHandler.handleError(error);
-          this.errorMessage = this.errorHandler.errorMessage; */
+          // log the error
+          this.errorMessage = "Unexpected error occurred, sorry for the inconvenience";
+          this.showError = true;
         })
       )
   }

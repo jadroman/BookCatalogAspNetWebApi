@@ -45,12 +45,13 @@ export class LoginComponent implements OnInit {
     this._authService.loginUser('api/accounts/login', userForAuth)
       .subscribe(res => {
         let response = res as AuthResponseBinding;
-        localStorage.setItem("token", response.token);   
+        localStorage.setItem("token", response.token);
         this._authService.sendAuthStateChangeNotification(response.isAuthSuccessful);
         this._router.navigate([this._returnUrl]);
       },
         (error) => {
-          this.errorMessage = error;
+          // log the error
+          this.errorMessage = "Unexpected error occurred, sorry for the inconvenience.";
           this.showError = true;
         })
   }

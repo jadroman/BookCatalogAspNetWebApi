@@ -1,4 +1,12 @@
 <div class="container-fluid">
+
+  <div class="row  text-center">
+    <div class="col-sm-12">
+      <div *ngIf="showError" class="alert alert-danger" role="alert">
+        <span [innerHTML]="errorMessage"></span>
+      </div>
+    </div>
+  </div>
   <form [formGroup]="categoryForm" autocomplete="off" novalidate (ngSubmit)="createCategory(categoryForm.value)">
     <div class="card card-body bg-light">
       <div class="form-group">
@@ -21,7 +29,7 @@
             <button type="button" class="btn btn-danger" (click)="redirectToCategoryList()">Cancel</button>
           </div>
           <div class="col-sm-auto">
-            <button type="submit" class="btn btn-info" [disabled]="!categoryForm.valid">Save</button>
+            <button type="submit" class="btn btn-info" [disabled]="!categoryForm.valid">Create</button>
           </div>
         </div>
       </div>

@@ -1,34 +1,42 @@
 <div class="card card-body bg-light">
-    <div class="row">
-      <div class="col-sm-auto">
-        <strong>Title:</strong>
+
+  <div class="row  text-center">
+    <div class="col-sm-12">
+      <div *ngIf="showError" class="alert alert-danger" role="alert">
+        <span [innerHTML]="errorMessage"></span>
       </div>
     </div>
-    <div class="row detailRow">
-      <div class="col-sm-auto">
-        {{book?.title}}
-      </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-auto">
+      <strong>Title:</strong>
     </div>
-    <div class="row">
-      <div class="col-sm-auto">
-        <strong>Year:</strong>
-      </div>
+  </div>
+  <div class="row detailRow">
+    <div class="col-sm-auto">
+      {{book?.title}}
     </div>
-    <div class="row detailRow">
-      <div class="col-sm-auto">
-        {{book?.year}}
-      </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-auto">
+      <strong>Year:</strong>
     </div>
-    <div class="row">
-      <div class="col-sm-auto">
-        <strong>Publisher:</strong>
-      </div>
+  </div>
+  <div class="row detailRow">
+    <div class="col-sm-auto">
+      {{book?.year}}
     </div>
-    <div class="row detailRow">
-      <div class="col-sm-auto">
-        {{book?.publisher}}
-      </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-auto">
+      <strong>Publisher:</strong>
     </div>
+  </div>
+  <div class="row detailRow">
+    <div class="col-sm-auto">
+      {{book?.publisher}}
+    </div>
+  </div>
   <div class="row">
     <div class="col-sm-auto">
       <strong>Author:</strong>
@@ -81,7 +89,7 @@
     </div>
   </div>
   <div class="row">
-      <div class="col-sm-auto" style="margin-top: 15px;">
-        <button type="button" class="btn btn-info" (click)="redirectToBookList()">return to list</button>
-      </div>
+    <div class="col-sm-auto" style="margin-top: 15px;">
+      <button type="button" class="btn btn-info" (click)="redirectToBookList()">return to list</button>
+    </div>
   </div>

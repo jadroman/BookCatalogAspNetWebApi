@@ -1,4 +1,12 @@
 <div class="container-fluid">
+    
+    <div class="row  text-center">
+        <div class="col-sm-12">
+            <div *ngIf="showError" class="alert alert-danger" role="alert">
+                <span [innerHTML]="errorMessage"></span>
+            </div>
+        </div>
+    </div>
     <div class="row" style="margin-top: 15px">
             <div class="alert alert-danger" role="alert">
                 Are you sure you want to delete this category?
@@ -21,9 +29,4 @@
             <button type="button" class="btn btn-danger" (click)="redirectToCategoryList()">Cancel</button>
         </div>
     </div>
-    <app-success-modal [modalHeaderText]="'Success message'" [modalBodyText]="'Action completed successfully'"
-        [okButtonText]="'OK'" (redirectOnOK)="redirectToCategoryList()"></app-success-modal>
-
-    <app-error-modal [modalHeaderText]="'Error message'" [modalBodyText]="errorMessage" [okButtonText]="'OK'">
-    </app-error-modal>
 </div>

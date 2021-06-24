@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Book } from 'src/app/interfaces/book/book.model';
-import { ErrorHandlerService } from 'src/app/shared/services/error-handler.service';
 import { RepositoryService } from 'src/app/shared/services/repository.service';
 
 @Component({
@@ -13,8 +12,9 @@ export class BookDeleteComponent implements OnInit {
 
   public errorMessage: string = '';
   public book!: Book;
+  public showError!: boolean;
   
-constructor(private repository: RepositoryService, private errorHandler: ErrorHandlerService, private router: Router,
+constructor(private repository: RepositoryService, private router: Router,
   private activeRoute: ActivatedRoute) { }
 
   ngOnInit() {
@@ -47,8 +47,9 @@ constructor(private repository: RepositoryService, private errorHandler: ErrorHa
         this.redirectToBookList();
       },
       (error) => {
-        /* this.errorHandler.handleError(error);
-        this.errorMessage = this.errorHandler.errorMessage; */
+        // log the error
+        this.errorMessage = "Unexpected error occurred, sorry for the inconvenience";
+        this.showError = true;
       })
   }
 

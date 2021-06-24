@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Book } from 'src/app/interfaces/book/book.model';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { ErrorHandlerService } from 'src/app/shared/services/error-handler.service';
 import { RepositoryService } from 'src/app/shared/services/repository.service';
 import { Router } from '@angular/router';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
@@ -16,6 +15,7 @@ export class BookListComponent implements OnInit {
   public books: Book[] = []; 
   public errorMessage: string = '';
   public searchForm!: FormGroup;
+  public showError!: boolean;
 
   currentIndex = -1;
   page = 1;
@@ -25,7 +25,7 @@ export class BookListComponent implements OnInit {
   author = '';
   pageSizes = [5, 10, 15];
 
-  constructor(private repository: RepositoryService, private errorHandler: ErrorHandlerService, 
+  constructor(private repository: RepositoryService, 
     private router: Router, private SpinnerService: NgxSpinnerService) { }
 
   ngOnInit(): void {
@@ -101,8 +101,9 @@ export class BookListComponent implements OnInit {
         this.SpinnerService.hide(); 
       },
       (error) => {
-        /* this.errorHandler.handleError(error);
-        this.errorMessage = this.errorHandler.errorMessage; */
+        // log the error
+        this.errorMessage = "Unexpected error occurred, sorry for the inconvenience";
+        this.showError = true;
         this.SpinnerService.hide();
       })
   }

@@ -15,7 +15,7 @@ namespace BookCatalog.Common.Helpers
 
         // filtering
         public uint MinYear { get; set; }
-        public uint MaxYear { get; set; } = (uint)DateTime.Now.Year;
+        public uint MaxYear { get; set; } 
         public bool ValidYearRange => MaxYear > MinYear;
 
         // searching

@@ -1,4 +1,12 @@
 <div class="card card-body bg-light">
+  
+  <div class="row  text-center">
+    <div class="col-sm-12">
+      <div *ngIf="showError" class="alert alert-danger" role="alert">
+        <span [innerHTML]="errorMessage"></span>
+      </div>
+    </div>
+  </div>
   <div class="row">
     <div class="col-md-auto">
       <strong>Name:</strong>

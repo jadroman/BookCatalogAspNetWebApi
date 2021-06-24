@@ -1,4 +1,10 @@
-
+<div class="row  text-center">
+  <div class="col-sm-12">
+    <div *ngIf="showError" class="alert alert-danger" role="alert">
+      <span [innerHTML]="errorMessage"></span>
+    </div>
+  </div>
+</div>
 <div class="row">
   <div style="margin-left: 15px;margin-top: 20px;margin-bottom: 20px;" class="col-md-12">
     <form autocomplete="off" [formGroup]="searchForm" novalidate (ngSubmit)="searchBooks(searchForm.value)">
@@ -9,9 +15,12 @@
         <option value="title">Title</option>
         <option value="author">Author</option>
       </select>
-      <input formControlName="searchTerm" style="margin-left: 10px;" placeholder="search term" type="text" name="searchTerm" id="searchTerm" class="align-middle" />
-      <button style="margin-left: 10px;" type="submit" class="btn btn-primary btn-sm align-middle" [disabled]="false">Search</button>
-      <a [routerLink]="['/book/create']" style="margin-right: 15px;float: right;" class="btn btn-success btn-sm align-middle">Create book</a>
+      <input formControlName="searchTerm" style="margin-left: 10px;" placeholder="search term" type="text"
+        name="searchTerm" id="searchTerm" class="align-middle" />
+      <button style="margin-left: 10px;" type="submit" class="btn btn-primary btn-sm align-middle"
+        [disabled]="false">Search</button>
+      <a [routerLink]="['/book/create']" style="margin-right: 15px;float: right;"
+        class="btn btn-success btn-sm align-middle">Create book</a>
     </form>
   </div>
 </div>
@@ -54,14 +63,20 @@
       </ngx-spinner>
     </div>
   </div>
-  <div class="col-md-12">
+</div>
+<div class="row">
+  <div class="col-md-12" style="text-align: center;">
     <pagination-controls previousLabel="Prev" nextLabel="Next" [responsive]="true"
       (pageChange)="handlePageChange($event)"></pagination-controls>
   </div>
-  Items per Page:
-  <select (change)="handlePageSizeChange($event)">
-    <option *ngFor="let size of pageSizes" [ngValue]="size">
-      {{ size }}
-    </option>
-  </select>
+</div>
+<div class="row">
+  <div class="col-md-12" style="text-align: center;">
+    Items per Page:
+    <select (change)="handlePageSizeChange($event)">
+      <option *ngFor="let size of pageSizes" [ngValue]="size">
+        {{ size }}
+      </option>
+    </select>
+  </div>
 </div>

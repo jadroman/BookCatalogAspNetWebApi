@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Category } from 'src/app/interfaces/category.model';
-import { ErrorHandlerService } from 'src/app/shared/services/error-handler.service';
 import { RepositoryService } from 'src/app/shared/services/repository.service';
 
 @Component({
@@ -13,8 +12,9 @@ export class CategoryDeleteComponent implements OnInit {
 
   public errorMessage: string = '';
   public category!: Category;
+  public showError!: boolean;
   
-constructor(private repository: RepositoryService, private errorHandler: ErrorHandlerService, private router: Router,
+constructor(private repository: RepositoryService, private router: Router,
   private activeRoute: ActivatedRoute) { }
 
   ngOnInit() {
@@ -30,8 +30,9 @@ constructor(private repository: RepositoryService, private errorHandler: ErrorHa
         this.category = res.body as Category;
       },
       (error) => {
-        /* this.errorHandler.handleError(error);
-        this.errorMessage = this.errorHandler.errorMessage; */
+        // log the error
+        this.errorMessage = "Unexpected error occurred, sorry for the inconvenience";
+        this.showError = true;
       })
   }
   
@@ -47,8 +48,9 @@ constructor(private repository: RepositoryService, private errorHandler: ErrorHa
         $('#successModal').modal();
       },
       (error) => {
-        /* this.errorHandler.handleError(error);
-        this.errorMessage = this.errorHandler.errorMessage; */
+        // log the error
+        this.errorMessage = "Unexpected error occurred, sorry for the inconvenience";
+        this.showError = true;
       })
   }
 }

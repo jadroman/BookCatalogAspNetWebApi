@@ -3,7 +3,6 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Book } from 'src/app/interfaces/book/book.model';
 import { Category } from 'src/app/interfaces/category.model';
-import { ErrorHandlerService } from 'src/app/shared/services/error-handler.service';
 import { RepositoryService } from 'src/app/shared/services/repository.service';
 
 @Component({
@@ -17,7 +16,10 @@ export class BookUpdateComponent implements OnInit {
   public book!: Book;
   public categories!: Category[];
   public bookForm!: FormGroup;
-  constructor(private repository: RepositoryService, private errorHandler: ErrorHandlerService, private router: Router,
+  public showError!: boolean;
+
+
+  constructor(private repository: RepositoryService, private router: Router,
     private activeRoute: ActivatedRoute) { }
     
     ngOnInit() {
@@ -47,8 +49,9 @@ export class BookUpdateComponent implements OnInit {
           this.getCategories();
         },
         (error) => {
-          /* this.errorHandler.handleError(error);
-          this.errorMessage = this.errorHandler.errorMessage; */
+          // log the error
+          this.errorMessage = "Unexpected error occurred, sorry for the inconvenience";
+          this.showError = true;
         })
     }
 
@@ -64,8 +67,9 @@ export class BookUpdateComponent implements OnInit {
           });
         },
         (error) => {
-          /* this.errorHandler.handleError(error);
-          this.errorMessage = this.errorHandler.errorMessage; */
+          // log the error
+          this.errorMessage = "Unexpected error occurred, sorry for the inconvenience";
+          this.showError = true;
         })
     }
 
@@ -109,8 +113,9 @@ export class BookUpdateComponent implements OnInit {
           this.redirectToBookList();
         },
         (error => {
-          /* this.errorHandler.handleError(error);
-          this.errorMessage = this.errorHandler.errorMessage; */
+          // log the error
+          this.errorMessage = "Unexpected error occurred, sorry for the inconvenience";
+          this.showError = true;
         })
       )
     }

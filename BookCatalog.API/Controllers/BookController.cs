@@ -4,18 +4,16 @@ using BookCatalog.Common.BindingModels.Book;
 using BookCatalog.Common.Entities;
 using BookCatalog.Common.Helpers;
 using BookCatalog.Common.Interfaces;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace BookCatalog.API.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize]
     [ApiController]
     public class BookController : ControllerBase
     {
@@ -31,11 +29,6 @@ namespace BookCatalog.API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetBooks([FromQuery] BookParameters bookParameters)
         {
-            if (!bookParameters.ValidYearRange)
-            {
-                return BadRequest("Max year cannot be less than min year.");
-            }
-
             var books = await _bookService.GetBooks(bookParameters);
 
             var metadata = new

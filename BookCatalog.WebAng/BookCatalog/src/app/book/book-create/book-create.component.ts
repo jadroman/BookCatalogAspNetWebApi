@@ -3,7 +3,6 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { BookForCreation } from 'src/app/interfaces/book/book-for-creation.mode';
 import { Category } from 'src/app/interfaces/category.model';
-import { ErrorHandlerService } from 'src/app/shared/services/error-handler.service';
 import { RepositoryService } from 'src/app/shared/services/repository.service';
 
 @Component({
@@ -16,8 +15,9 @@ export class BookCreateComponent implements OnInit {
   public errorMessage: string = '';
   public bookForm!: FormGroup;
   public categories!: Category[];
+  public showError!: boolean;
 
-  constructor(private repository: RepositoryService, private errorHandler: ErrorHandlerService, private router: Router) { }
+  constructor(private repository: RepositoryService, private router: Router) { }
 
   ngOnInit() {
     this.bookForm = new FormGroup({
@@ -58,8 +58,9 @@ export class BookCreateComponent implements OnInit {
         });
       },
       (error) => {
-        /* this.errorHandler.handleError(error);
-        this.errorMessage = this.errorHandler.errorMessage; */
+        // log the error
+        this.errorMessage = "Unexpected error occurred, sorry for the inconvenience";
+        this.showError = true;
       })
   }
 
@@ -106,9 +107,9 @@ export class BookCreateComponent implements OnInit {
         this.redirectToBookList();
       },
         (error => {
-          /* $('#errorModal').modal();
-          this.errorHandler.handleError(error);
-          this.errorMessage = this.errorHandler.errorMessage; */
+          // log the error
+          this.errorMessage = "Unexpected error occurred, sorry for the inconvenience";
+          this.showError = true;
         })
       )
   }

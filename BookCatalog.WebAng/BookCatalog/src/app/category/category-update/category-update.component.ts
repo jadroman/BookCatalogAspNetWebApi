@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Category } from 'src/app/interfaces/category.model';
-import { ErrorHandlerService } from 'src/app/shared/services/error-handler.service';
 import { RepositoryService } from 'src/app/shared/services/repository.service';
 
 @Component({
@@ -14,7 +13,9 @@ export class CategoryUpdateComponent implements OnInit {
   public errorMessage: string = '';
   public category!: Category;
   public categoryForm!: FormGroup;
-  constructor(private repository: RepositoryService, private errorHandler: ErrorHandlerService, private router: Router,
+  public showError!: boolean;
+
+  constructor(private repository: RepositoryService, private router: Router,
     private activeRoute: ActivatedRoute) { }
     
     ngOnInit() {
@@ -36,8 +37,9 @@ export class CategoryUpdateComponent implements OnInit {
           this.categoryForm.patchValue(this.category);
         },
         (error) => {
-          /* this.errorHandler.handleError(error);
-          this.errorMessage = this.errorHandler.errorMessage; */
+          // log the error
+          this.errorMessage = "Unexpected error occurred, sorry for the inconvenience";
+          this.showError = true;
         })
     }
 
@@ -71,11 +73,12 @@ export class CategoryUpdateComponent implements OnInit {
       let apiUrl = `api/category/${this.category.id}`;
       this.repository.update(apiUrl, this.category)
         .subscribe(res => {
-          $('#successModal').modal();
+          this.redirectToCategoryList();
         },
         (error => {
-          /* this.errorHandler.handleError(error);
-          this.errorMessage = this.errorHandler.errorMessage; */
+          // log the error
+          this.errorMessage = "Unexpected error occurred, sorry for the inconvenience";
+          this.showError = true;
         })
       )
     }

@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
-import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
@@ -9,7 +9,6 @@ import { MenuComponent } from './menu/menu.component';
 import { NotFoundComponent } from './error-pages/not-found/not-found.component';
 import { InternalServerComponent } from './error-pages/internal-server/internal-server.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { ErrorHandlerService } from './shared/services/error-handler.service';
 import { JwtModule } from '@auth0/angular-jwt';
 import { AuthGuard } from './shared/guards/auth.guard';
 
@@ -34,7 +33,7 @@ export function tokenGetter() {
       { path: 'category', loadChildren: () => 
                 import('./category/category.module').then(m => m.CategoryModule), canActivate: [AuthGuard]  },
       { path: 'book', loadChildren: () => 
-                import('./book/book.module').then(m => m.BookModule)/* , canActivate: [AuthGuard] */  },
+                import('./book/book.module').then(m => m.BookModule), canActivate: [AuthGuard]  },
       { path: 'authentication', loadChildren: () => 
                 import('./authentication/authentication.module').then(m => m.AuthenticationModule) },
       { path: '404', component : NotFoundComponent},
@@ -51,13 +50,7 @@ export function tokenGetter() {
     }),
     BrowserAnimationsModule
   ],
-  providers: [
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: ErrorHandlerService,
-      multi: true
-    }
-  ],
+  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

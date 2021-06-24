@@ -115,9 +115,17 @@ namespace BookCatalog.Domain.Services
 
         private IQueryable<Book> Filter(BookParameters bookParameters)
         {
-            return _context.Books.Where(b => b.Year >= bookParameters.MinYear &&
+            var books = _context.Books.OrderBy(b => b.Title)
+                                                    .AsNoTracking();
+
+            if (bookParameters.MinYear > 0 && bookParameters.MaxYear > 0)
+            {
+                books = books.Where(b => b.Year >= bookParameters.MinYear &&
                                                 b.Year <= bookParameters.MaxYear).OrderBy(on => on.Title)
                                                     .AsNoTracking();
+            }
+
+            return books;
         }
 
         private void Sort<T>(ref IQueryable<T> entities, string orderByQueryString)
