@@ -5,7 +5,6 @@ import { RouterModule } from '@angular/router';
 import { CategoryDetailsComponent } from './category-details/category-details.component';
 import { CategoryCreateComponent } from './category-create/category-create.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import { SharedModule } from '../shared/shared.module';
 import { CategoryUpdateComponent } from './category-update/category-update.component';
 import { CategoryDeleteComponent } from './category-delete/category-delete.component';
 import { NgxPaginationModule } from 'ngx-pagination';
@@ -22,7 +21,6 @@ import { NgxSpinnerModule } from 'ngx-spinner';
   ],
   imports: [
     CommonModule,
-    SharedModule,
     RouterModule.forChild([
       { path: '', component: CategoryListComponent },
       { path: 'list', component: CategoryListComponent },

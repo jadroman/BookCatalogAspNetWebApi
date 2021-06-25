@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { UserForRegistrationBinding } from 'src/app/interfaces/user/userForRegistrationBinding.model';
+import { UserForRegistration } from 'src/app/interfaces/user/userForRegistration.model';
 import { PasswordConfirmationValidatorService } from 'src/app/shared/custom-validators/password-confirmation-validator.service';
 import { AuthenticationService } from 'src/app/shared/services/authentication.service';
 
@@ -43,7 +43,7 @@ export class RegisterUserComponent implements OnInit {
   public registerUser = (registerFormValue: any) => {    
     this.showError = false;
     const formValues = { ...registerFormValue };
-    const user: UserForRegistrationBinding = {
+    const user: UserForRegistration = {
       firstName: formValues.firstName,
       lastName: formValues.lastName,
       email: formValues.email,

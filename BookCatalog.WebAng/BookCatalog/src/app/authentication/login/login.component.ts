@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AuthResponseBinding } from 'src/app/interfaces/response/authResponseBinding.model';
-import { UserForAuthenticationBinding } from 'src/app/interfaces/user/userForAuthenticationBinding.model';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { AuthResponse } from 'src/app/interfaces/response/authResponse.model';
+import { UserForAuthentication } from 'src/app/interfaces/user/userForAuthentication.model';
 import { AuthenticationService } from 'src/app/shared/services/authentication.service';
 
 @Component({
@@ -17,7 +18,8 @@ export class LoginComponent implements OnInit {
   public showError!: boolean;
   private _returnUrl!: string;
 
-  constructor(private _authService: AuthenticationService, private _router: Router, private _route: ActivatedRoute) { }
+  constructor(private _authService: AuthenticationService, private _router: Router, 
+    private _route: ActivatedRoute, private SpinnerService: NgxSpinnerService) { }
 
   ngOnInit(): void {
     this.loginForm = new FormGroup({
@@ -36,23 +38,26 @@ export class LoginComponent implements OnInit {
   }
 
   public loginUser = (loginFormValue: any) => {
+    this.SpinnerService.show(); 
     this.showError = false;
     const login = { ...loginFormValue };
-    const userForAuth: UserForAuthenticationBinding = {
+    const userForAuth: UserForAuthentication = {
       email: login.username,
       password: login.password
     }
     this._authService.loginUser('api/accounts/login', userForAuth)
       .subscribe(res => {
-        let response = res as AuthResponseBinding;
+        let response = res as AuthResponse;
         localStorage.setItem("token", response.token);
         this._authService.sendAuthStateChangeNotification(response.isAuthSuccessful);
         this._router.navigate([this._returnUrl]);
+        this.SpinnerService.hide(); 
       },
         (error) => {
           // log the error
           this.errorMessage = "Unexpected error occurred, sorry for the inconvenience.";
           this.showError = true;
+          this.SpinnerService.hide(); 
         })
   }
 

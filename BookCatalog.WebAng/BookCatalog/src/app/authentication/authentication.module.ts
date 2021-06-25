@@ -4,6 +4,7 @@ import { RegisterUserComponent } from './register-user/register-user.component';
 import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 import { LoginComponent } from './login/login.component';
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 
 
@@ -18,7 +19,8 @@ import { LoginComponent } from './login/login.component';
     RouterModule.forChild([
       { path: 'register', component: RegisterUserComponent },
       { path: 'login', component: LoginComponent }
-    ])
+    ]),  
+    NgxSpinnerModule
   ]
 })
 export class AuthenticationModule { }

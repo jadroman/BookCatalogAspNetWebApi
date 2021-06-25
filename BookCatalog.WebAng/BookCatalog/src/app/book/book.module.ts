@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BookListComponent } from './book-list/book-list.component';
 import { RouterModule } from '@angular/router';
-import { SharedModule } from '../shared/shared.module';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -10,6 +9,7 @@ import { BookDetailsComponent } from './book-details/book-details.component';
 import { BookUpdateComponent } from './book-update/book-update.component';
 import { BookCreateComponent } from './book-create/book-create.component';
 import { BookDeleteComponent } from './book-delete/book-delete.component';
+import { DigitOnlyDirective } from '../shared/helpers/digit-only.directive';
 
 
 
@@ -19,12 +19,14 @@ import { BookDeleteComponent } from './book-delete/book-delete.component';
     BookDetailsComponent,
     BookUpdateComponent,
     BookCreateComponent,
-    BookDeleteComponent
+    BookDeleteComponent,
+    DigitOnlyDirective
   ],
   imports: [
+    NgxPaginationModule,  
     CommonModule,
-    SharedModule,
-    CommonModule,
+    ReactiveFormsModule,
+    NgxSpinnerModule,
     RouterModule.forChild([
       { path: '', component: BookListComponent },
       { path: 'list', component: BookListComponent },
@@ -32,10 +34,7 @@ import { BookDeleteComponent } from './book-delete/book-delete.component';
       { path: 'update/:id', component: BookUpdateComponent },
       { path: 'create', component: BookCreateComponent },
       { path: 'delete/:id', component: BookDeleteComponent }
-    ]),
-    ReactiveFormsModule,
-    NgxPaginationModule,  
-    NgxSpinnerModule
+    ])
   ]
 })
 export class BookModule { }

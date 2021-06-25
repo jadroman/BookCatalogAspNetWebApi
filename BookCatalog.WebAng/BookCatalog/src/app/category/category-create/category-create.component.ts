@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { CategoryForCreation } from 'src/app/interfaces/category-for-creation.mode';
+import { CategoryForCreation } from 'src/app/interfaces/category-for-creation.model';
 import { RepositoryService } from 'src/app/shared/services/repository.service';
 
 @Component({

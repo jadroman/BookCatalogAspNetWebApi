@@ -1,4 +1,4 @@
-export interface RegistrationResponseBinding {
+export interface RegistrationResponse {
     isSuccessfulRegistration: boolean;
     errros: string[];
 }

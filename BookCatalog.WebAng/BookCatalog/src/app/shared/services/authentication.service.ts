@@ -1,9 +1,9 @@
  import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { EnvironmentUrlService } from './environment-url.service';
-import { UserForRegistrationBinding } from 'src/app/interfaces/user/userForRegistrationBinding.model';
-import { RegistrationResponseBinding } from 'src/app/interfaces/response/registrationResponseBinding.model';
-import { UserForAuthenticationBinding } from 'src/app/interfaces/user/userForAuthenticationBinding.model';
+import { UserForRegistration } from 'src/app/interfaces/user/userForRegistration.model';
+import { RegistrationResponse } from 'src/app/interfaces/response/registrationResponse.model';
+import { UserForAuthentication } from 'src/app/interfaces/user/userForAuthentication.model';
 import { Subject } from 'rxjs';
 import { JwtHelperService } from '@auth0/angular-jwt';
 
@@ -16,12 +16,12 @@ export class AuthenticationService {
 
   constructor(private _http: HttpClient, private _envUrl: EnvironmentUrlService, private _jwtHelper: JwtHelperService) { }
 
-  public loginUser = (route: string, body: UserForAuthenticationBinding) => {
+  public loginUser = (route: string, body: UserForAuthentication) => {
     return this._http.post(this.createCompleteRoute(route, this._envUrl.urlAddress), body);
   }
 
-  public registerUser = (route: string, body: UserForRegistrationBinding) => {
-    return this._http.post<RegistrationResponseBinding> (this.createCompleteRoute(route, this._envUrl.urlAddress), body);
+  public registerUser = (route: string, body: UserForRegistration) => {
+    return this._http.post<RegistrationResponse> (this.createCompleteRoute(route, this._envUrl.urlAddress), body);
   }
 
   public sendAuthStateChangeNotification = (isAuthenticated: boolean) => {

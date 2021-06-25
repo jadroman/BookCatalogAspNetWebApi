@@ -7,7 +7,6 @@ import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
 import { MenuComponent } from './menu/menu.component';
 import { NotFoundComponent } from './error-pages/not-found/not-found.component';
-import { InternalServerComponent } from './error-pages/internal-server/internal-server.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { JwtModule } from '@auth0/angular-jwt';
 import { AuthGuard } from './shared/guards/auth.guard';
@@ -22,8 +21,7 @@ export function tokenGetter() {
     AppComponent,
     HomeComponent,
     MenuComponent,
-    NotFoundComponent,
-    InternalServerComponent
+    NotFoundComponent
   ],
   imports: [
     BrowserModule,
@@ -37,7 +35,6 @@ export function tokenGetter() {
       { path: 'authentication', loadChildren: () => 
                 import('./authentication/authentication.module').then(m => m.AuthenticationModule) },
       { path: '404', component : NotFoundComponent},
-      { path: '500', component: InternalServerComponent },
       { path: '', redirectTo: '/home', pathMatch: 'full' },
       { path: '**', redirectTo: '/404', pathMatch: 'full'}
     ]),
