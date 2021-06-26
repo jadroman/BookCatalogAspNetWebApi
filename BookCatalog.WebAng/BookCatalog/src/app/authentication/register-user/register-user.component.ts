@@ -40,7 +40,7 @@ export class RegisterUserComponent implements OnInit {
     return this.registerForm.controls[controlName].hasError(errorName)
   }
 
-  public registerUser = (registerFormValue: any) => {    
+  public registerUser = (registerFormValue: any) => {
     this.showError = false;
     const formValues = { ...registerFormValue };
     const user: UserForRegistration = {
@@ -51,14 +51,17 @@ export class RegisterUserComponent implements OnInit {
       confirmPassword: formValues.confirm
     };
     this._authService.registerUser("api/accounts/registration", user)
-    .subscribe(_ => {
-      this._router.navigate(["/authentication/login"]);
-    },
-    (error) => {      
-      // log the error
-      this.errorMessage = "Unexpected error occurred, sorry for the inconvenience";
-      this.showError = true;
-    })
+      .subscribe(_ => {
+        this._router.navigate(["/authentication/login"]);
+      },
+        (error) => {
+          // log the error
+          this.errorMessage = `
+            Unexpected error occurred, sorry for the inconvenience.
+            Please check the password creation rules bellow.
+          `;
+          this.showError = true;
+        })
   }
 
 }

@@ -45,7 +45,7 @@ constructor(private repository: RepositoryService, private router: Router,
     
     this.repository.delete(deleteUrl)
       .subscribe(res => {
-        $('#successModal').modal();
+        this.redirectToCategoryList();
       },
       (error) => {
         // log the error

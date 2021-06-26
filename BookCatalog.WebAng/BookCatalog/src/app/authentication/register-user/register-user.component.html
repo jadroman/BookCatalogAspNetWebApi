@@ -58,6 +58,26 @@
                         <em *ngIf="isInvalid('password') && hasError('password', 'required')">Password is required</em>
                     </div>
                 </div>
+                <div class="row">
+                    <div class="col-sm-auto">
+                        <div class="alert alert-warning" role="alert">
+                            <ul>
+                                <li>
+                                    Passwords must be at least 6 characters.
+                                </li>
+                                <li>
+                                    Passwords must have at least one non alphanumeric character.
+                                </li>
+                                <li>
+                                    Passwords must have at least one lowercase ('a'-'z').
+                                </li>
+                                <li>
+                                    Passwords must have at least one uppercase ('A'-'Z').
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="form-group">
                 <div class="row">
