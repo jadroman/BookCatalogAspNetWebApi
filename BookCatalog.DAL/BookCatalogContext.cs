@@ -7,9 +7,7 @@ namespace BookCatalog.DAL
 {
     public class BookCatalogContext : IdentityDbContext<User>, IBookCatalogContext
     {
-        public BookCatalogContext(DbContextOptions<BookCatalogContext> options) : base(options)
-        {
-        }
+        public BookCatalogContext(DbContextOptions<BookCatalogContext> options) : base(options){}
 
         public DbSet<Book> Books { get; set; }
         public DbSet<Category> Categories { get; set; }
