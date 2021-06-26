@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BookCatalog.DAL.Migrations
 {
     [DbContext(typeof(BookCatalogContext))]
-    [Migration("20210611152007_IdentityTablesCreation")]
-    partial class IdentityTablesCreation
+    [Migration("20210626102254_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
