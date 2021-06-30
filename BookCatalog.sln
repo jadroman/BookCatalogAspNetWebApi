@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookCatalog.Domain", "BookC
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookCatalog.Tests", "BookCatalog.Tests\BookCatalog.Tests.csproj", "{EDF6F959-0CB5-4520-97CB-9CE42AFB8F18}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookCatalog.WebBlz", "BookCatalog.WebBlz\BookCatalog.WebBlz.csproj", "{3A7988CC-407C-41BD-99A8-3D0943725C97}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{EDF6F959-0CB5-4520-97CB-9CE42AFB8F18}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EDF6F959-0CB5-4520-97CB-9CE42AFB8F18}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EDF6F959-0CB5-4520-97CB-9CE42AFB8F18}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3A7988CC-407C-41BD-99A8-3D0943725C97}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3A7988CC-407C-41BD-99A8-3D0943725C97}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3A7988CC-407C-41BD-99A8-3D0943725C97}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3A7988CC-407C-41BD-99A8-3D0943725C97}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
