@@ -1,8 +1,10 @@
 ﻿using BookCatalog.Common.BindingModels;
 using BookCatalog.Common.BindingModels.Book;
 using BookCatalog.Common.Entities;
+using BookCatalog.Common.Helpers;
 using System;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.WebUtilities;
 using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
@@ -21,9 +23,14 @@ namespace BookCatalog.WebBlz.HttpRepository
             _options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
         }
 
-        public async Task<PagedBindingEntity<CategoryBindingModel>> GetCategories()
+        public async Task<PagedBindingEntity<CategoryBindingModel>> GetCategories(CategoryParameters parameters)
         {
-            var response = await _client.GetAsync("category");
+            var queryStringParam = new Dictionary<string, string>
+            {
+                ["pageNumber"] = parameters.PageNumber.ToString()
+            };
+
+            var response = await _client.GetAsync(QueryHelpers.AddQueryString("category", queryStringParam));
             var content = await response.Content.ReadAsStringAsync();
 
             if (!response.IsSuccessStatusCode)
