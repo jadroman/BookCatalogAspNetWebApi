@@ -39,5 +39,12 @@ namespace BookCatalog.WebBlz.Pages
             _categoryParameters.PageNumber = page;
             await GetCategories();
         }
+        private async Task SearchChanged(string searchTerm)
+        {
+            Console.WriteLine(searchTerm);
+            _categoryParameters.PageNumber = 0;
+            _categoryParameters.Name = searchTerm;
+            await GetCategories();
+        }
     }
 }

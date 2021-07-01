@@ -27,7 +27,8 @@ namespace BookCatalog.WebBlz.HttpRepository
         {
             var queryStringParam = new Dictionary<string, string>
             {
-                ["pageNumber"] = parameters.PageNumber.ToString()
+                ["pageNumber"] = parameters.PageNumber.ToString(),
+                ["Name"] = parameters.Name ?? ""
             };
 
             var response = await _client.GetAsync(QueryHelpers.AddQueryString("category", queryStringParam));
