@@ -1,4 +1,5 @@
 ﻿@page "/categories"
+@using BookCatalog.WebBlz.Components;
 
 <div class="row">
     <div class="col-md-10">
@@ -15,6 +16,6 @@
 </div>
 <div class="row">
     <div class="col">
-        <Pagination HasNext="HasNext" HasPrevious="HasPrevious" TotalCount="TotalCount" PageSize="PageSize" TotalPages="TotalPages" Spread="2" SelectedPage="SelectedPage" />
+        <Pagination MetaData="MetaData" Spread="2" SelectedPage="SelectedPage" />
     </div>
 </div>

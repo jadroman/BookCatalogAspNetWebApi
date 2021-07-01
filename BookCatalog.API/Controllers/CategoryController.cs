@@ -32,27 +32,12 @@ namespace BookCatalog.API.Controllers
         {
             var categories = await _categoryService.GetCategories(categoryParameters);
 
-            var metadata = new
-            {
-                categories.TotalCount,
-                categories.PageSize,
-                categories.CurrentPage,
-                categories.TotalPages,
-                categories.HasNext,
-                categories.HasPrevious
-            };
-
-            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(categories.MetaData));
 
             var categoryResult = new PagedBindingEntity<CategoryBindingModel>
             {
                 Items = _mapper.Map<IEnumerable<CategoryBindingModel>>(categories),
-                CurrentPage = categories.CurrentPage,
-                TotalCount = categories.TotalCount,
-                TotalPages = categories.TotalPages,
-                HasNext = categories.HasNext,
-                HasPrevious = categories.HasPrevious,
-                PageSize = categories.PageSize
+                MetaData = categories.MetaData
             };
 
             return Ok(categoryResult);

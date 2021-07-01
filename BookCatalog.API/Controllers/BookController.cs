@@ -31,27 +31,12 @@ namespace BookCatalog.API.Controllers
         {
             var books = await _bookService.GetBooks(bookParameters);
 
-            var metadata = new
-            {
-                books.TotalCount,
-                books.PageSize,
-                books.CurrentPage,
-                books.TotalPages,
-                books.HasNext,
-                books.HasPrevious
-            };
-
-            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(books.MetaData));
 
             var bookResult = new PagedBindingEntity<BookBindingModel>
             {
                 Items = _mapper.Map<IEnumerable<BookBindingModel>>(books),
-                CurrentPage = books.CurrentPage,
-                TotalCount = books.TotalCount,
-                TotalPages = books.TotalPages,
-                HasNext = books.HasNext,
-                HasPrevious = books.HasPrevious,
-                PageSize = books.PageSize
+                MetaData= books.MetaData
             };
 
             return Ok(bookResult);

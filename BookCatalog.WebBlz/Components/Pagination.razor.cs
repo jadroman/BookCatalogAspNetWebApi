@@ -1,4 +1,5 @@
-﻿using BookCatalog.WebBlz.Helpers;
+﻿using BookCatalog.Common.Helpers;
+using BookCatalog.WebBlz.Helpers;
 using Microsoft.AspNetCore.Components;
 using System;
 using System.Collections.Generic;
@@ -10,22 +11,7 @@ namespace BookCatalog.WebBlz.Components
     public partial class Pagination
     {
         [Parameter]
-        public int CurrentPage { get; set; }
-
-        [Parameter]
-        public int TotalPages { get; set; }
-
-        [Parameter]
-        public int PageSize { get; set; }
-
-        [Parameter]
-        public int TotalCount { get; set; }
-
-        [Parameter]
-        public bool HasPrevious { get; set; }
-
-        [Parameter]
-        public bool HasNext { get; set; }
+        public PagingMetaData MetaData { get; set; }
 
         [Parameter]
         public int Spread { get; set; }
@@ -41,23 +27,27 @@ namespace BookCatalog.WebBlz.Components
 
         private void CreatePaginationLinks()
         {
-            _links = new List<PagingLink>();
-            _links.Add(new PagingLink(CurrentPage, HasPrevious, "Previous"));
-            for (int i = 0; i < TotalPages; i++)
+            _links = new List<PagingLink>
             {
-                if (i >= CurrentPage - Spread && i <= CurrentPage + Spread)
+                new PagingLink(MetaData.CurrentPage - 1, MetaData.HasPrevious, "Previous")
+            };
+
+            for (int i = 0; i < MetaData.TotalPages; i++)
+            {
+                if (i >= MetaData.CurrentPage - Spread && i <= MetaData.CurrentPage + Spread)
                 {
-                    _links.Add(new PagingLink(i, true, (i+1).ToString()) { Active = CurrentPage == i });
+                    _links.Add(new PagingLink(i, true, (i+1).ToString()) { Active = MetaData.CurrentPage == i });
                 }
             }
-            _links.Add(new PagingLink(CurrentPage + 1, HasNext, "Next"));
+
+            _links.Add(new PagingLink(MetaData.CurrentPage + 1, MetaData.HasNext, "Next"));
         }
 
         private async Task OnSelectedPage(PagingLink link)
         {
-            if (link.Page == CurrentPage || !link.Enabled)
+            if (link.Page == MetaData.CurrentPage || !link.Enabled)
                 return;
-            CurrentPage = link.Page;
+            MetaData.CurrentPage = link.Page;
             await SelectedPage.InvokeAsync(link.Page);
         }
     }

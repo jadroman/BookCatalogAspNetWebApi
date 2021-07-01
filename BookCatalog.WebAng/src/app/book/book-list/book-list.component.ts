@@ -95,9 +95,9 @@ export class BookListComponent implements OnInit {
     let apiAddress: string = "api/book";
     this.repository.getData(apiAddress, params)
       .subscribe((res:any) => {
-        const { items, totalCount } = res.body;
+        const { items, metaData } = res.body;
         this.books = items as Book[];
-        this.count = totalCount;
+        this.count = metaData.totalCount;
         this.SpinnerService.hide(); 
       },
       (error) => {

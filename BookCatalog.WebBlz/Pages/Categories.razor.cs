@@ -14,12 +14,7 @@ namespace BookCatalog.WebBlz.Pages
     public partial class Categories
     {
         public PagedBindingEntity<CategoryBindingModel> Response { get; set; }
-        public int CurrentPage { get; set; }
-        public int TotalPages { get; set; }
-        public int PageSize { get; set; }
-        public int TotalCount { get; set; }
-        public bool HasPrevious { get; set; }
-        public bool HasNext { get; set; }
+        public PagingMetaData MetaData { get; set; } = new PagingMetaData();
         public List<CategoryBindingModel> CategoryList { get; set; } = new();
         private CategoryParameters _categoryParameters = new(); 
 
@@ -36,12 +31,7 @@ namespace BookCatalog.WebBlz.Pages
         {
             Response = await CategoryRepo.GetCategories(_categoryParameters);
             CategoryList=Response.Items.ToList();
-            CurrentPage = Response.CurrentPage;
-            TotalPages = Response.TotalPages;
-            PageSize = Response.PageSize;
-            TotalCount = Response.TotalCount;
-            HasPrevious = Response.HasPrevious;
-            HasNext = Response.HasNext;
+            MetaData = Response.MetaData;
         }
 
         private async Task SelectedPage(int page)
