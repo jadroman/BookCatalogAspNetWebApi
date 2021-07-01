@@ -9,6 +9,8 @@ using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
+using BookCatalog.Common.BindingModels.Category;
+using System.Text;
 
 namespace BookCatalog.WebBlz.HttpRepository
 {
@@ -42,6 +44,20 @@ namespace BookCatalog.WebBlz.HttpRepository
             //var categories = JsonSerializer.Deserialize<List<Category>>(content, _options);
             var categories = JsonSerializer.Deserialize<PagedBindingEntity<CategoryBindingModel>>(content, _options);
             return categories;
+        }
+
+        public async Task CreateCategory(CategoryEditBindingModel category)
+        {
+            var content = JsonSerializer.Serialize(category);
+            var bodyContent = new StringContent(content, Encoding.UTF8, "application/json");
+
+            var postResult = await _client.PostAsync("category", bodyContent);
+            var postContent = await postResult.Content.ReadAsStringAsync();
+
+            if (!postResult.IsSuccessStatusCode)
+            {
+                throw new ApplicationException(postContent);
+            }
         }
     }
 }

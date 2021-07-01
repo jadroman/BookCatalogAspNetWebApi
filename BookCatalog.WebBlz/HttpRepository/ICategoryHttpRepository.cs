@@ -1,5 +1,6 @@
 ﻿using BookCatalog.Common.BindingModels;
 using BookCatalog.Common.BindingModels.Book;
+using BookCatalog.Common.BindingModels.Category;
 using BookCatalog.Common.Entities;
 using BookCatalog.Common.Helpers;
 using System;
@@ -11,6 +12,7 @@ namespace BookCatalog.WebBlz.HttpRepository
 {
     public interface ICategoryHttpRepository
     {
-        Task<PagedBindingEntity<CategoryBindingModel>> GetCategories(CategoryParameters parameters);
+        Task<PagedBindingEntity<CategoryBindingModel>> GetCategories(CategoryParameters parameters); 
+        Task CreateCategory(CategoryEditBindingModel category);
     }
 }

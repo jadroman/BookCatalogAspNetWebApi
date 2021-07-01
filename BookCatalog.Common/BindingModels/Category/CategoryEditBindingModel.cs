@@ -11,7 +11,7 @@ namespace BookCatalog.Common.BindingModels.Category
     {
         public int Id { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Name is required field")]
         [StringLength(48)]
         public string Name { get; set; }
     }

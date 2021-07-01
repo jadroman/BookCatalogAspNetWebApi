@@ -9,13 +9,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace BookCatalog.WebBlz.Pages
+namespace BookCatalog.WebBlz.Pages.Category
 {
-    public partial class Categories
+    public partial class CategoryList
     {
         public PagedBindingEntity<CategoryBindingModel> Response { get; set; }
         public PagingMetaData MetaData { get; set; } = new PagingMetaData();
-        public List<CategoryBindingModel> CategoryList { get; set; } = new();
+        public List<CategoryBindingModel> CategList { get; set; } = new();
         private CategoryParameters _categoryParameters = new(); 
 
         [Inject]
@@ -30,7 +30,7 @@ namespace BookCatalog.WebBlz.Pages
         private async Task GetCategories()
         {
             Response = await CategoryRepo.GetCategories(_categoryParameters);
-            CategoryList=Response.Items.ToList();
+            CategList=Response.Items.ToList();
             MetaData = Response.MetaData;
         }
 
