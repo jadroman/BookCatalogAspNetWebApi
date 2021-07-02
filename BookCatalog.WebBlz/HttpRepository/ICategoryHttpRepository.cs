@@ -14,5 +14,7 @@ namespace BookCatalog.WebBlz.HttpRepository
     {
         Task<PagedBindingEntity<CategoryBindingModel>> GetCategories(CategoryParameters parameters); 
         Task CreateCategory(CategoryEditBindingModel category);
+        Task<CategoryEditBindingModel> GetCategory(int id);
+        Task UpdateCategory(CategoryEditBindingModel category);
     }
 }

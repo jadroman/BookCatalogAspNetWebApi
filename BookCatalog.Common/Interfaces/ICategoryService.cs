@@ -12,7 +12,7 @@ namespace BookCatalog.Common.Interfaces
 {
     public interface ICategoryService
     {
-        Task<Category> GetCategoryById(int id);
+        Task<Category> GetCategoryById(int id, bool trackEntity = false);
         Task<int> SaveCategory(Category category);
         Task<Result<int>> DeleteCategory(Category category);
         Task<Category> GetCategoryByIdWithBooks(int id);

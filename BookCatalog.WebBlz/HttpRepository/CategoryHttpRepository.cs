@@ -11,6 +11,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using BookCatalog.Common.BindingModels.Category;
 using System.Text;
+using System.IO;
 
 namespace BookCatalog.WebBlz.HttpRepository
 {
@@ -57,6 +58,37 @@ namespace BookCatalog.WebBlz.HttpRepository
             if (!postResult.IsSuccessStatusCode)
             {
                 throw new ApplicationException(postContent);
+            }
+        }
+        public async Task<CategoryEditBindingModel> GetCategory(int id)
+        {
+            var url = Path.Combine("category", id.ToString());
+
+            var response = await _client.GetAsync(url);
+
+            var content = await response.Content.ReadAsStringAsync();
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new ApplicationException(content);
+            }
+
+            var category = JsonSerializer.Deserialize<CategoryEditBindingModel>(content, _options);
+
+            return category;
+        }
+
+        public async Task UpdateCategory(CategoryEditBindingModel category)
+        {
+            var content = JsonSerializer.Serialize(category);
+            var bodyContent = new StringContent(content, Encoding.UTF8, "application/json");
+            var url = Path.Combine("category", category.Id.ToString());
+
+            var putResult = await _client.PutAsync(url, bodyContent);
+            var putContent = await putResult.Content.ReadAsStringAsync();
+
+            if (!putResult.IsSuccessStatusCode)
+            {
+                throw new ApplicationException(putContent);
             }
         }
     }

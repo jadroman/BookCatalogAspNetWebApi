@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Components;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -14,5 +15,14 @@ namespace BookCatalog.WebBlz.Components
         
         [Parameter]
         public bool IsLoading { get; set; }
+
+        [Inject]
+        public NavigationManager NavigationManager { get; set; }
+
+        private void RedirectToUpdate(int id)
+        {
+            var url = Path.Combine("/category/", id.ToString());
+            NavigationManager.NavigateTo(url);
+        }
     }
 }

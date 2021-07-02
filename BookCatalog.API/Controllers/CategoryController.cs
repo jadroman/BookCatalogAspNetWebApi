@@ -93,7 +93,7 @@ namespace BookCatalog.API.Controllers
                 return BadRequest("Invalid model object");
             }
 
-            var categoryEntity = await _categoryService.GetCategoryById(id);
+            var categoryEntity = await _categoryService.GetCategoryById(id, true);
 
             _mapper.Map(category, categoryEntity);
 

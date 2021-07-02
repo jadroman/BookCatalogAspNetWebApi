@@ -103,11 +103,21 @@ namespace BookCatalog.Domain.Services
             return _context.Categories.AsNoTracking().CountAsync();
         }
 
-        public async Task<Category> GetCategoryById(int id)
+        public async Task<Category> GetCategoryById(int id, bool trackEntity = false)
         {
-            var category = await _context.Categories
-                 .AsNoTracking()
-                 .FirstOrDefaultAsync(c => c.Id == id);
+            Category category;
+
+            if (trackEntity)
+            {
+                category = await _context.Categories
+                     .FirstOrDefaultAsync(c => c.Id == id);
+            }
+            else
+            {
+                category = await _context.Categories
+                     .AsNoTracking()
+                     .FirstOrDefaultAsync(c => c.Id == id);
+            }
 
             return category;
         }
@@ -126,10 +136,6 @@ namespace BookCatalog.Domain.Services
             if (category.Id == 0)
             {
                 await _context.Categories.AddAsync(category);
-            }
-            else
-            {
-                _context.Update(category);
             }
 
             return await _context.SaveChangesAsync();

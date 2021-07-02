@@ -32,7 +32,7 @@ namespace BookCatalog.WebBlz.Pages.Category
         {
             Response = await CategoryRepo.GetCategories(_categoryParameters);
             IsLoading = false;
-            CategList=Response.Items.ToList();
+            CategList = Response.Items.ToList();
             MetaData = Response.MetaData;
         }
 

@@ -1,0 +1,23 @@
+﻿@page "/category/{id}"
+
+<h2>Update Category Form</h2>
+
+@if (_category != null)
+{
+    <EditForm Model="_category" OnValidSubmit="Update" class="card card-body bg-light mt-5">
+        <DataAnnotationsValidator />
+        <div class="form-group row">
+            <label for="name" class="col-md-2 col-form-label">Name:</label>
+            <div class="col-md-10">
+                <InputText id="name" class="form-control" @bind-Value="_category.Name" />
+                <ValidationMessage For="@(() => _category.Name)" />
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12 text-right">
+                <button type="submit" class="btn btn-success">Update</button>
+            </div>
+        </div>
+    </EditForm>
+}
