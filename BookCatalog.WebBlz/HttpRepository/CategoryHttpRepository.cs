@@ -91,5 +91,18 @@ namespace BookCatalog.WebBlz.HttpRepository
                 throw new ApplicationException(putContent);
             }
         }
+
+        public async Task DeleteCategory(int id)
+        {
+            var url = Path.Combine("category", id.ToString());
+
+            var deleteResult = await _client.DeleteAsync(url);
+            var deleteContent = await deleteResult.Content.ReadAsStringAsync();
+
+            if (!deleteResult.IsSuccessStatusCode)
+            {
+                throw new ApplicationException(deleteContent);
+            }
+        }
     }
 }

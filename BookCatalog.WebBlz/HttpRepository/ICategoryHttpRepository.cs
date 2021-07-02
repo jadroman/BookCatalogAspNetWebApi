@@ -16,5 +16,6 @@ namespace BookCatalog.WebBlz.HttpRepository
         Task CreateCategory(CategoryEditBindingModel category);
         Task<CategoryEditBindingModel> GetCategory(int id);
         Task UpdateCategory(CategoryEditBindingModel category);
+        Task DeleteCategory(int id);
     }
 }

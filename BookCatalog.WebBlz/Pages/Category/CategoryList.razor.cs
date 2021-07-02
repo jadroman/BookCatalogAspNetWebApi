@@ -3,6 +3,7 @@ using BookCatalog.Common.BindingModels.Book;
 using BookCatalog.Common.Entities;
 using BookCatalog.Common.Helpers;
 using BookCatalog.WebBlz.HttpRepository;
+using BookCatalog.WebBlz.Shared;
 using Microsoft.AspNetCore.Components;
 using System;
 using System.Collections.Generic;
@@ -17,7 +18,12 @@ namespace BookCatalog.WebBlz.Pages.Category
         public PagedBindingEntity<CategoryBindingModel> Response { get; set; }
         public PagingMetaData MetaData { get; set; } = new PagingMetaData();
         public List<CategoryBindingModel> CategList { get; set; } = new();
-        private CategoryParameters _categoryParameters = new(); 
+        private CategoryParameters _categoryParameters = new();
+        private YesNoModal _yesNoModal;
+
+        [Inject]
+        public NavigationManager Navigation { get; set; }
+
 
         [Inject]
         public ICategoryHttpRepository CategoryRepo { get; set; }
@@ -27,6 +33,33 @@ namespace BookCatalog.WebBlz.Pages.Category
             await GetCategories();
         }
 
+        private void DeleteCategory(int id)
+        {
+            _yesNoModal.Show($@"Are you sure you want to delete ""{GetCategoryNameById(id)}"" category?", id);
+        }
+
+        private string GetCategoryNameById(int id)
+        {
+            string catName = "";
+            if (CategList != null && CategList.Count > 1)
+            {
+                catName = CategList.Where(c => c.Id == id).FirstOrDefault().Name;
+            }
+            return catName;
+        }
+
+        public async Task CategoryDeletionConfirmed(object id)
+        {
+            //Console.WriteLine($"CategoryDeletionConfirmed: {entityId}");
+            await CategoryRepo.DeleteCategory(Convert.ToInt32(id));
+            //_categoryParameters.PageNumber = 1;
+            await GetCategories();
+        }
+
+        public void CategoryDeletionRejected()
+        {
+            Console.WriteLine($"CategoryDeletionRejected");
+        }
 
         private async Task GetCategories()
         {

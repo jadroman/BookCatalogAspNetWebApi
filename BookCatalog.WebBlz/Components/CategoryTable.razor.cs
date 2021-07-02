@@ -12,7 +12,10 @@ namespace BookCatalog.WebBlz.Components
     {
         [Parameter]
         public List<CategoryBindingModel> Categories { get; set; }
-        
+
+        [Parameter]
+        public EventCallback<int> OnDeleted { get; set; }
+
         [Parameter]
         public bool IsLoading { get; set; }
 
