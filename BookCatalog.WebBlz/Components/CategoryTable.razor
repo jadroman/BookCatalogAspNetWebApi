@@ -1,4 +1,4 @@
-﻿@if (Categories.Count > 0)
+﻿@if (!IsLoading || Categories.Count > 0)
 {
     <table class="table">
         <thead>
@@ -31,4 +31,11 @@ else
     <span>
         Loading categories...
     </span>
+}
+
+@if(!IsLoading && Categories.Count < 1)
+{
+<span>
+    No categories...
+</span>
 }

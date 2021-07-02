@@ -13,6 +13,7 @@ namespace BookCatalog.WebBlz.Pages.Category
 {
     public partial class CategoryList
     {
+        public bool IsLoading { get; set; } = true;
         public PagedBindingEntity<CategoryBindingModel> Response { get; set; }
         public PagingMetaData MetaData { get; set; } = new PagingMetaData();
         public List<CategoryBindingModel> CategList { get; set; } = new();
@@ -30,6 +31,7 @@ namespace BookCatalog.WebBlz.Pages.Category
         private async Task GetCategories()
         {
             Response = await CategoryRepo.GetCategories(_categoryParameters);
+            IsLoading = false;
             CategList=Response.Items.ToList();
             MetaData = Response.MetaData;
         }
@@ -41,7 +43,6 @@ namespace BookCatalog.WebBlz.Pages.Category
         }
         private async Task SearchChanged(string searchTerm)
         {
-            Console.WriteLine(searchTerm);
             _categoryParameters.PageNumber = 0;
             _categoryParameters.Name = searchTerm;
             await GetCategories();
