@@ -14,19 +14,15 @@ namespace BookCatalog.WebBlz.Pages.Category
 {
     public partial class CategoryList
     {
-        public bool IsLoading { get; set; } = true;
-        public PagedBindingEntity<CategoryBindingModel> Response { get; set; }
-        public PagingMetaData MetaData { get; set; } = new PagingMetaData();
-        public List<CategoryBindingModel> CategList { get; set; } = new();
-        private CategoryParameters _categoryParameters = new();
-        private YesNoModal _yesNoModal;
+        bool _isLoading = true;
+        PagedBindingEntity<CategoryBindingModel> _response;
+        PagingMetaData _pagingMetaData = new();
+        List<CategoryBindingModel> _itemsList = new();
+        CategoryParameters _itemsParameters = new();
+        YesNoModal _yesNoModal;
 
         [Inject]
-        public NavigationManager Navigation { get; set; }
-
-
-        [Inject]
-        public ICategoryHttpRepository CategoryRepo { get; set; }
+        ICategoryHttpRepository Repository { get; set; }
 
         protected async override Task OnInitializedAsync()
         {
@@ -41,43 +37,37 @@ namespace BookCatalog.WebBlz.Pages.Category
         private string GetCategoryNameById(int id)
         {
             string catName = "";
-            if (CategList != null && CategList.Count > 1)
+            if (_itemsList != null && _itemsList.Count > 0)
             {
-                catName = CategList.Where(c => c.Id == id).FirstOrDefault().Name;
+                catName = _itemsList.Where(c => c.Id == id).FirstOrDefault().Name;
             }
+
             return catName;
         }
 
         public async Task CategoryDeletionConfirmed(object id)
         {
-            //Console.WriteLine($"CategoryDeletionConfirmed: {entityId}");
-            await CategoryRepo.DeleteCategory(Convert.ToInt32(id));
-            //_categoryParameters.PageNumber = 1;
+            await Repository.DeleteCategory(Convert.ToInt32(id));
             await GetCategories();
-        }
-
-        public void CategoryDeletionRejected()
-        {
-            Console.WriteLine($"CategoryDeletionRejected");
         }
 
         private async Task GetCategories()
         {
-            Response = await CategoryRepo.GetCategories(_categoryParameters);
-            IsLoading = false;
-            CategList = Response.Items.ToList();
-            MetaData = Response.MetaData;
+            _response = await Repository.GetCategories(_itemsParameters);
+            _isLoading = false;
+            _itemsList = _response.Items.ToList();
+            _pagingMetaData = _response.MetaData;
         }
 
         private async Task SelectedPage(int page)
         {
-            _categoryParameters.PageNumber = page;
+            _itemsParameters.PageNumber = page;
             await GetCategories();
         }
         private async Task SearchChanged(string searchTerm)
         {
-            _categoryParameters.PageNumber = 0;
-            _categoryParameters.Name = searchTerm;
+            _itemsParameters.PageNumber = 0;
+            _itemsParameters.Name = searchTerm;
             await GetCategories();
         }
     }

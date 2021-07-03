@@ -17,10 +17,6 @@ namespace BookCatalog.WebBlz.Shared
         [Parameter]
         public EventCallback<object> Confirmed { get; set; }
 
-
-        [Parameter]
-        public EventCallback Rejected { get; set; }
-
         [Inject]
         public NavigationManager Navigation { get; set; }
 
@@ -35,7 +31,6 @@ namespace BookCatalog.WebBlz.Shared
             _modalDisplay = "block;";
             _modalClass = "show";
             _showBackdrop = true;
-            //StateHasChanged();
         }
 
         private void Hide()
@@ -43,7 +38,6 @@ namespace BookCatalog.WebBlz.Shared
             _modalDisplay = "none;";
             _modalClass = "";
             _showBackdrop = false;
-            //StateHasChanged();
         }
 
         private async Task Confirm()
@@ -55,7 +49,6 @@ namespace BookCatalog.WebBlz.Shared
         private async Task Reject()
         {
             Hide();
-            await Rejected.InvokeAsync();
         }
     }
 }

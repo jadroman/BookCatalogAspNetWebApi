@@ -12,13 +12,13 @@
 </div>
 <div class="row">
     <div class="col">
-        <CategoryTable Categories="CategList" IsLoading="IsLoading"  OnDeleted="DeleteCategory" />
+        <CategoryTable Categories="_itemsList" IsLoading="_isLoading"  OnDeleted="DeleteCategory" />
     </div>
 </div>
 <div class="row">
     <div class="col">
-        <Pagination MetaData="MetaData" Spread="2" SelectedPage="SelectedPage" />
+        <Pagination MetaData="_pagingMetaData" Spread="2" SelectedPage="SelectedPage" />
     </div>
 </div>
 
-<YesNoModal @ref="_yesNoModal" Confirmed="CategoryDeletionConfirmed" Rejected="CategoryDeletionRejected" />
+<YesNoModal @ref="_yesNoModal" Confirmed="CategoryDeletionConfirmed" />
