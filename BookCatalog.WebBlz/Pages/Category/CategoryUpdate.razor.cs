@@ -3,6 +3,7 @@ using BookCatalog.Common.BindingModels.Category;
 using BookCatalog.WebBlz.HttpRepository;
 using BookCatalog.WebBlz.Shared;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Forms;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,13 +13,13 @@ namespace BookCatalog.WebBlz.Pages.Category
 {
     public partial class CategoryUpdate
     {
-        private CategoryEditBindingModel _category;
+        CategoryEditBindingModel _category;
 
         [Inject]
         ICategoryHttpRepository CategoryRepo { get; set; }
 
         [Inject]
-        public NavigationManager Navigation { get; set; }
+        NavigationManager Navigation { get; set; }
 
         [Parameter]
         public string Id { get; set; }
@@ -33,5 +34,11 @@ namespace BookCatalog.WebBlz.Pages.Category
             await CategoryRepo.UpdateCategory(_category);
             Navigation.NavigateTo("/categories");
         }
+
+        private void CancelUpdate()
+        {
+            Navigation.NavigateTo("/categories");
+        }
+
     }
 }

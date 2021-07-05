@@ -17,8 +17,8 @@ namespace BookCatalog.WebBlz.Pages.Category
         bool _isLoading = true;
         PagedBindingEntity<CategoryBindingModel> _response;
         PagingMetaData _pagingMetaData = new();
-        List<CategoryBindingModel> _itemsList = new();
-        CategoryParameters _itemsParameters = new();
+        List<CategoryBindingModel> _categoryList = new();
+        CategoryParameters _categoryParameters = new();
         YesNoModal _yesNoModal;
 
         [Inject]
@@ -37,9 +37,9 @@ namespace BookCatalog.WebBlz.Pages.Category
         private string GetCategoryNameById(int id)
         {
             string catName = "";
-            if (_itemsList != null && _itemsList.Count > 0)
+            if (_categoryList != null && _categoryList.Count > 0)
             {
-                catName = _itemsList.Where(c => c.Id == id).FirstOrDefault().Name;
+                catName = _categoryList.Where(c => c.Id == id).FirstOrDefault().Name;
             }
 
             return catName;
@@ -53,21 +53,21 @@ namespace BookCatalog.WebBlz.Pages.Category
 
         private async Task GetCategories()
         {
-            _response = await Repository.GetCategories(_itemsParameters);
+            _response = await Repository.GetCategories(_categoryParameters);
             _isLoading = false;
-            _itemsList = _response.Items.ToList();
+            _categoryList = _response.Items.ToList();
             _pagingMetaData = _response.MetaData;
         }
 
         private async Task SelectedPage(int page)
         {
-            _itemsParameters.PageNumber = page;
+            _categoryParameters.PageNumber = page;
             await GetCategories();
         }
         private async Task SearchChanged(string searchTerm)
         {
-            _itemsParameters.PageNumber = 0;
-            _itemsParameters.Name = searchTerm;
+            _categoryParameters.PageNumber = 0;
+            _categoryParameters.Name = searchTerm;
             await GetCategories();
         }
     }

@@ -1,22 +1,22 @@
 ﻿@page "/categories"
 @using BookCatalog.WebBlz.Components;
+@using BookCatalog.WebBlz.Shared;
 
 <div class="row">
-    <div class="col-md-10">
-        @*Place for search and sort*@
+    <div class="col-md-4">
         <Search OnSearchChanged="SearchChanged" />
     </div>
-    <div class="col-md-2">
-        <a href="/createCategory">Create Category</a>
+    <div class="col-md-3 offset-md-5 text-right">
+        <a href="/createCategory" class="btn btn-success">New Category</a>
     </div>
 </div>
 <div class="row">
-    <div class="col">
-        <CategoryTable Categories="_itemsList" IsLoading="_isLoading"  OnDeleted="DeleteCategory" />
+    <div class="col-md-12">
+        <CategoryTable Categories="_categoryList" IsLoading="_isLoading" OnDeleted="DeleteCategory" />
     </div>
 </div>
 <div class="row">
-    <div class="col">
+    <div class="col-md-12" style="text-align: center;">
         <Pagination MetaData="_pagingMetaData" Spread="2" SelectedPage="SelectedPage" />
     </div>
 </div>

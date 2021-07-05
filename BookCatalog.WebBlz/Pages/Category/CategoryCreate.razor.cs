@@ -10,17 +10,22 @@ namespace BookCatalog.WebBlz.Pages.Category
 {
     public partial class CategoryCreate
     {
-        private CategoryEditBindingModel _category = new();
+        CategoryEditBindingModel _category = new();
 
         [Inject]
-        public ICategoryHttpRepository CategoryRepo { get; set; }
+        ICategoryHttpRepository Repository { get; set; }
 
         [Inject]
-        public NavigationManager Navigation { get; set; }
+        NavigationManager Navigation { get; set; }
 
         private async Task Create()
         {
-            await CategoryRepo.CreateCategory(_category);
+            await Repository.CreateCategory(_category);
+            Navigation.NavigateTo("/categories");
+        }
+
+        private void CancelUpdate()
+        {
             Navigation.NavigateTo("/categories");
         }
     }

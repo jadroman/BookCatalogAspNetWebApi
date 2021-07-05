@@ -1,18 +1,27 @@
 ﻿@page "/createCategory"
 
-<h2>Create Category Form</h2>
+<h2>Create Category</h2>
 
 <EditForm Model="_category" OnValidSubmit="Create" class="card card-body bg-light mt-5">
     <DataAnnotationsValidator />
-    <div class="form-group row">
-        <label for="name" class="col-md-2 col-form-label">Name:</label>
-        <div class="col-md-10">
-            <InputText id="name" class="form-control" @bind-Value="_category.Name" />
-            <ValidationMessage For="@(() => _category.Name)" />
+    <div class="form-group">
+        <div class="row">
+            <div class="col-md-auto">
+                <label for="name" class=" col-form-label">Name:</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-auto">
+                <InputText id="name" autocomplete="off" class="form-control" @bind-Value="_category.Name" />
+                <ValidationMessage For="@(() => _category.Name)" />
+            </div>
         </div>
     </div>
     <div class="row">
-        <div class="col-md-12 text-right">
+        <div class="col-md-auto">
+            <button type="button" class="btn btn-info" @onclick="CancelUpdate">Cancel</button>
+        </div>
+        <div class="col-md-auto">
             <button type="submit" class="btn btn-success">Create</button>
         </div>
     </div>
