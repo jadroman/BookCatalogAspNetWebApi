@@ -21,6 +21,7 @@ namespace BookCatalog.WebBlz
             // TODO: move url to config file
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("http://localhost:5000/api/") });
             builder.Services.AddScoped<ICategoryHttpRepository, CategoryHttpRepository>();
+            builder.Services.AddScoped<IBookHttpRepository, BookHttpRepository>();
 
             await builder.Build().RunAsync();
         }

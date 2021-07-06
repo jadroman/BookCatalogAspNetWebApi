@@ -1,0 +1,24 @@
+﻿@page "/books"
+@using BookCatalog.WebBlz.Components;
+@using BookCatalog.WebBlz.Shared;
+
+<div class="row">
+    <div class="col-md-4">
+        @*<Search OnSearchChanged="SearchChanged" />*@
+    </div>
+    <div class="col-md-3 offset-md-5 text-right">
+        <a href="/createBook" class="btn btn-success">New Book</a>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <BookTable Books="_bookList" IsLoading="_isLoading" OnDeleted="DeleteBook" />
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12" style="text-align: center;">
+        <Pagination MetaData="_pagingMetaData" Spread="2" SelectedPage="SelectedPage" />
+    </div>
+</div>
+
+<YesNoModal @ref="_yesNoModal" Confirmed="BookDeletionConfirmed" />
