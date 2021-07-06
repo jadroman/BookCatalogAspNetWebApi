@@ -17,7 +17,7 @@ namespace BookCatalog.WebBlz
         {
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("#app");
-
+          
             // TODO: move url to config file
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("http://localhost:5000/api/") });
             builder.Services.AddScoped<ICategoryHttpRepository, CategoryHttpRepository>();

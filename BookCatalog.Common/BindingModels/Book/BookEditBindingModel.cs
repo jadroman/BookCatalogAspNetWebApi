@@ -9,28 +9,31 @@ namespace BookCatalog.Common.BindingModels.Book
 {
     public class BookEditBindingModel
     {
+         const string  maxCharError = "Maximum character input exceeded";
+
          public int Id { get; set; }
 
-        [Required]
-        [StringLength(200)]
+        [Required(ErrorMessage = "Title is required field")]
+        [StringLength(200, ErrorMessage = maxCharError)]
         public string Title { get; set; }
 
-        [Range(1, 2050)]
+        [Range(1, 2050, ErrorMessage ="Range must be between 1 and 2050")]
         public int? Year { get; set; }
 
-        [StringLength(56)]
+        [StringLength(56, ErrorMessage = maxCharError)]
         public string Publisher { get; set; }
 
-        [StringLength(56)]
+        [StringLength(56, ErrorMessage = maxCharError)]
         public string Author { get; set; }
 
         public string Note { get; set; }
 
-        [StringLength(56)]
+        [StringLength(56, ErrorMessage = maxCharError)]
         public string Collection { get; set; }
 
         [Display(Name = "Already read")]
-        public bool Read { get; set; }
+        public int Read { get; set; }
+
         public int? CategoryId { get; set; }
 
         public CategoryBindingModel Category { get; set; }
