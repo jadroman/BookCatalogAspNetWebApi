@@ -15,6 +15,9 @@ namespace BookCatalog.WebBlz.Pages.Book
     public partial class BookList
     {
         bool _isLoading = true;
+        string _placeholderSearchTitle = "Book title";
+        string _placeholderSearchAuthor = "Book author";
+        string _placeholderSearchNote = "Book note";
         PagedBindingEntity<BookBindingModel> _response;
         PagingMetaData _pagingMetaData = new();
         List<BookBindingModel> _bookList = new();
@@ -64,10 +67,25 @@ namespace BookCatalog.WebBlz.Pages.Book
             _bookParameters.PageNumber = page;
             await GetBooks();
         }
-        private async Task SearchChanged(string searchTerm)
+
+        private async Task SearchTitleChanged(string searchTerm)
         {
             _bookParameters.PageNumber = 0;
             _bookParameters.Title = searchTerm;
+            await GetBooks();
+        }
+
+        private async Task SearchAuthorChanged(string searchTerm)
+        {
+            _bookParameters.PageNumber = 0;
+            _bookParameters.Author = searchTerm;
+            await GetBooks();
+        }
+
+        private async Task SearchNoteChanged(string searchTerm)
+        {
+            _bookParameters.PageNumber = 0;
+            _bookParameters.Note = searchTerm;
             await GetBooks();
         }
     }

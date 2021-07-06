@@ -13,6 +13,9 @@ namespace BookCatalog.WebBlz.Components
         public string SearchTerm { get; set; }
 
         [Parameter]
+        public string PlaceholderText { get; set; }
+
+        [Parameter]
         public EventCallback<string> OnSearchChanged { get; set; }
 
         private void SearchChanged()

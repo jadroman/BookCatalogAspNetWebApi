@@ -30,7 +30,9 @@ namespace BookCatalog.WebBlz.HttpRepository
             var queryStringParam = new Dictionary<string, string>
             {
                 ["pageNumber"] = parameters.PageNumber.ToString(),
-                ["Name"] = parameters.Title ?? ""
+                ["Title"] = parameters.Title ?? "",
+                ["Author"] = parameters.Author ?? "",
+                ["Note"] = parameters.Note ?? ""
             };
 
             var response = await _client.GetAsync(QueryHelpers.AddQueryString("book", queryStringParam));

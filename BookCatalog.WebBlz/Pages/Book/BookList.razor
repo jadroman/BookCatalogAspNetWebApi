@@ -3,10 +3,22 @@
 @using BookCatalog.WebBlz.Shared;
 
 <div class="row">
-    <div class="col-md-4">
-        @*<Search OnSearchChanged="SearchChanged" />*@
+    <div class="col-md-12">
+        Search by:
     </div>
-    <div class="col-md-3 offset-md-5 text-right">
+</div>
+
+<div class="row">
+    <div class="col-md-3">
+        <Search OnSearchChanged="SearchTitleChanged" PlaceholderText=@_placeholderSearchTitle />
+    </div>
+    <div class="col-md-3">
+        <Search OnSearchChanged="SearchAuthorChanged" PlaceholderText=@_placeholderSearchAuthor />
+    </div>
+    <div class="col-md-3">
+        <Search OnSearchChanged="SearchNoteChanged" PlaceholderText=@_placeholderSearchNote />
+    </div>
+    <div class="col-md-3 text-right">
         <a href="/createBook" class="btn btn-success">New Book</a>
     </div>
 </div>

@@ -15,7 +15,8 @@ namespace BookCatalog.WebBlz.Pages.Category
     public partial class CategoryList
     {
         bool _isLoading = true;
-        PagedBindingEntity<CategoryBindingModel> _response;
+        string _placeholderSearchText = "Category name";
+         PagedBindingEntity<CategoryBindingModel> _response;
         PagingMetaData _pagingMetaData = new();
         List<CategoryBindingModel> _categoryList = new();
         CategoryParameters _categoryParameters = new();
