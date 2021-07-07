@@ -13,6 +13,8 @@ namespace BookCatalog.WebBlz.Pages.Book
 {
     public partial class BookUpdate
     {
+        string trueRead = "true";
+        string falseRead = "false";
         BookEditBindingModel _book;
         List<CategoryBindingModel> _categories = new();
 

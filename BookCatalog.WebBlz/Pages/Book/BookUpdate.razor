@@ -86,8 +86,8 @@
             <div class="row">
                 <div class="col-md-auto radioWrapper">
                     <InputRadioGroup id="Read" @bind-Value="_book.Read">
-                        <InputRadio id="No" Value="0" /><label class="radioLabel" for="No">No</label><br>
-                        <InputRadio id="Yes" Value="1" /><label class="radioLabel" for="Yes">Yes</label>
+                        <InputRadio id="No" Value="@falseRead" /><label class="radioLabel" for="No">No</label><br>
+                        <InputRadio id="Yes" Value="@trueRead" /><label class="radioLabel" for="Yes">Yes</label>
                     </InputRadioGroup>
                 </div>
             </div>
