@@ -1,6 +1,7 @@
 ﻿using BookCatalog.Common.BindingModels;
 using BookCatalog.Common.BindingModels.Book;
 using BookCatalog.Common.Helpers;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace BookCatalog.WebBlz.HttpRepository
@@ -12,5 +13,6 @@ namespace BookCatalog.WebBlz.HttpRepository
         Task<BookEditBindingModel> GetBook(int id);
         Task UpdateBook(BookEditBindingModel book);
         Task DeleteBook(int id);
+        Task<PagedBindingEntity<CategoryBindingModel>> GetCategories();
     }
 }

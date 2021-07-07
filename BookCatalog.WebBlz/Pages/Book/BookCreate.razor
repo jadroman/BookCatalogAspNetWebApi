@@ -32,6 +32,25 @@
     </div>
     <div class="form-group">
         <div class="row">
+            <div class="col-md-6">
+                <label for="category" class=" col-form-label">Category:</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <InputSelect Value="_book.CategoryId" class="form-control" ValueExpression="@(() =>  _book.CategoryId)" 
+                             ValueChanged="@((int? selected) => { CategoryChanged(selected); })">
+                    <option value="">Select category...</option>
+                    @foreach (var categ in _categories)
+                    {
+                        <option value="@categ.Id">@categ.Name</option>
+                    }
+                </InputSelect>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="row">
             <div class="col-md-auto">
                 <label for="year" class=" col-form-label">Year:</label>
             </div>
@@ -64,10 +83,10 @@
         </div>
         <div class="row">
             <div class="col-md-auto radioWrapper">
-                  <InputRadioGroup id="Read" @bind-Value="_book.Read">
-                      <InputRadio id="No" Value="0" /><label class="radioLabel" for="No">No</label><br>
-                      <InputRadio id="Yes" Value="1" /><label class="radioLabel" for="Yes">Yes</label>
-                  </InputRadioGroup>
+                <InputRadioGroup id="Read" @bind-Value="_book.Read">
+                    <InputRadio id="No" Value="false" /><label class="radioLabel" for="No">No</label><br>
+                    <InputRadio id="Yes" Value="true" /><label class="radioLabel" for="Yes">Yes</label>
+                </InputRadioGroup>
             </div>
         </div>
     </div>

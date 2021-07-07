@@ -1,7 +1,9 @@
 ﻿using BookCatalog.Common.BindingModels.Book;
 using BookCatalog.Common.BindingModels.Category;
 using BookCatalog.WebBlz.HttpRepository;
+using BookCatalog.WebBlz.Shared;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Forms;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,33 +11,36 @@ using System.Threading.Tasks;
 
 namespace BookCatalog.WebBlz.Pages.Book
 {
-    public partial class BookCreate
+    public partial class BookUpdate
     {
-        BookEditBindingModel _book = new();
+        BookEditBindingModel _book;
         List<CategoryBindingModel> _categories = new();
-        
 
-       [Inject]
+        [Inject]
         IBookHttpRepository Repository { get; set; }
 
         [Inject]
         NavigationManager Navigation { get; set; }
 
+        [Parameter]
+        public string Id { get; set; }
+
         protected async override Task OnInitializedAsync()
         {
-            await GetCategories();
+            _book = await Repository.GetBook(Convert.ToInt32(Id));
         }
 
-        private async Task Create()
+        private async Task Update()
         {
-            await Repository.CreateBook(_book);
-            Navigation.NavigateTo("/book");
+            await Repository.UpdateBook(_book);
+            Navigation.NavigateTo("/books");
         }
 
         private void CancelUpdate()
         {
             Navigation.NavigateTo("/books");
         }
+
 
         private async Task GetCategories()
         {
@@ -45,7 +50,7 @@ namespace BookCatalog.WebBlz.Pages.Book
 
         private void CategoryChanged(int? selected)
         {
-            _book.CategoryId = selected; 
+            _book.CategoryId = selected;
         }
     }
 }

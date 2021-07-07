@@ -11,6 +11,8 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using System.Text;
 using System.IO;
+using Newtonsoft.Json;
+using BookCatalog.WebBlz.Helpers;
 
 namespace BookCatalog.WebBlz.HttpRepository
 {
@@ -43,13 +45,15 @@ namespace BookCatalog.WebBlz.HttpRepository
                 throw new ApplicationException(content);
             }
 
-            var books = JsonSerializer.Deserialize<PagedBindingEntity<BookBindingModel>>(content, _options);
+            var books = System.Text.Json.JsonSerializer.Deserialize<PagedBindingEntity<BookBindingModel>>(content, _options);
+            //var books = JsonConvert.DeserializeObject<PagedBindingEntity<BookBindingModel>>(content, new CustomJsonConverter());
+
             return books;
         }
 
         public async Task CreateBook(BookEditBindingModel book)
         {
-            var content = JsonSerializer.Serialize(book);
+            var content = System.Text.Json.JsonSerializer.Serialize(book);
             var bodyContent = new StringContent(content, Encoding.UTF8, "application/json");
 
             var postResult = await _client.PostAsync("book", bodyContent);
@@ -72,14 +76,15 @@ namespace BookCatalog.WebBlz.HttpRepository
                 throw new ApplicationException(content);
             }
 
-            var book = JsonSerializer.Deserialize<BookEditBindingModel>(content, _options);
+            var book = JsonConvert.DeserializeObject<BookEditBindingModel>(content, new CustomJsonConverter());
+            //var book = JsonSerializer.Deserialize<BookEditBindingModel>(content, _options);
 
             return book;
         }
 
         public async Task UpdateBook(BookEditBindingModel book)
         {
-            var content = JsonSerializer.Serialize(book);
+            var content = System.Text.Json.JsonSerializer.Serialize(book);
             var bodyContent = new StringContent(content, Encoding.UTF8, "application/json");
             var url = Path.Combine("book", book.Id.ToString());
 
@@ -103,6 +108,21 @@ namespace BookCatalog.WebBlz.HttpRepository
             {
                 throw new ApplicationException(deleteContent);
             }
+        }
+
+        public async Task<PagedBindingEntity<CategoryBindingModel>> GetCategories()
+        {
+
+            var response = await _client.GetAsync("category");
+            var content = await response.Content.ReadAsStringAsync();
+
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new ApplicationException(content);
+            }
+
+            var categories = System.Text.Json.JsonSerializer.Deserialize<PagedBindingEntity<CategoryBindingModel>>(content, _options);
+            return categories;
         }
     }
 }
