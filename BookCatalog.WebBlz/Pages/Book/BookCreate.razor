@@ -1,5 +1,7 @@
 ﻿@page "/createBook"
 @using BookCatalog.WebBlz.Helpers
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize]
 
 <h2>Book</h2>
 
@@ -39,7 +41,7 @@
         </div>
         <div class="row">
             <div class="col-md-6">
-                <InputSelect Value="_book.CategoryId" class="form-control" ValueExpression="@(() =>  _book.CategoryId)" 
+                <InputSelect Value="_book.CategoryId" class="form-control" ValueExpression="@(() =>  _book.CategoryId)"
                              ValueChanged="@((int? selected) => { CategoryChanged(selected); })">
                     <option value="">Select category...</option>
                     @foreach (var categ in _categories)

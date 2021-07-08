@@ -1,4 +1,6 @@
+using BookCatalog.WebBlz.Auth;
 using BookCatalog.WebBlz.HttpRepository;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,8 +23,10 @@ namespace BookCatalog.WebBlz
             // TODO: move url to config file
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("http://localhost:5000/api/") });
             builder.Services.AddScoped<ICategoryHttpRepository, CategoryHttpRepository>();
-            builder.Services.AddScoped<IBookHttpRepository, BookHttpRepository>();
+            builder.Services.AddScoped<IBookHttpRepository, BookHttpRepository>(); 
+            builder.Services.AddScoped<AuthenticationStateProvider, TestAuthStateProvider>();
 
+            builder.Services.AddAuthorizationCore();
             await builder.Build().RunAsync();
         }
     }

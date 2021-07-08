@@ -1,6 +1,7 @@
 ﻿@page "/book/{id}"
 @using BookCatalog.WebBlz.Helpers
-
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize]
 
 <h2>Update book</h2>
 
@@ -47,7 +48,7 @@
                         <option value="">Select category...</option>
                         @foreach (var categ in _categories)
                         {
-                        <option value="@categ.Id">@categ.Name</option>
+                            <option value="@categ.Id">@categ.Name</option>
                         }
                     </InputSelect>
                 </div>
