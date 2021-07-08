@@ -30,6 +30,7 @@ namespace BookCatalog.WebBlz.Pages.Book
         protected async override Task OnInitializedAsync()
         {
             _book = await Repository.GetBook(Convert.ToInt32(Id));
+            await GetCategories();
         }
 
         private async Task Update()
@@ -42,7 +43,6 @@ namespace BookCatalog.WebBlz.Pages.Book
         {
             Navigation.NavigateTo("/books");
         }
-
 
         private async Task GetCategories()
         {

@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.WebUtilities;
 using System.Linq;
 using System.Net.Http;
-using System.Text.Json;
 using System.Threading.Tasks;
 using System.Text;
 using System.IO;
@@ -19,12 +18,10 @@ namespace BookCatalog.WebBlz.HttpRepository
     public class BookHttpRepository : IBookHttpRepository
     {
         private readonly HttpClient _client;
-        private readonly JsonSerializerOptions _options;
 
         public BookHttpRepository(HttpClient client)
         {
             _client = client;
-            _options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
         }
 
         public async Task<PagedBindingEntity<BookBindingModel>> GetBooks(BookParameters parameters)
@@ -45,8 +42,7 @@ namespace BookCatalog.WebBlz.HttpRepository
                 throw new ApplicationException(content);
             }
 
-            var books = System.Text.Json.JsonSerializer.Deserialize<PagedBindingEntity<BookBindingModel>>(content, _options);
-            //var books = JsonConvert.DeserializeObject<PagedBindingEntity<BookBindingModel>>(content, new CustomJsonConverter());
+            var books = JsonConvert.DeserializeObject<PagedBindingEntity<BookBindingModel>>(content);
 
             return books;
         }
@@ -76,8 +72,7 @@ namespace BookCatalog.WebBlz.HttpRepository
                 throw new ApplicationException(content);
             }
 
-            var book = JsonConvert.DeserializeObject<BookEditBindingModel>(content, new CustomJsonConverter());
-            //var book = JsonSerializer.Deserialize<BookEditBindingModel>(content, _options);
+            var book = JsonConvert.DeserializeObject<BookEditBindingModel>(content);
 
             return book;
         }
@@ -121,7 +116,7 @@ namespace BookCatalog.WebBlz.HttpRepository
                 throw new ApplicationException(content);
             }
 
-            var categories = System.Text.Json.JsonSerializer.Deserialize<PagedBindingEntity<CategoryBindingModel>>(content, _options);
+            var categories = JsonConvert.DeserializeObject<PagedBindingEntity<CategoryBindingModel>>(content);
             return categories;
         }
     }
