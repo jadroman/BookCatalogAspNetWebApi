@@ -1,4 +1,6 @@
 ﻿@page "/createBook"
+@using BookCatalog.WebBlz.Helpers
+
 <h2>Book</h2>
 
 <EditForm Model="_book" OnValidSubmit="Create" class="card card-body bg-light mt-5">
@@ -83,8 +85,8 @@
         <div class="row">
             <div class="col-md-auto radioWrapper">
                 <InputRadioGroup id="Read" @bind-Value="_book.Read">
-                    <InputRadio id="No" Value="@falseRead" /><label class="radioLabel" for="No">No</label><br>
-                    <InputRadio id="Yes" Value="@trueRead" /><label class="radioLabel" for="Yes">Yes</label>
+                    <InputRadio id="No" Value="@BooleanString.False" /><label class="radioLabel" for="No">No</label><br>
+                    <InputRadio id="Yes" Value="@BooleanString.True" /><label class="radioLabel" for="Yes">Yes</label>
                 </InputRadioGroup>
             </div>
         </div>

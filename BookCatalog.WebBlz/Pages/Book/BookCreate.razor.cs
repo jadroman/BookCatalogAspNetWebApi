@@ -1,5 +1,6 @@
 ﻿using BookCatalog.Common.BindingModels.Book;
 using BookCatalog.Common.BindingModels.Category;
+using BookCatalog.WebBlz.Helpers;
 using BookCatalog.WebBlz.HttpRepository;
 using Microsoft.AspNetCore.Components;
 using System;
@@ -11,12 +12,9 @@ namespace BookCatalog.WebBlz.Pages.Book
 {
     public partial class BookCreate
     {
-        string trueRead = "true";
-        string falseRead = "false";
-        BookEditBindingModel _book = new();
+        readonly BookEditBindingModel _book = new();
         List<CategoryBindingModel> _categories = new();
         
-
        [Inject]
         IBookHttpRepository Repository { get; set; }
 
@@ -26,12 +24,13 @@ namespace BookCatalog.WebBlz.Pages.Book
         protected async override Task OnInitializedAsync()
         {
             await GetCategories();
+            _book.Read = BooleanString.False;
         }
 
         private async Task Create()
         {
             await Repository.CreateBook(_book);
-            Navigation.NavigateTo("/book");
+            Navigation.NavigateTo("/books");
         }
 
         private void CancelUpdate()

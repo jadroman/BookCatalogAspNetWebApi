@@ -84,10 +84,6 @@ namespace BookCatalog.Domain.Services
             {
                 await _context.Books.AddAsync(book);
             }
-            //else
-            //{
-            //    _context.Update(book);
-            //}
 
             return await _context.SaveChangesAsync();
         }
