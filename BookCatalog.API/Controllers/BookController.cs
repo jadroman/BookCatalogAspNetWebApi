@@ -92,7 +92,7 @@ namespace BookCatalog.API.Controllers
                 return BadRequest("Invalid model object");
             }
 
-            var bookEntity = await _bookService.GetBookById(id);
+            var bookEntity = await _bookService.GetBookById(id, true);
 
             _mapper.Map(book, bookEntity);
 

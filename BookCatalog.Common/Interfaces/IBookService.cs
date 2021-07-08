@@ -9,7 +9,7 @@ namespace BookCatalog.Common.Interfaces
     public interface IBookService
     {
         Task<PagedList<Book>> GetBooks(BookParameters bookParameters);
-        Task<Book> GetBookById(int id);
+        Task<Book> GetBookById(int id, bool trackEntity = false);
         Task<int> SaveBook(Book book);
         Task<int> DeleteBook(Book book);
         Task<List<Category>> GetAllCategories();
