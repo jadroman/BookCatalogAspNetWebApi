@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 namespace BookCatalog.API.Controllers
 {
     [Route("api/[controller]")]
-    //[Authorize]
+    [Authorize]
     [ApiController]
     public class BookController : ControllerBase
     {

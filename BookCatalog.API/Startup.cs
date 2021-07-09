@@ -36,6 +36,7 @@ namespace BookCatalog
                     .AddEntityFrameworkStores<BookCatalogContext>();
 
             var jwtSettings = Configuration.GetSection("JwtSettings");
+
             services.AddAuthentication(opt =>
             {
                 opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

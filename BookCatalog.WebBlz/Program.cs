@@ -1,3 +1,4 @@
+using Blazored.LocalStorage;
 using BookCatalog.WebBlz.Auth;
 using BookCatalog.WebBlz.HttpRepository;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -24,7 +25,9 @@ namespace BookCatalog.WebBlz
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("http://localhost:5000/api/") });
             builder.Services.AddScoped<ICategoryHttpRepository, CategoryHttpRepository>();
             builder.Services.AddScoped<IBookHttpRepository, BookHttpRepository>(); 
-            builder.Services.AddScoped<AuthenticationStateProvider, TestAuthStateProvider>();
+            builder.Services.AddScoped<AuthenticationStateProvider, AuthStateProvider>();
+            builder.Services.AddBlazoredLocalStorage();
+            builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 
             builder.Services.AddAuthorizationCore();
             await builder.Build().RunAsync();

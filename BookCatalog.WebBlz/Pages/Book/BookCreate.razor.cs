@@ -15,7 +15,7 @@ namespace BookCatalog.WebBlz.Pages.Book
         readonly BookEditBindingModel _book = new();
         List<CategoryBindingModel> _categories = new();
         
-       [Inject]
+        [Inject]
         IBookHttpRepository Repository { get; set; }
 
         [Inject]

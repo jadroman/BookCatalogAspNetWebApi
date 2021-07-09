@@ -5,11 +5,15 @@ using BookCatalog.Common.Entities;
 using BookCatalog.Common.Helpers;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
+using System.Security.Claims;
 
 namespace BookCatalog.API.Controllers
 {
@@ -20,12 +24,16 @@ namespace BookCatalog.API.Controllers
         private readonly UserManager<User> _userManager;
         private readonly IMapper _mapper;
         private readonly JwtHandler _jwtHandler;
+        private readonly IConfiguration _configuration;
+        private readonly IConfigurationSection _jwtSettings;
 
-        public AccountsController(UserManager<User> userManager, IMapper mapper, JwtHandler jwtHandler)
+        public AccountsController(UserManager<User> userManager, IMapper mapper, JwtHandler jwtHandler, IConfiguration configuration)
         {
             _userManager = userManager;
-            _mapper = mapper;
-            _jwtHandler = jwtHandler;
+            _mapper = mapper; 
+            _configuration = configuration;
+            _jwtHandler = jwtHandler; 
+            _jwtSettings = _configuration.GetSection("JwtSettings");
         }
 
         [HttpPost("Login")]
@@ -62,6 +70,36 @@ namespace BookCatalog.API.Controllers
             }
 
             return StatusCode(201);
+        }
+
+        private SigningCredentials GetSigningCredentials()
+        {
+            var key = Encoding.UTF8.GetBytes(_jwtSettings["securityKey"]);
+            var secret = new SymmetricSecurityKey(key);
+
+            return new SigningCredentials(secret, SecurityAlgorithms.HmacSha256);
+        }
+
+        private List<Claim> GetClaims(IdentityUser user)
+        {
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, user.Email)
+            };
+
+            return claims;
+        }
+
+        private JwtSecurityToken GenerateTokenOptions(SigningCredentials signingCredentials, List<Claim> claims)
+        {
+            var tokenOptions = new JwtSecurityToken(
+                issuer: _jwtSettings["validIssuer"],
+                audience: _jwtSettings["validAudience"],
+                claims: claims,
+                expires: DateTime.Now.AddMinutes(Convert.ToDouble(_jwtSettings["expiryInMinutes"])),
+                signingCredentials: signingCredentials);
+
+            return tokenOptions;
         }
     }
 }
