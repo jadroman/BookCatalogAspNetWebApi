@@ -12,16 +12,26 @@ using System.Text;
 using System.IO;
 using Newtonsoft.Json;
 using BookCatalog.WebBlz.Helpers;
+using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
+using Blazored.LocalStorage;
+using BookCatalog.WebBlz.Auth;
 
 namespace BookCatalog.WebBlz.HttpRepository
 {
     public class BookHttpRepository : IBookHttpRepository
     {
         private readonly HttpClient _client;
+        private readonly AuthenticationStateProvider _authStateProvider;
+        private readonly ILocalStorageService _localStorage;
+        private readonly NavigationManager _navMagager;
 
-        public BookHttpRepository(HttpClient client)
+        public BookHttpRepository(HttpClient client, AuthenticationStateProvider authStateProvider, ILocalStorageService localStorage, NavigationManager navManager)
         {
             _client = client;
+            _authStateProvider = authStateProvider;
+            _localStorage = localStorage;
+            _navMagager = navManager;
         }
 
         public async Task<PagedBindingEntity<BookBindingModel>> GetBooks(BookParameters parameters)
@@ -37,9 +47,11 @@ namespace BookCatalog.WebBlz.HttpRepository
             var response = await _client.GetAsync(QueryHelpers.AddQueryString("book", queryStringParam));
             var content = await response.Content.ReadAsStringAsync();
 
-            if (!response.IsSuccessStatusCode)
+            if(response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
             {
-                throw new ApplicationException(content);
+                await _localStorage.RemoveItemAsync("authToken");
+                ((AuthStateProvider)_authStateProvider).NotifyUserLogout();
+                _client.DefaultRequestHeaders.Authorization = null;
             }
 
             var books = JsonConvert.DeserializeObject<PagedBindingEntity<BookBindingModel>>(content);

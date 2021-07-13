@@ -10,7 +10,8 @@ namespace BookCatalog.WebBlz.Pages
 {
     public partial class Login
     {
-        private UserForAuthenticationBindingModel _userForAuthentication = new ();
+        UserForAuthenticationBindingModel _userForAuthentication = new ();
+        bool _isLoading = false;
 
         [Inject]
         public IAuthenticationService AuthenticationService { get; set; }
@@ -23,9 +24,11 @@ namespace BookCatalog.WebBlz.Pages
 
         public async Task ExecuteLogin()
         {
+            _isLoading = true;
             ShowAuthError = false;
 
             var result = await AuthenticationService.Login(_userForAuthentication);
+            _isLoading = false;
             if (!result.IsAuthSuccessful)
             {
                 Error = result.ErrorMessage;
