@@ -10,4 +10,5 @@ export interface Book{
     note: string;
     collection: string;
     read: boolean;
+    categoryId:number;
 }

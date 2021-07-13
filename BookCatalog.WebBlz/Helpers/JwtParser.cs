@@ -1,9 +1,8 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
-using System.Threading.Tasks;
+using System.Text.Json;
 
 namespace BookCatalog.WebBlz.Helpers
 {
@@ -16,7 +15,7 @@ namespace BookCatalog.WebBlz.Helpers
 
             var jsonBytes = ParseBase64WithoutPadding(payload);
 
-            var keyValuePairs = JsonConvert.DeserializeObject<Dictionary<string, object>>(jsonBytes.ToString());
+            var keyValuePairs = JsonSerializer.Deserialize<Dictionary<string, object>>(jsonBytes);
 
             claims.AddRange(keyValuePairs.Select(kvp => new Claim(kvp.Key, kvp.Value.ToString())));
 
