@@ -105,7 +105,7 @@ export class BookUpdateComponent implements OnInit {
       this.book!.read = bookFormValue.read;
       this.book!.year = bookFormValue.year;
       this.book!.collection = bookFormValue.collection;
-      this.book!.categoryId = bookFormValue.category;
+      this.book!.categoryId = (bookFormValue.category == 0) ? null : bookFormValue.category;
     
       let apiUrl = `api/book/${this.book?.id}`;
       this.repository.update(apiUrl, this.book)
