@@ -24,14 +24,12 @@ namespace BookCatalog.WebBlz.HttpRepository
         private readonly HttpClient _client;
         private readonly AuthenticationStateProvider _authStateProvider;
         private readonly ILocalStorageService _localStorage;
-        private readonly NavigationManager _navMagager;
 
-        public BookHttpRepository(HttpClient client, AuthenticationStateProvider authStateProvider, ILocalStorageService localStorage, NavigationManager navManager)
+        public BookHttpRepository(HttpClient client, AuthenticationStateProvider authStateProvider, ILocalStorageService localStorage)
         {
             _client = client;
             _authStateProvider = authStateProvider;
             _localStorage = localStorage;
-            _navMagager = navManager;
         }
 
         public async Task<PagedBindingEntity<BookBindingModel>> GetBooks(BookParameters parameters)
@@ -47,7 +45,7 @@ namespace BookCatalog.WebBlz.HttpRepository
             var response = await _client.GetAsync(QueryHelpers.AddQueryString("book", queryStringParam));
             var content = await response.Content.ReadAsStringAsync();
 
-            if(response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+            if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
             {
                 await _localStorage.RemoveItemAsync("authToken");
                 ((AuthStateProvider)_authStateProvider).NotifyUserLogout();

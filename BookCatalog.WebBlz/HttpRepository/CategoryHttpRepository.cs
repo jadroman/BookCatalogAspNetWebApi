@@ -12,6 +12,9 @@ using System.Threading.Tasks;
 using BookCatalog.Common.BindingModels.Category;
 using System.Text;
 using System.IO;
+using Microsoft.AspNetCore.Components.Authorization;
+using Blazored.LocalStorage;
+using BookCatalog.WebBlz.Auth;
 
 namespace BookCatalog.WebBlz.HttpRepository
 {
@@ -19,11 +22,15 @@ namespace BookCatalog.WebBlz.HttpRepository
     {
         private readonly HttpClient _client;
         private readonly JsonSerializerOptions _options;
+        private readonly AuthenticationStateProvider _authStateProvider;
+        private readonly ILocalStorageService _localStorage;
 
-        public CategoryHttpRepository(HttpClient client)
+        public CategoryHttpRepository(HttpClient client, AuthenticationStateProvider authStateProvider, ILocalStorageService localStorage)
         {
             _client = client;
             _options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+            _authStateProvider = authStateProvider;
+            _localStorage = localStorage;
         }
 
         public async Task<PagedBindingEntity<CategoryBindingModel>> GetCategories(CategoryParameters parameters)
@@ -37,12 +44,13 @@ namespace BookCatalog.WebBlz.HttpRepository
             var response = await _client.GetAsync(QueryHelpers.AddQueryString("category", queryStringParam));
             var content = await response.Content.ReadAsStringAsync();
 
-            if (!response.IsSuccessStatusCode)
+            if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
             {
-                throw new ApplicationException(content);
+                await _localStorage.RemoveItemAsync("authToken");
+                ((AuthStateProvider)_authStateProvider).NotifyUserLogout();
+                _client.DefaultRequestHeaders.Authorization = null;
             }
 
-            //var categories = JsonSerializer.Deserialize<List<Category>>(content, _options);
             var categories = JsonSerializer.Deserialize<PagedBindingEntity<CategoryBindingModel>>(content, _options);
             return categories;
         }
