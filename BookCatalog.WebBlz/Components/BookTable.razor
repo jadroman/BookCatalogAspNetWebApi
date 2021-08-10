@@ -1,37 +1,49 @@
 ﻿@if (!IsLoading || Books.Count > 0)
 {
 
-    <div class="table-responsive">
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th scope="col">Title</th>
-                    <th scope="col">Author</th>
-                    <th scope="col"></th>
-                    <th scope="col"></th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var book in Books)
-                {
-                <tr>
-                    <td style="width:60%" class="align-middle">
-                        @book.Title
-                    </td>
-                    <td style="width:20%" class="align-middle">
-                        @book.Author
-                    </td>
-                    <td style="width:10%" class="align-middle">
-                        <button type="button" class="btn btn-info" @onclick="() => RedirectToUpdate(book.Id)">Update</button>
-                    </td>
-                    <td style="width:10%" class="align-middle">
-                        <button type="button" class="btn btn-danger" @onclick="() => OnDeleted.InvokeAsync(book.Id)">Delete</button>
-                    </td>
-                </tr>
-                }
-            </tbody>
-        </table>
-    </div>
+    <MudTable Items="@Books" Hover="true" Breakpoint="Breakpoint.Sm" RightAlignSmall="true">
+        <HeaderContent>
+            <MudTh>Title</MudTh>
+            <MudTh>Author</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Name">@context.Title</MudTd>
+            <MudTd DataLabel="Supplier">@context.Author</MudTd>
+        </RowTemplate>
+    </MudTable>
+
+
+    @*<div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">Title</th>
+                        <th scope="col">Author</th>
+                        <th scope="col"></th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var book in Books)
+                    {
+                    <tr>
+                        <td style="width:60%" class="align-middle">
+                            @book.Title
+                        </td>
+                        <td style="width:20%" class="align-middle">
+                            @book.Author
+                        </td>
+                        <td style="width:10%" class="align-middle">
+                            <button type="button" class="btn btn-info" @onclick="() => RedirectToUpdate(book.Id)">Update</button>
+                        </td>
+                        <td style="width:10%" class="align-middle">
+                            <button type="button" class="btn btn-danger" @onclick="() => OnDeleted.InvokeAsync(book.Id)">Delete</button>
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>*@
 
 }
 else

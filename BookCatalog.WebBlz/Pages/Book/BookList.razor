@@ -14,26 +14,26 @@
 </div>
 
 <div class="row">
-    <div class="col-md-3">
+    <div class="col-sm-3">
         <Search OnSearchChanged="SearchTitleChanged" PlaceholderText=@_placeholderSearchTitle />
     </div>
-    <div class="col-md-3">
+    <div class="col-sm-3">
         <Search OnSearchChanged="SearchAuthorChanged" PlaceholderText=@_placeholderSearchAuthor />
     </div>
-    <div class="col-md-3">
+    <div class="col-sm-3">
         <Search OnSearchChanged="SearchNoteChanged" PlaceholderText=@_placeholderSearchNote />
     </div>
-    <div class="col-md-3 text-right">
+    <div class="col-sm-3 text-right">
         <a href="/book/create" class="btn btn-success">New Book</a>
     </div>
 </div>
 <div class="row">
-    <div class="col-md-12">
+    <div class="col-sm-12">
         <BookTable Books="_bookList" IsLoading="_isLoading" OnDeleted="DeleteBook" />
     </div>
 </div>
 <div class="row">
-    <div class="col-md-12" style="text-align: center;">
+    <div class="col-sm-12" style="text-align: center;">
         <Pagination MetaData="_pagingMetaData" Spread="2" SelectedPage="SelectedPage" />
     </div>
 </div>

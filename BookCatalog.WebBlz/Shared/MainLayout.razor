@@ -1,17 +1,57 @@
 ﻿@inherits LayoutComponentBase
 
-<div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
+<nav class="navbar navbar-expand-sm  navbar-light" style="background-color: #e3f2fd;" aria-label="Third navbar example">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">Book catalog</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample03" aria-controls="navbarsExample03" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-    <div class="main">
-        <div class="top-row px-4">
-            <AuthLinks />
-        </div>
-
-        <div class="content px-4">
-            @Body
+        <div class="collapse navbar-collapse" id="navbarsExample03">
+            <ul class="navbar-nav me-auto mb-2 mb-sm-0">
+                <AuthorizeView>
+                    <Authorized>
+                        <li class="nav-item">
+                            <NavLink class="nav-link" href="Logout" Match=@NavLinkMatch.Prefix>
+                                Log out
+                            </NavLink>
+                        </li>
+                        <li class="nav-item">
+                            <NavLink class="nav-link" href="Registration" Match=@NavLinkMatch.Prefix>
+                                Register
+                            </NavLink>
+                        </li>
+                    </Authorized>
+                    <NotAuthorized>
+                        <LoginRedirect />
+                    </NotAuthorized>
+                </AuthorizeView>
+                <li class="nav-item">
+                    <NavLink class="nav-link" href="category" Match=@NavLinkMatch.Prefix>
+                        Categories
+                    </NavLink>
+                </li>
+                <li class="nav-item">
+                    <NavLink class="nav-link" href="book" Match=@NavLinkMatch.Prefix>
+                        Books
+                    </NavLink>
+                </li>
+            </ul>
+            <AuthorizeView>
+                <Authorized>
+                    Hello, @context.User.Identity.Name!
+                </Authorized>
+            </AuthorizeView>
         </div>
     </div>
+</nav>
+<div class="container-fluid">
+    @Body
 </div>
+
+<MudThemeProvider Theme="_currentTheme" />
+
+@code{
+
+    private MudTheme _currentTheme = new MudTheme();
+}
