@@ -21,12 +21,12 @@ namespace BookCatalog.WebBlz.Pages.Category
         private async Task Create()
         {
             await Repository.CreateCategory(_category);
-            Navigation.NavigateTo("/categories");
+            Navigation.NavigateTo("/category");
         }
 
         private void CancelUpdate()
         {
-            Navigation.NavigateTo("/categories");
+            Navigation.NavigateTo("/category");
         }
     }
 }

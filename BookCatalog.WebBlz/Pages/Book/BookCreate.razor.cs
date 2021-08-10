@@ -30,12 +30,12 @@ namespace BookCatalog.WebBlz.Pages.Book
         private async Task Create()
         {
             await Repository.CreateBook(_book);
-            Navigation.NavigateTo("/books");
+            Navigation.NavigateTo("/book");
         }
 
         private void CancelUpdate()
         {
-            Navigation.NavigateTo("/books");
+            Navigation.NavigateTo("/book");
         }
 
         private async Task GetCategories()

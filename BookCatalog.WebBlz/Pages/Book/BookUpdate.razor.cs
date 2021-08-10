@@ -34,12 +34,12 @@ namespace BookCatalog.WebBlz.Pages.Book
         private async Task Update()
         {
             await Repository.UpdateBook(_book);
-            Navigation.NavigateTo("/books");
+            Navigation.NavigateTo("/book");
         }
 
         private void CancelUpdate()
         {
-            Navigation.NavigateTo("/books");
+            Navigation.NavigateTo("/book");
         }
 
         private async Task GetCategories()

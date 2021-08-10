@@ -32,12 +32,12 @@ namespace BookCatalog.WebBlz.Pages.Category
         private async Task Update()
         {
             await CategoryRepo.UpdateCategory(_category);
-            Navigation.NavigateTo("/categories");
+            Navigation.NavigateTo("/category");
         }
 
         private void CancelUpdate()
         {
-            Navigation.NavigateTo("/categories");
+            Navigation.NavigateTo("/category");
         }
 
     }

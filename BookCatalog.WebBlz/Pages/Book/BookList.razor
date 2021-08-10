@@ -1,5 +1,4 @@
-﻿@page "/"
-@page "/books"
+﻿@page "/book"
 @using BookCatalog.WebBlz.Components;
 @using BookCatalog.WebBlz.Shared;
 @using Microsoft.AspNetCore.Authorization
@@ -25,7 +24,7 @@
         <Search OnSearchChanged="SearchNoteChanged" PlaceholderText=@_placeholderSearchNote />
     </div>
     <div class="col-md-3 text-right">
-        <a href="/createBook" class="btn btn-success">New Book</a>
+        <a href="/book/create" class="btn btn-success">New Book</a>
     </div>
 </div>
 <div class="row">

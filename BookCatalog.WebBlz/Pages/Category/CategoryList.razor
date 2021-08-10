@@ -1,4 +1,4 @@
-﻿@page "/categories"
+﻿@page "/category"
 @using BookCatalog.WebBlz.Components;
 @using BookCatalog.WebBlz.Shared;
 @using Microsoft.AspNetCore.Authorization
@@ -9,7 +9,7 @@
         <Search OnSearchChanged="SearchChanged" PlaceholderText=@_placeholderSearchText />
     </div>
     <div class="col-md-3 offset-md-5 text-right">
-        <a href="/createCategory" class="btn btn-success">New Category</a>
+        <a href="/category/create" class="btn btn-success">New Category</a>
     </div>
 </div>
 <div class="row">
