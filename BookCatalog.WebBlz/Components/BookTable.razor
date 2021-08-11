@@ -1,19 +1,7 @@
 ﻿@if (!IsLoading || Books.Count > 0)
 {
 
-    <MudTable Items="@Books" Hover="true" Breakpoint="Breakpoint.Sm" RightAlignSmall="true">
-        <HeaderContent>
-            <MudTh>Title</MudTh>
-            <MudTh>Author</MudTh>
-        </HeaderContent>
-        <RowTemplate>
-            <MudTd DataLabel="Name">@context.Title</MudTd>
-            <MudTd DataLabel="Supplier">@context.Author</MudTd>
-        </RowTemplate>
-    </MudTable>
-
-
-    @*<div class="table-responsive">
+    <div class="table-responsive">
             <table class="table table-striped">
                 <thead>
                     <tr>
@@ -43,7 +31,7 @@
                     }
                 </tbody>
             </table>
-        </div>*@
+        </div>
 
 }
 else
