@@ -27,8 +27,13 @@ namespace BookCatalog.WebBlz.Pages.Book
         [Inject]
         IBookHttpRepository Repository { get; set; }
 
+        [Inject]
+        public HttpInterceptorService Interceptor { get; set; }
+
+
         protected async override Task OnInitializedAsync()
         {
+            Interceptor.RegisterEvent();
             await GetBooks();
         }
 
@@ -58,7 +63,7 @@ namespace BookCatalog.WebBlz.Pages.Book
         {
             _response = await Repository.GetBooks(_bookParameters);
             _isLoading = false;
-            if (_response != null)
+            if (_response != null && _response.Items != null)
             {
                 _bookList = _response.Items.ToList();
                 _pagingMetaData = _response.MetaData;
@@ -91,5 +96,7 @@ namespace BookCatalog.WebBlz.Pages.Book
             _bookParameters.Note = searchTerm;
             await GetBooks();
         }
+
+        public void Dispose() => Interceptor.DisposeEvent();
     }
 }

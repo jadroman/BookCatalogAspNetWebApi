@@ -30,7 +30,6 @@ namespace BookCatalog.API.Controllers
         public async Task<IActionResult> GetBooks([FromQuery] BookParameters bookParameters)
         {
             var books = await _bookService.GetBooks(bookParameters);
-
             Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(books.MetaData));
 
             var bookResult = new PagedBindingEntity<BookBindingModel>

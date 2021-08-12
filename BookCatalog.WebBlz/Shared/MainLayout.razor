@@ -21,21 +21,26 @@
                                 Register
                             </NavLink>
                         </li>
+                        <li class="nav-item">
+                            <NavLink class="nav-link" href="category" Match=@NavLinkMatch.Prefix>
+                                Categories
+                            </NavLink>
+                        </li>
+                        <li class="nav-item">
+                            <NavLink class="nav-link" href="book" Match=@NavLinkMatch.Prefix>
+                                Books
+                            </NavLink>
+                        </li>
                     </Authorized>
                     <NotAuthorized>
+                        <li class="nav-item">
+                            <NavLink class="nav-link" href="login" Match=@NavLinkMatch.Prefix>
+                                Login
+                            </NavLink>
+                        </li>
                         <LoginRedirect />
                     </NotAuthorized>
                 </AuthorizeView>
-                <li class="nav-item">
-                    <NavLink class="nav-link" href="category" Match=@NavLinkMatch.Prefix>
-                        Categories
-                    </NavLink>
-                </li>
-                <li class="nav-item">
-                    <NavLink class="nav-link" href="book" Match=@NavLinkMatch.Prefix>
-                        Books
-                    </NavLink>
-                </li>
             </ul>
             <AuthorizeView>
                 <Authorized>
@@ -48,10 +53,3 @@
 <div class="container-fluid">
     @Body
 </div>
-
-<MudThemeProvider Theme="_currentTheme" />
-
-@code{
-
-    private MudTheme _currentTheme = new MudTheme();
-}

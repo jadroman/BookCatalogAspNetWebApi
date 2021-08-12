@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Blazored.LocalStorage;
 using BookCatalog.WebBlz.Auth;
+using System.Net;
 
 namespace BookCatalog.WebBlz.HttpRepository
 {
@@ -23,13 +24,15 @@ namespace BookCatalog.WebBlz.HttpRepository
     {
         private readonly HttpClient _client;
         private readonly AuthenticationStateProvider _authStateProvider;
-        private readonly ILocalStorageService _localStorage;
+        private readonly ILocalStorageService _localStorage; 
+        private readonly NavigationManager _navManager;
 
-        public BookHttpRepository(HttpClient client, AuthenticationStateProvider authStateProvider, ILocalStorageService localStorage)
+        public BookHttpRepository(HttpClient client, AuthenticationStateProvider authStateProvider, ILocalStorageService localStorage, NavigationManager navManager)
         {
             _client = client;
             _authStateProvider = authStateProvider;
             _localStorage = localStorage;
+            _navManager = navManager;
         }
 
         public async Task<PagedBindingEntity<BookBindingModel>> GetBooks(BookParameters parameters)
@@ -43,15 +46,30 @@ namespace BookCatalog.WebBlz.HttpRepository
             };
 
             var response = await _client.GetAsync(QueryHelpers.AddQueryString("book", queryStringParam));
+
+
+            //if (!response.IsSuccessStatusCode)
+            //{
+            //    var statusCode = response.StatusCode;
+
+            //    switch (statusCode)
+            //    {
+            //        case HttpStatusCode.NotFound:
+            //            _navManager.NavigateTo("/CustomNotFound");
+            //            break;
+            //        case HttpStatusCode.Unauthorized:
+            //            await _localStorage.RemoveItemAsync("authToken");
+            //            ((AuthStateProvider)_authStateProvider).NotifyUserLogout();
+            //            _client.DefaultRequestHeaders.Authorization = null;
+            //            break;
+            //        default:
+            //            _navManager.NavigateTo("/CustomInternalServerError");
+            //            break;
+            //    }
+            //    throw new ApplicationException($"Reasong: {response.ReasonPhrase}");
+            //}
+
             var content = await response.Content.ReadAsStringAsync();
-
-            if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
-            {
-                await _localStorage.RemoveItemAsync("authToken");
-                ((AuthStateProvider)_authStateProvider).NotifyUserLogout();
-                _client.DefaultRequestHeaders.Authorization = null;
-            }
-
             var books = JsonConvert.DeserializeObject<PagedBindingEntity<BookBindingModel>>(content);
 
             return books;

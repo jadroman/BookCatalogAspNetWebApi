@@ -25,6 +25,9 @@ namespace BookCatalog.WebBlz.Pages.Category
         [Inject]
         ICategoryHttpRepository Repository { get; set; }
 
+        [Inject]
+        public HttpInterceptorService Interceptor { get; set; }
+
         protected async override Task OnInitializedAsync()
         {
             await GetCategories();
@@ -71,5 +74,7 @@ namespace BookCatalog.WebBlz.Pages.Category
             _categoryParameters.Name = searchTerm;
             await GetCategories();
         }
+
+        public void Dispose() => Interceptor.DisposeEvent();
     }
 }
