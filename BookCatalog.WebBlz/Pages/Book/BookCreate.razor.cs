@@ -1,5 +1,4 @@
 ﻿using BookCatalog.Common.BindingModels.Book;
-using BookCatalog.Common.BindingModels.Category;
 using BookCatalog.WebBlz.Helpers;
 using BookCatalog.WebBlz.HttpRepository;
 using Microsoft.AspNetCore.Components;
@@ -10,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace BookCatalog.WebBlz.Pages.Book
 {
-    public partial class BookCreate
+    public partial class BookCreate : IDisposable
     {
         readonly BookEditBindingModel _book = new();
         List<CategoryBindingModel> _categories = new();
@@ -21,8 +20,12 @@ namespace BookCatalog.WebBlz.Pages.Book
         [Inject]
         NavigationManager Navigation { get; set; }
 
+        [Inject]
+        public HttpInterceptorService Interceptor { get; set; }
+
         protected async override Task OnInitializedAsync()
         {
+            Interceptor.RegisterEvent();
             await GetCategories();
             _book.Read = BooleanString.False;
         }
@@ -48,5 +51,7 @@ namespace BookCatalog.WebBlz.Pages.Book
         {
             _book.CategoryId = selected; 
         }
+
+        public void Dispose() => Interceptor.DisposeEvent();
     }
 }

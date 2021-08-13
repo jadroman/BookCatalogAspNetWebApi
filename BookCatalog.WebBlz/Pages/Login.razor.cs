@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace BookCatalog.WebBlz.Pages
 {
-    public partial class Login
+    public partial class Login : IDisposable
     {
         UserForAuthenticationBindingModel _userForAuthentication = new ();
         bool _isLoading = false;
@@ -19,8 +19,16 @@ namespace BookCatalog.WebBlz.Pages
         [Inject]
         public NavigationManager NavigationManager { get; set; }
 
+        [Inject]
+        public HttpInterceptorService Interceptor { get; set; }
+
         public bool ShowAuthError { get; set; }
         public string Error { get; set; }
+
+        protected override void OnInitialized()
+        {
+            Interceptor.RegisterEvent();
+        }
 
         public async Task ExecuteLogin()
         {
@@ -39,5 +47,7 @@ namespace BookCatalog.WebBlz.Pages
                 NavigationManager.NavigateTo("/");
             }
         }
+
+        public void Dispose() => Interceptor.DisposeEvent();
     }
 }

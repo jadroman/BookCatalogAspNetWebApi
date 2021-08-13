@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace BookCatalog.WebBlz.Pages.Category
 {
-    public partial class CategoryList
+    public partial class CategoryList : IDisposable
     {
         bool _isLoading = true;
         string _placeholderSearchText = "Category name";
@@ -30,6 +30,7 @@ namespace BookCatalog.WebBlz.Pages.Category
 
         protected async override Task OnInitializedAsync()
         {
+            Interceptor.RegisterEvent();
             await GetCategories();
         }
 

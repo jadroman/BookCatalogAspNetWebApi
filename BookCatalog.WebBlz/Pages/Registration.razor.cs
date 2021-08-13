@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace BookCatalog.WebBlz.Pages
 {
-    public partial class Registration
+    public partial class Registration : IDisposable
     {
         UserForRegistrationBindingModel _userForRegistration = new ();
 
@@ -21,6 +21,14 @@ namespace BookCatalog.WebBlz.Pages
         public bool ShowRegistrationErrors { get; set; }
 
         public IEnumerable<string> Errors { get; set; }
+
+        [Inject]
+        public HttpInterceptorService Interceptor { get; set; }
+
+        protected override void OnInitialized()
+        {
+            Interceptor.RegisterEvent();
+        }
 
         public async Task Register()
         {
@@ -37,5 +45,7 @@ namespace BookCatalog.WebBlz.Pages
                 NavigationManager.NavigateTo("/");
             }
         }
+
+        public void Dispose() => Interceptor.DisposeEvent();
     }
 }

@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace BookCatalog.WebBlz.Pages.Book
 {
-    public partial class BookList
+    public partial class BookList : IDisposable
     {
         bool _isLoading = true;
         string _placeholderSearchTitle = "Book title";

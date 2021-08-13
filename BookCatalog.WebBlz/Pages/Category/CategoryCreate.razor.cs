@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace BookCatalog.WebBlz.Pages.Category
 {
-    public partial class CategoryCreate
+    public partial class CategoryCreate : IDisposable
     {
         CategoryEditBindingModel _category = new();
 
@@ -17,6 +17,15 @@ namespace BookCatalog.WebBlz.Pages.Category
 
         [Inject]
         NavigationManager Navigation { get; set; }
+
+        [Inject]
+        public HttpInterceptorService Interceptor { get; set; }
+
+
+        protected override void OnInitialized()
+        {
+            Interceptor.RegisterEvent();
+        }
 
         private async Task Create()
         {
@@ -28,5 +37,7 @@ namespace BookCatalog.WebBlz.Pages.Category
         {
             Navigation.NavigateTo("/category");
         }
+
+        public void Dispose() => Interceptor.DisposeEvent();
     }
 }

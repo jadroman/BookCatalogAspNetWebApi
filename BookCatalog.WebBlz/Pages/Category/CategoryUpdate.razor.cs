@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace BookCatalog.WebBlz.Pages.Category
 {
-    public partial class CategoryUpdate
+    public partial class CategoryUpdate : IDisposable
     {
         CategoryEditBindingModel _category;
 
@@ -24,8 +24,12 @@ namespace BookCatalog.WebBlz.Pages.Category
         [Parameter]
         public string Id { get; set; }
 
+        [Inject]
+        public HttpInterceptorService Interceptor { get; set; }
+
         protected async override Task OnInitializedAsync()
         {
+            Interceptor.RegisterEvent();
             _category = await CategoryRepo.GetCategory(Convert.ToInt32(Id));
         }
 
@@ -40,5 +44,6 @@ namespace BookCatalog.WebBlz.Pages.Category
             Navigation.NavigateTo("/category");
         }
 
+        public void Dispose() => Interceptor.DisposeEvent();
     }
 }
