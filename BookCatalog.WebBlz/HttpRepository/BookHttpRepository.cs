@@ -46,29 +46,6 @@ namespace BookCatalog.WebBlz.HttpRepository
             };
 
             var response = await _client.GetAsync(QueryHelpers.AddQueryString("book", queryStringParam));
-
-
-            //if (!response.IsSuccessStatusCode)
-            //{
-            //    var statusCode = response.StatusCode;
-
-            //    switch (statusCode)
-            //    {
-            //        case HttpStatusCode.NotFound:
-            //            _navManager.NavigateTo("/CustomNotFound");
-            //            break;
-            //        case HttpStatusCode.Unauthorized:
-            //            await _localStorage.RemoveItemAsync("authToken");
-            //            ((AuthStateProvider)_authStateProvider).NotifyUserLogout();
-            //            _client.DefaultRequestHeaders.Authorization = null;
-            //            break;
-            //        default:
-            //            _navManager.NavigateTo("/CustomInternalServerError");
-            //            break;
-            //    }
-            //    throw new ApplicationException($"Reasong: {response.ReasonPhrase}");
-            //}
-
             var content = await response.Content.ReadAsStringAsync();
             var books = JsonConvert.DeserializeObject<PagedBindingEntity<BookBindingModel>>(content);
 
@@ -82,11 +59,6 @@ namespace BookCatalog.WebBlz.HttpRepository
 
             var postResult = await _client.PostAsync("book", bodyContent);
             var postContent = await postResult.Content.ReadAsStringAsync();
-
-            if (!postResult.IsSuccessStatusCode)
-            {
-                throw new ApplicationException(postContent);
-            }
         }
         public async Task<BookEditBindingModel> GetBook(int id)
         {
@@ -95,11 +67,6 @@ namespace BookCatalog.WebBlz.HttpRepository
             var response = await _client.GetAsync(url);
 
             var content = await response.Content.ReadAsStringAsync();
-            if (!response.IsSuccessStatusCode)
-            {
-                throw new ApplicationException(content);
-            }
-
             var book = JsonConvert.DeserializeObject<BookEditBindingModel>(content);
 
             return book;
@@ -113,11 +80,6 @@ namespace BookCatalog.WebBlz.HttpRepository
 
             var putResult = await _client.PutAsync(url, bodyContent);
             var putContent = await putResult.Content.ReadAsStringAsync();
-
-            if (!putResult.IsSuccessStatusCode)
-            {
-                throw new ApplicationException(putContent);
-            }
         }
 
         public async Task DeleteBook(int id)
@@ -126,11 +88,6 @@ namespace BookCatalog.WebBlz.HttpRepository
 
             var deleteResult = await _client.DeleteAsync(url);
             var deleteContent = await deleteResult.Content.ReadAsStringAsync();
-
-            if (!deleteResult.IsSuccessStatusCode)
-            {
-                throw new ApplicationException(deleteContent);
-            }
         }
 
         public async Task<PagedBindingEntity<CategoryBindingModel>> GetCategories()
@@ -138,12 +95,6 @@ namespace BookCatalog.WebBlz.HttpRepository
 
             var response = await _client.GetAsync("category");
             var content = await response.Content.ReadAsStringAsync();
-
-            if (!response.IsSuccessStatusCode)
-            {
-                throw new ApplicationException(content);
-            }
-
             var categories = JsonConvert.DeserializeObject<PagedBindingEntity<CategoryBindingModel>>(content);
             return categories;
         }

@@ -2,6 +2,7 @@
 using BookCatalog.Common.BindingModels.Book;
 using BookCatalog.Common.Entities;
 using BookCatalog.Common.Helpers;
+using BookCatalog.WebBlz.Components;
 using BookCatalog.WebBlz.HttpRepository;
 using BookCatalog.WebBlz.Shared;
 using Microsoft.AspNetCore.Components;
@@ -15,13 +16,14 @@ namespace BookCatalog.WebBlz.Pages.Book
     public partial class BookList : IDisposable
     {
         bool _isLoading = true;
-        string _placeholderSearchTitle = "Book title";
-        string _placeholderSearchAuthor = "Book author";
-        string _placeholderSearchNote = "Book note";
+        readonly string _placeholderSearchTitle = "Search by title";
+        readonly string _placeholderSearchAuthor = "Search by author";
+        readonly string _placeholderSearchNote = "Search by note";
         PagedBindingEntity<BookBindingModel> _response;
         PagingMetaData _pagingMetaData = new();
         List<BookBindingModel> _bookList = new();
         BookParameters _bookParameters = new();
+        Search _searchByAuthor, _searchByTitle, _searchByNote;
         YesNoModal _yesNoModal;
 
         [Inject]
@@ -34,6 +36,18 @@ namespace BookCatalog.WebBlz.Pages.Book
         protected async override Task OnInitializedAsync()
         {
             Interceptor.RegisterEvent();
+            await GetBooks();
+        }
+
+        private async Task ResetSearch()
+        {
+            _searchByTitle.Clear();
+            _searchByNote.Clear();
+            _searchByAuthor.Clear();
+
+            _bookParameters.Title = string.Empty;
+            _bookParameters.Note = string.Empty;
+            _bookParameters.Author = string.Empty;
             await GetBooks();
         }
 
@@ -63,11 +77,10 @@ namespace BookCatalog.WebBlz.Pages.Book
         {
             _response = await Repository.GetBooks(_bookParameters);
             _isLoading = false;
-            if (_response != null && _response.Items != null)
-            {
-                _bookList = _response.Items.ToList();
-                _pagingMetaData = _response.MetaData;
-            }
+
+            _bookList = _response?.Items?.ToList();
+            _pagingMetaData = _response?.MetaData;
+
         }
 
         private async Task SelectedPage(int page)

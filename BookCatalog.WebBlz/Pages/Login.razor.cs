@@ -44,7 +44,7 @@ namespace BookCatalog.WebBlz.Pages
             }
             else
             {
-                NavigationManager.NavigateTo("/");
+                NavigationManager.NavigateTo("/book");
             }
         }
 

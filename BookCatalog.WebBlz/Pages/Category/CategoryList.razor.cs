@@ -60,8 +60,8 @@ namespace BookCatalog.WebBlz.Pages.Category
         {
             _response = await Repository.GetCategories(_categoryParameters);
             _isLoading = false;
-            _categoryList = _response.Items.ToList();
-            _pagingMetaData = _response.MetaData;
+            _categoryList = _response?.Items?.ToList();
+            _pagingMetaData = _response?.MetaData;
         }
 
         private async Task SelectedPage(int page)

@@ -44,7 +44,7 @@ namespace BookCatalog.WebBlz.Pages.Book
         private async Task GetCategories()
         {
             var response = await Repository.GetCategories();
-            _categories = response.Items.ToList();
+            _categories = response?.Items?.ToList();
         }
 
         private void CategoryChanged(int? selected)

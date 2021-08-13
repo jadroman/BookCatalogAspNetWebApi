@@ -1,34 +1,40 @@
-﻿@page "/book"
+﻿@page "/"
+@page "/book"
 @using BookCatalog.WebBlz.Components;
 @using BookCatalog.WebBlz.Shared;
 @using Microsoft.AspNetCore.Authorization
 @attribute [Authorize]
 
-<div class="row">
-    <div class="col-md-12">
-
+<div class="row d-flex justify-content-center">
+    <div class="col-md-auto mb-1 mt-3">
+        <h1>Book list</h1>
     </div>
-    <div class="col-md-12">
-        Search by:
-    </div>
+    @*<div class="col-md-auto mb-1">
+            Search by:
+        </div>*@
 </div>
 
-<div class="row">
-    <div class="col-sm-3">
-        <Search OnSearchChanged="SearchTitleChanged" PlaceholderText=@_placeholderSearchTitle />
+<div class="row mb-1 d-flex justify-content-center">
+    <div class="col-sm-auto">
+        <Search OnSearchChanged="SearchTitleChanged" PlaceholderText=@_placeholderSearchTitle @ref="_searchByTitle" />
     </div>
-    <div class="col-sm-3">
-        <Search OnSearchChanged="SearchAuthorChanged" PlaceholderText=@_placeholderSearchAuthor />
+    <div class="col-sm-auto">
+        <Search OnSearchChanged="SearchAuthorChanged" PlaceholderText=@_placeholderSearchAuthor @ref="_searchByAuthor" />
     </div>
-    <div class="col-sm-3">
-        <Search OnSearchChanged="SearchNoteChanged" PlaceholderText=@_placeholderSearchNote />
+    <div class="col-sm-auto">
+        <Search OnSearchChanged="SearchNoteChanged" PlaceholderText=@_placeholderSearchNote @ref="_searchByNote" />
     </div>
-    <div class="col-sm-3 text-right">
+    <div class="col-sm-auto">
+        <button type="button" class="btn btn-primary" @onclick="ResetSearch">Reset</button>
+    </div>
+</div>
+<div class="row d-flex justify-content-center">
+    <div class="col-sm-auto mb-1">
         <a href="/book/create" class="btn btn-success">New Book</a>
     </div>
 </div>
-<div class="row">
-    <div class="col-sm-12">
+<div class="row d-flex justify-content-center">
+    <div class="col-sm-auto">
         <BookTable Books="_bookList" IsLoading="_isLoading" OnDeleted="DeleteBook" />
     </div>
 </div>

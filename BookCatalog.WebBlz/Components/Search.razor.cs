@@ -30,5 +30,11 @@ namespace BookCatalog.WebBlz.Components
             OnSearchChanged.InvokeAsync(SearchTerm);
             _timer.Dispose();
         }
+
+
+        public void Clear()
+        {
+            SearchTerm = string.Empty;
+        }
     }
 }
