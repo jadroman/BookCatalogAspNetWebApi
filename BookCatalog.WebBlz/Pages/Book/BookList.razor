@@ -9,12 +9,9 @@
     <div class="col-md-auto mb-1 mt-3">
         <h1>Book list</h1>
     </div>
-    @*<div class="col-md-auto mb-1">
-            Search by:
-        </div>*@
 </div>
 
-<div class="row mb-1 d-flex justify-content-center">
+<div class="row mb-2 d-flex justify-content-center">
     <div class="col-sm-auto">
         <Search OnSearchChanged="SearchTitleChanged" PlaceholderText=@_placeholderSearchTitle @ref="_searchByTitle" />
     </div>
@@ -30,18 +27,21 @@
 </div>
 <div class="row d-flex justify-content-center">
     <div class="col-sm-auto mb-1">
-        <a href="/book/create" class="btn btn-success">New Book</a>
+        <div class="row">
+            <div class="col-sm-auto mb-1">
+                <a href="/book/create" class="btn btn-success">New Book</a>
+            </div>
+        </div>
+        <div class="row d-flex justify-content-center">
+            <div class="col-sm-auto">
+                <BookTable Books="_bookList" IsLoading="_isLoading" OnDeleted="DeleteBook" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12" style="text-align: center;">
+                <Pagination MetaData="_pagingMetaData" Spread="2" SelectedPage="SelectedPage" />
+            </div>
+        </div>
     </div>
 </div>
-<div class="row d-flex justify-content-center">
-    <div class="col-sm-auto">
-        <BookTable Books="_bookList" IsLoading="_isLoading" OnDeleted="DeleteBook" />
-    </div>
-</div>
-<div class="row">
-    <div class="col-sm-12" style="text-align: center;">
-        <Pagination MetaData="_pagingMetaData" Spread="2" SelectedPage="SelectedPage" />
-    </div>
-</div>
-
 <YesNoModal @ref="_yesNoModal" Confirmed="BookDeletionConfirmed" />

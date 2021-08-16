@@ -14,6 +14,7 @@ using System.Text;
 using System.IO;
 using Microsoft.AspNetCore.Components.Authorization;
 using Blazored.LocalStorage;
+using Newtonsoft.Json;
 using BookCatalog.WebBlz.Auth;
 
 namespace BookCatalog.WebBlz.HttpRepository
@@ -44,29 +45,18 @@ namespace BookCatalog.WebBlz.HttpRepository
             var response = await _client.GetAsync(QueryHelpers.AddQueryString("category", queryStringParam));
             var content = await response.Content.ReadAsStringAsync();
 
-            if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
-            {
-                await _localStorage.RemoveItemAsync("authToken");
-                ((AuthStateProvider)_authStateProvider).NotifyUserLogout();
-                _client.DefaultRequestHeaders.Authorization = null;
-            }
-
-            var categories = JsonSerializer.Deserialize<PagedBindingEntity<CategoryBindingModel>>(content, _options);
+            //var categories = JsonSerializer.Deserialize<PagedBindingEntity<CategoryBindingModel>>(content, _options);
+            var categories = JsonConvert.DeserializeObject<PagedBindingEntity<CategoryBindingModel>>(content);
             return categories;
         }
 
         public async Task CreateCategory(CategoryEditBindingModel category)
         {
-            var content = JsonSerializer.Serialize(category);
+            var content = System.Text.Json.JsonSerializer.Serialize(category);
             var bodyContent = new StringContent(content, Encoding.UTF8, "application/json");
 
             var postResult = await _client.PostAsync("category", bodyContent);
-            var postContent = await postResult.Content.ReadAsStringAsync();
-
-            if (!postResult.IsSuccessStatusCode)
-            {
-                throw new ApplicationException(postContent);
-            }
+            await postResult.Content.ReadAsStringAsync();
         }
         public async Task<CategoryEditBindingModel> GetCategory(int id)
         {
@@ -75,29 +65,20 @@ namespace BookCatalog.WebBlz.HttpRepository
             var response = await _client.GetAsync(url);
 
             var content = await response.Content.ReadAsStringAsync();
-            if (!response.IsSuccessStatusCode)
-            {
-                throw new ApplicationException(content);
-            }
 
-            var category = JsonSerializer.Deserialize<CategoryEditBindingModel>(content, _options);
-
+            //var category = JsonSerializer.Deserialize<CategoryEditBindingModel>(content, _options);
+            var category = JsonConvert.DeserializeObject<CategoryEditBindingModel>(content);
             return category;
         }
 
         public async Task UpdateCategory(CategoryEditBindingModel category)
         {
-            var content = JsonSerializer.Serialize(category);
+            var content = System.Text.Json.JsonSerializer.Serialize(category);
             var bodyContent = new StringContent(content, Encoding.UTF8, "application/json");
             var url = Path.Combine("category", category.Id.ToString());
 
             var putResult = await _client.PutAsync(url, bodyContent);
-            var putContent = await putResult.Content.ReadAsStringAsync();
-
-            if (!putResult.IsSuccessStatusCode)
-            {
-                throw new ApplicationException(putContent);
-            }
+            await putResult.Content.ReadAsStringAsync();
         }
 
         public async Task DeleteCategory(int id)
@@ -105,12 +86,7 @@ namespace BookCatalog.WebBlz.HttpRepository
             var url = Path.Combine("category", id.ToString());
 
             var deleteResult = await _client.DeleteAsync(url);
-            var deleteContent = await deleteResult.Content.ReadAsStringAsync();
-
-            if (!deleteResult.IsSuccessStatusCode)
-            {
-                throw new ApplicationException(deleteContent);
-            }
+            await deleteResult.Content.ReadAsStringAsync();
         }
     }
 }
