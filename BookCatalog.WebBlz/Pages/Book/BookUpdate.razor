@@ -121,7 +121,7 @@
                             <label for="note" class=" col-form-label">Note:</label>
                         </div>
                     </div>
-                    <div class="row mb-2">
+                    <div class="row">
                         <div class="col-sm-12">
                             <InputTextArea id="note" autocomplete="off" class="form-control" @bind-Value="_book.Note" />
                             <ValidationMessage For="@(() => _book.Note)" />
@@ -129,7 +129,7 @@
                     </div>
                 </div>
 
-                <div class="row">
+                <div class="row mt-2">
                     <div class="col-sm-auto">
                         <button type="button" class="btn btn-primary" @onclick="CancelUpdate">Cancel</button>
                     </div>

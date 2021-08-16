@@ -1,11 +1,8 @@
 ﻿using BookCatalog.Common.BindingModels;
 using BookCatalog.Common.BindingModels.Book;
-using BookCatalog.Common.Entities;
 using BookCatalog.Common.Helpers;
-using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.WebUtilities;
-using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -15,7 +12,6 @@ using System.IO;
 using Microsoft.AspNetCore.Components.Authorization;
 using Blazored.LocalStorage;
 using Newtonsoft.Json;
-using BookCatalog.WebBlz.Auth;
 
 namespace BookCatalog.WebBlz.HttpRepository
 {
@@ -45,7 +41,6 @@ namespace BookCatalog.WebBlz.HttpRepository
             var response = await _client.GetAsync(QueryHelpers.AddQueryString("category", queryStringParam));
             var content = await response.Content.ReadAsStringAsync();
 
-            //var categories = JsonSerializer.Deserialize<PagedBindingEntity<CategoryBindingModel>>(content, _options);
             var categories = JsonConvert.DeserializeObject<PagedBindingEntity<CategoryBindingModel>>(content);
             return categories;
         }
@@ -66,7 +61,6 @@ namespace BookCatalog.WebBlz.HttpRepository
 
             var content = await response.Content.ReadAsStringAsync();
 
-            //var category = JsonSerializer.Deserialize<CategoryEditBindingModel>(content, _options);
             var category = JsonConvert.DeserializeObject<CategoryEditBindingModel>(content);
             return category;
         }

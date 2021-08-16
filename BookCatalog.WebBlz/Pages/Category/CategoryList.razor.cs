@@ -2,6 +2,7 @@
 using BookCatalog.Common.BindingModels.Book;
 using BookCatalog.Common.Entities;
 using BookCatalog.Common.Helpers;
+using BookCatalog.WebBlz.Components;
 using BookCatalog.WebBlz.HttpRepository;
 using BookCatalog.WebBlz.Shared;
 using Microsoft.AspNetCore.Components;
@@ -19,6 +20,7 @@ namespace BookCatalog.WebBlz.Pages.Category
          PagedBindingEntity<CategoryBindingModel> _response;
         PagingMetaData _pagingMetaData = new();
         List<CategoryBindingModel> _categoryList = new();
+        Search _searchByName;
         CategoryParameters _categoryParameters = new();
         YesNoModal _yesNoModal;
 
@@ -31,6 +33,13 @@ namespace BookCatalog.WebBlz.Pages.Category
         protected async override Task OnInitializedAsync()
         {
             Interceptor.RegisterEvent();
+            await GetCategories();
+        }
+
+        private async Task ResetSearch()
+        {
+            _searchByName.Clear();
+            _categoryParameters.Name = string.Empty;
             await GetCategories();
         }
 

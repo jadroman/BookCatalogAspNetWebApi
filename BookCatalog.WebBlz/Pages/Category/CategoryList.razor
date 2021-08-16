@@ -4,23 +4,39 @@
 @using Microsoft.AspNetCore.Authorization
 @attribute [Authorize]
 
-<div class="row">
-    <div class="col-md-4">
-        <Search OnSearchChanged="SearchChanged" PlaceholderText=@_placeholderSearchText />
-    </div>
-    <div class="col-md-3 offset-md-5 text-right">
-        <a href="/category/create" class="btn btn-success">New Category</a>
-    </div>
-</div>
-<div class="row">
-    <div class="col-md-12">
-        <CategoryTable Categories="_categoryList" IsLoading="_isLoading" OnDeleted="DeleteCategory" />
-    </div>
-</div>
-<div class="row">
-    <div class="col-md-12" style="text-align: center;">
-        <Pagination MetaData="_pagingMetaData" Spread="2" SelectedPage="SelectedPage" />
+<div class="row d-flex justify-content-center">
+    <div class="col-md-auto mb-1 mt-3">
+        <h1>Category list</h1>
     </div>
 </div>
 
+<div class="row mb-2 d-flex justify-content-center">
+    <div class="col-sm-auto">
+        <Search OnSearchChanged="SearchChanged" PlaceholderText=@_placeholderSearchText @ref="_searchByName" />
+    </div>
+    <div class="col-sm-auto">
+        <button type="button" class="btn btn-primary" @onclick="ResetSearch">Reset</button>
+    </div>
+</div>
+
+
+<div class="row d-flex justify-content-center">
+    <div class="col-sm-auto mb-1">
+        <div class="row">
+            <div class="col-sm-auto mb-1">
+                <a href="/category/create" class="btn btn-success">New Category</a>
+            </div>
+        </div>
+        <div class="row d-flex justify-content-center">
+            <div class="col-sm-auto">
+                <CategoryTable Categories="_categoryList" IsLoading="_isLoading" OnDeleted="DeleteCategory" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12" style="text-align: center;">
+                <Pagination MetaData="_pagingMetaData" Spread="2" SelectedPage="SelectedPage" />
+            </div>
+        </div>
+    </div>
+</div>
 <YesNoModal @ref="_yesNoModal" Confirmed="CategoryDeletionConfirmed" />
