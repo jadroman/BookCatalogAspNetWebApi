@@ -15,12 +15,12 @@
                 <DataAnnotationsValidator />
                 <div class="form-group">
                     <div class="row">
-                        <div class="col-md-12">
+                        <div class="col-sm-12">
                             <label for="name" class="col-form-label">Name:</label>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-12">
+                        <div class="col-sm-12">
                             <InputText id="name" class="form-control" @bind-Value="_category.Name" />
                             <ValidationMessage For="@(() => _category.Name)" />
                         </div>
@@ -28,10 +28,10 @@
                 </div>
 
                 <div class="row mt-2">
-                    <div class="col-md-auto">
+                    <div class="col-sm-auto">
                         <button type="button" class="btn btn-primary" @onclick="CancelUpdate">Cancel</button>
                     </div>
-                    <div class="col-md-auto">
+                    <div class="col-sm-auto">
                         <button type="submit" class="btn btn-success">Update</button>
                     </div>
                 </div>
