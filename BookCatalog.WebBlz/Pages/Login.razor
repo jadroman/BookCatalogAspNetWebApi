@@ -2,8 +2,10 @@
 
 @if (ShowAuthError)
 {
-    <div class="alert alert-danger" role="alert">
-        <p>@Error</p>
+    <div class="row alert alert-danger" role="alert">
+        <div class="col">
+            <p>@Error</p>
+        </div>
     </div>
 }
 
@@ -20,7 +22,7 @@
                 <DataAnnotationsValidator />
                 <div class="row">
                     <div class="col-sm-12">
-                        <label for="email" class="col-md-2 col-form-label">Email:</label>
+                        <label for="email" class="col-md-auto col-form-label">Email:</label>
                     </div>
                 </div>
                 <div class="row">
@@ -32,7 +34,7 @@
 
                 <div class="row">
                     <div class="col-sm-12">
-                        <label for="password" class="col-md-2 col-form-label">Password:</label>
+                        <label for="password" class="col-md-auto col-form-label">Password:</label>
                     </div>
                 </div>
                 <div class="row">

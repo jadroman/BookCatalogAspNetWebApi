@@ -3,128 +3,137 @@
 @using Microsoft.AspNetCore.Authorization
 @attribute [Authorize]
 
-<h2>Book</h2>
-
-<EditForm Model="_book" OnValidSubmit="Create" class="card card-body bg-light mt-5">
-    <DataAnnotationsValidator />
-    <div class="form-group">
-        <div class="row">
-            <div class="col-md-6">
-                <label for="title" class=" col-form-label">Title:</label>
+<main>
+    <div class="row justify-content-center">
+        <div class="col-sm-6">
+            <div class="row">
+                <div class="col-sm-auto mb-1 mt-2">
+                    <h2>New book</h2>
+                </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-md-6">
-                <InputText id="title" autocomplete="off" class="form-control" @bind-Value="_book.Title" />
-                <ValidationMessage For="@(() => _book.Title)" />
-            </div>
+            <EditForm Model="_book" OnValidSubmit="Create" class="card card-body bg-light mt-1">
+                <DataAnnotationsValidator />
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <label for="title" class=" col-form-label">Title:</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <InputText id="title" autocomplete="off" class="form-control" @bind-Value="_book.Title" />
+                            <ValidationMessage For="@(() => _book.Title)" />
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <label for="author" class=" col-form-label">Author:</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <InputText id="author" autocomplete="off" class="form-control" @bind-Value="_book.Author" />
+                            <ValidationMessage For="@(() => _book.Author)" />
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <label for="category" class=" col-form-label">Category:</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <InputSelect Value="_book.CategoryId" class="form-control" ValueExpression="@(() =>  _book.CategoryId)"
+                                         ValueChanged="@((int? selected) => { CategoryChanged(selected); })">
+                                <option value="">Select category...</option>
+                                @foreach (var categ in _categories)
+                                {
+                                    <option value="@categ.Id">@categ.Name</option>
+                                }
+                            </InputSelect>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <label for="year" class=" col-form-label">Year:</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <InputNumber id="year" autocomplete="off" class="form-control" @bind-Value="_book.Year" />
+                            <ValidationMessage For="@(() => _book.Year)" />
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <label for="publisher" class=" col-form-label">Publisher:</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <InputText id="publisher" autocomplete="off" class="form-control" @bind-Value="_book.Publisher" />
+                            <ValidationMessage For="@(() => _book.Publisher)" />
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <label for="read" class=" col-form-label">Already read?:</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12 radioWrapper">
+                            <InputRadioGroup id="Read" @bind-Value="_book.Read">
+                                <InputRadio id="No" Value="@BooleanString.False" /><label class="radioLabel" for="No">No</label><br>
+                                <InputRadio id="Yes" Value="@BooleanString.True" /><label class="radioLabel" for="Yes">Yes</label>
+                            </InputRadioGroup>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <label for="collection" class=" col-form-label">Collection:</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <InputText id="collection" autocomplete="off" class="form-control" @bind-Value="_book.Collection" />
+                            <ValidationMessage For="@(() => _book.Collection)" />
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <label for="note" class=" col-form-label">Note:</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <InputTextArea id="note" autocomplete="off" class="form-control" @bind-Value="_book.Note" />
+                            <ValidationMessage For="@(() => _book.Note)" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-sm-auto">
+                        <button type="button" class="btn btn-primary" @onclick="CancelUpdate">Cancel</button>
+                    </div>
+                    <div class="col-sm-auto">
+                        <button type="submit" class="btn btn-success">Create</button>
+                    </div>
+                </div>
+            </EditForm>
         </div>
     </div>
-    <div class="form-group">
-        <div class="row">
-            <div class="col-md-6">
-                <label for="author" class=" col-form-label">Author:</label>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-6">
-                <InputText id="author" autocomplete="off" class="form-control" @bind-Value="_book.Author" />
-                <ValidationMessage For="@(() => _book.Author)" />
-            </div>
-        </div>
-    </div>
-    <div class="form-group">
-        <div class="row">
-            <div class="col-md-6">
-                <label for="category" class=" col-form-label">Category:</label>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-6">
-                <InputSelect Value="_book.CategoryId" class="form-control" ValueExpression="@(() =>  _book.CategoryId)"
-                             ValueChanged="@((int? selected) => { CategoryChanged(selected); })">
-                    <option value="">Select category...</option>
-                    @foreach (var categ in _categories)
-                    {
-                        <option value="@categ.Id">@categ.Name</option>
-                    }
-                </InputSelect>
-            </div>
-        </div>
-    </div>
-    <div class="form-group">
-        <div class="row">
-            <div class="col-md-auto">
-                <label for="year" class=" col-form-label">Year:</label>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-auto">
-                <InputNumber id="year" autocomplete="off" class="form-control" @bind-Value="_book.Year" />
-                <ValidationMessage For="@(() => _book.Year)" />
-            </div>
-        </div>
-    </div>
-    <div class="form-group">
-        <div class="row">
-            <div class="col-md-6">
-                <label for="publisher" class=" col-form-label">Publisher:</label>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-6">
-                <InputText id="publisher" autocomplete="off" class="form-control" @bind-Value="_book.Publisher" />
-                <ValidationMessage For="@(() => _book.Publisher)" />
-            </div>
-        </div>
-    </div>
-    <div class="form-group">
-        <div class="row">
-            <div class="col-md-auto">
-                <label for="read" class=" col-form-label">Already read?:</label>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-auto radioWrapper">
-                <InputRadioGroup id="Read" @bind-Value="_book.Read">
-                    <InputRadio id="No" Value="@BooleanString.False" /><label class="radioLabel" for="No">No</label><br>
-                    <InputRadio id="Yes" Value="@BooleanString.True" /><label class="radioLabel" for="Yes">Yes</label>
-                </InputRadioGroup>
-            </div>
-        </div>
-    </div>
-    <div class="form-group">
-        <div class="row">
-            <div class="col-md-6">
-                <label for="collection" class=" col-form-label">Collection:</label>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-6">
-                <InputText id="collection" autocomplete="off" class="form-control" @bind-Value="_book.Collection" />
-                <ValidationMessage For="@(() => _book.Collection)" />
-            </div>
-        </div>
-    </div>
-    <div class="form-group">
-        <div class="row">
-            <div class="col-md-6">
-                <label for="note" class=" col-form-label">Note:</label>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-6">
-                <InputTextArea id="note" autocomplete="off" class="form-control" @bind-Value="_book.Note" />
-                <ValidationMessage For="@(() => _book.Note)" />
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-auto">
-            <button type="button" class="btn btn-info" @onclick="CancelUpdate">Cancel</button>
-        </div>
-        <div class="col-md-auto">
-            <button type="submit" class="btn btn-success">Create</button>
-        </div>
-    </div>
-</EditForm>
+</main>

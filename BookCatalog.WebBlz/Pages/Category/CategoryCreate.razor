@@ -2,29 +2,38 @@
 @using Microsoft.AspNetCore.Authorization
 @attribute [Authorize]
 
-<h2>Create Category</h2>
-
-<EditForm Model="_category" OnValidSubmit="Create" class="card card-body bg-light mt-5">
-    <DataAnnotationsValidator />
-    <div class="form-group">
-        <div class="row">
-            <div class="col-md-auto">
-                <label for="name" class=" col-form-label">Name:</label>
+<main>
+    <div class="row justify-content-center">
+        <div class="col-sm-6">
+            <div class="row">
+                <div class="col-sm-auto mb-1 mt-2">
+                    <h2>New category</h2>
+                </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-md-auto">
-                <InputText id="name" autocomplete="off" class="form-control" @bind-Value="_category.Name" />
-                <ValidationMessage For="@(() => _category.Name)" />
-            </div>
+            <EditForm Model="_category" OnValidSubmit="Create" class="card card-body bg-light mt-1">
+                <DataAnnotationsValidator />
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <label for="name" class=" col-form-label">Name:</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <InputText id="name" autocomplete="off" class="form-control" @bind-Value="_category.Name" />
+                            <ValidationMessage For="@(() => _category.Name)" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-sm-auto">
+                        <button type="button" class="btn btn-primary" @onclick="CancelUpdate">Cancel</button>
+                    </div>
+                    <div class="col-sm-auto">
+                        <button type="submit" class="btn btn-success">Create</button>
+                    </div>
+                </div>
+            </EditForm>
         </div>
     </div>
-    <div class="row">
-        <div class="col-md-auto">
-            <button type="button" class="btn btn-info" @onclick="CancelUpdate">Cancel</button>
-        </div>
-        <div class="col-md-auto">
-            <button type="submit" class="btn btn-success">Create</button>
-        </div>
-    </div>
-</EditForm>
+</main>
