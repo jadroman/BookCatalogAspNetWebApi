@@ -12,8 +12,9 @@ using System.IO;
 using Microsoft.AspNetCore.Components.Authorization;
 using Blazored.LocalStorage;
 using Newtonsoft.Json;
+using BookCatalog.WebBlz.Services.Interfaces;
 
-namespace BookCatalog.WebBlz.HttpRepository
+namespace BookCatalog.WebBlz.Services
 {
     public class CategoryHttpRepository : ICategoryHttpRepository
     {

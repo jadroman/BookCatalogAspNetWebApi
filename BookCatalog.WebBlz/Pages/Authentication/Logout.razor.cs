@@ -1,11 +1,8 @@
-﻿using BookCatalog.WebBlz.HttpRepository;
+﻿using BookCatalog.WebBlz.Services.Interfaces;
 using Microsoft.AspNetCore.Components;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
-namespace BookCatalog.WebBlz.Pages
+namespace BookCatalog.WebBlz.Pages.Authentication
 {
     public partial class Logout
     {

@@ -2,29 +2,25 @@
 using BookCatalog.Common.BindingModels.Authentication;
 using BookCatalog.Common.BindingModels.Registration;
 using BookCatalog.WebBlz.Auth;
+using BookCatalog.WebBlz.Services.Interfaces;
 using Microsoft.AspNetCore.Components.Authorization;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BookCatalog.WebBlz.HttpRepository
+namespace BookCatalog.WebBlz.Services
 {
     public class AuthenticationService : IAuthenticationService
     {
         private readonly HttpClient _client;
         private readonly AuthenticationStateProvider _authStateProvider;
         private readonly ILocalStorageService _localStorage; 
-        private readonly System.Text.Json.JsonSerializerOptions _options;
 
         public AuthenticationService(HttpClient client, AuthenticationStateProvider authStateProvider, ILocalStorageService localStorage)
         {
             _client = client; 
-            _options = new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true };
             _authStateProvider = authStateProvider;
             _localStorage = localStorage;
         }

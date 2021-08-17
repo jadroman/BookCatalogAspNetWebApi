@@ -1,6 +1,7 @@
 using Blazored.LocalStorage;
 using BookCatalog.WebBlz.Auth;
-using BookCatalog.WebBlz.HttpRepository;
+using BookCatalog.WebBlz.Services;
+using BookCatalog.WebBlz.Services.Interfaces;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -28,8 +29,6 @@ namespace BookCatalog.WebBlz
                 cl.EnableIntercept(sp);
             });
 
-            // TODO: move url to config file
-            //builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("http://localhost:5000/api/") });
             builder.Services.AddScoped(
                 sp => sp.GetService<IHttpClientFactory>().CreateClient("BookCatalogAPI"));
             builder.Services.AddScoped<HttpInterceptorService>();

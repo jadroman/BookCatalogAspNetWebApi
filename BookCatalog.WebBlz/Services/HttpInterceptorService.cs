@@ -1,6 +1,7 @@
 ﻿
 using Blazored.LocalStorage;
 using BookCatalog.WebBlz.Auth;
+using BookCatalog.WebBlz.Services.Interfaces;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using System;
@@ -8,10 +9,10 @@ using System.Net;
 using System.Threading.Tasks;
 using Toolbelt.Blazor;
 
-namespace BookCatalog.WebBlz.HttpRepository
+namespace BookCatalog.WebBlz.Services
 {
-	public class HttpInterceptorService
-	{
+	public class HttpInterceptorService : IHttpInterceptorService
+    {
 		private readonly HttpClientInterceptor _interceptor;
         private readonly AuthenticationStateProvider _authStateProvider;
         private readonly ILocalStorageService _localStorage;
@@ -43,7 +44,6 @@ namespace BookCatalog.WebBlz.HttpRepository
                         await _localStorage.RemoveItemAsync("authToken");
                         ((AuthStateProvider)_authStateProvider).NotifyUserLogout();
                         e.Request.Headers.Authorization = null;
-                        //_client.DefaultRequestHeaders.Authorization = null;
                         break;
                     default:
                         _navManager.NavigateTo("/CustomInternalServerError");

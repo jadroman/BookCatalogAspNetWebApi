@@ -1,9 +1,9 @@
 ﻿using BookCatalog.Common.BindingModels;
 using BookCatalog.Common.BindingModels.Book;
-using BookCatalog.Common.Entities;
 using BookCatalog.Common.Helpers;
 using BookCatalog.WebBlz.Components;
-using BookCatalog.WebBlz.HttpRepository;
+using BookCatalog.WebBlz.Services;
+using BookCatalog.WebBlz.Services.Interfaces;
 using BookCatalog.WebBlz.Shared;
 using Microsoft.AspNetCore.Components;
 using System;

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace BookCatalog.WebBlz.HttpRepository
+namespace BookCatalog.WebBlz.Services.Interfaces
 {
     public interface IAuthenticationService
     {

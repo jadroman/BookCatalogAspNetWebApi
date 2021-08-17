@@ -4,7 +4,7 @@ using BookCatalog.Common.Helpers;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace BookCatalog.WebBlz.HttpRepository
+namespace BookCatalog.WebBlz.Services.Interfaces
 {
     public interface IBookHttpRepository
     {

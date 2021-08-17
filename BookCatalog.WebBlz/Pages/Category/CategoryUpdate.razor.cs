@@ -1,12 +1,8 @@
-﻿using BookCatalog.Common.BindingModels.Book;
-using BookCatalog.Common.BindingModels.Category;
-using BookCatalog.WebBlz.HttpRepository;
-using BookCatalog.WebBlz.Shared;
+﻿using BookCatalog.Common.BindingModels.Category;
+using BookCatalog.WebBlz.Services;
+using BookCatalog.WebBlz.Services.Interfaces;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Forms;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace BookCatalog.WebBlz.Pages.Category

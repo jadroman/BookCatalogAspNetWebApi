@@ -21,4 +21,8 @@
     <ProjectReference Include="..\BookCatalog.Common\BookCatalog.Common.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="HttpRepository\" />
+  </ItemGroup>
+
 </Project>

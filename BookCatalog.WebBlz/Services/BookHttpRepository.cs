@@ -1,24 +1,19 @@
 ﻿using BookCatalog.Common.BindingModels;
 using BookCatalog.Common.BindingModels.Book;
-using BookCatalog.Common.Entities;
 using BookCatalog.Common.Helpers;
-using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.WebUtilities;
-using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Text;
 using System.IO;
 using Newtonsoft.Json;
-using BookCatalog.WebBlz.Helpers;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Blazored.LocalStorage;
-using BookCatalog.WebBlz.Auth;
-using System.Net;
+using BookCatalog.WebBlz.Services.Interfaces;
 
-namespace BookCatalog.WebBlz.HttpRepository
+namespace BookCatalog.WebBlz.Services
 {
     public class BookHttpRepository : IBookHttpRepository
     {

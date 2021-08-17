@@ -1,5 +1,6 @@
 ﻿using BookCatalog.Common.BindingModels.Category;
-using BookCatalog.WebBlz.HttpRepository;
+using BookCatalog.WebBlz.Services;
+using BookCatalog.WebBlz.Services.Interfaces;
 using Microsoft.AspNetCore.Components;
 using System;
 using System.Collections.Generic;
