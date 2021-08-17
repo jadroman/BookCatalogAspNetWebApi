@@ -71,6 +71,11 @@ namespace BookCatalog
         {
             if (env.IsDevelopment())
             {
+                using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
+                {
+                    var context = serviceScope.ServiceProvider.GetService<BookCatalogContext>();
+                    context.Database.EnsureCreated();
+                }
                 app.UseDeveloperExceptionPage();
             }
             else
