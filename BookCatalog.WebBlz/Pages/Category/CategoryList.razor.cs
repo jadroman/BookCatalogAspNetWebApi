@@ -40,6 +40,7 @@ namespace BookCatalog.WebBlz.Pages.Category
         {
             _searchByName.Clear();
             _categoryParameters.Name = string.Empty;
+            _categoryParameters.PageNumber = 0;
             await GetCategories();
         }
 

@@ -8,9 +8,6 @@ using System.Threading.Tasks;
 using System.Text;
 using System.IO;
 using Newtonsoft.Json;
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Authorization;
-using Blazored.LocalStorage;
 using BookCatalog.WebBlz.Services.Interfaces;
 
 namespace BookCatalog.WebBlz.Services
@@ -18,16 +15,10 @@ namespace BookCatalog.WebBlz.Services
     public class BookHttpRepository : IBookHttpRepository
     {
         private readonly HttpClient _client;
-        private readonly AuthenticationStateProvider _authStateProvider;
-        private readonly ILocalStorageService _localStorage; 
-        private readonly NavigationManager _navManager;
 
-        public BookHttpRepository(HttpClient client, AuthenticationStateProvider authStateProvider, ILocalStorageService localStorage, NavigationManager navManager)
+        public BookHttpRepository(HttpClient client)
         {
             _client = client;
-            _authStateProvider = authStateProvider;
-            _localStorage = localStorage;
-            _navManager = navManager;
         }
 
         public async Task<PagedBindingEntity<BookBindingModel>> GetBooks(BookParameters parameters)
@@ -52,8 +43,7 @@ namespace BookCatalog.WebBlz.Services
             var content = System.Text.Json.JsonSerializer.Serialize(book);
             var bodyContent = new StringContent(content, Encoding.UTF8, "application/json");
 
-            var postResult = await _client.PostAsync("book", bodyContent);
-            var postContent = await postResult.Content.ReadAsStringAsync();
+            await _client.PostAsync("book", bodyContent);
         }
         public async Task<BookEditBindingModel> GetBook(int id)
         {
@@ -73,16 +63,14 @@ namespace BookCatalog.WebBlz.Services
             var bodyContent = new StringContent(content, Encoding.UTF8, "application/json");
             var url = Path.Combine("book", book.Id.ToString());
 
-            var putResult = await _client.PutAsync(url, bodyContent);
-            var putContent = await putResult.Content.ReadAsStringAsync();
+            await _client.PutAsync(url, bodyContent);
         }
 
         public async Task DeleteBook(int id)
         {
             var url = Path.Combine("book", id.ToString());
 
-            var deleteResult = await _client.DeleteAsync(url);
-            var deleteContent = await deleteResult.Content.ReadAsStringAsync();
+            await _client.DeleteAsync(url);
         }
 
         public async Task<PagedBindingEntity<CategoryBindingModel>> GetCategories()

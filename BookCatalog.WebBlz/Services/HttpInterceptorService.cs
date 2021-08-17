@@ -36,7 +36,6 @@ namespace BookCatalog.WebBlz.Services
                 {
                     var statusCode = e.Response.StatusCode;
 
-                    //string message;
                     switch (statusCode)
                     {
                         case HttpStatusCode.NotFound:

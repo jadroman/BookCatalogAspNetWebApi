@@ -4,13 +4,10 @@ using BookCatalog.Common.Helpers;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.WebUtilities;
 using System.Net.Http;
-using System.Text.Json;
 using System.Threading.Tasks;
 using BookCatalog.Common.BindingModels.Category;
 using System.Text;
 using System.IO;
-using Microsoft.AspNetCore.Components.Authorization;
-using Blazored.LocalStorage;
 using Newtonsoft.Json;
 using BookCatalog.WebBlz.Services.Interfaces;
 
@@ -19,16 +16,10 @@ namespace BookCatalog.WebBlz.Services
     public class CategoryHttpRepository : ICategoryHttpRepository
     {
         private readonly HttpClient _client;
-        private readonly JsonSerializerOptions _options;
-        private readonly AuthenticationStateProvider _authStateProvider;
-        private readonly ILocalStorageService _localStorage;
 
-        public CategoryHttpRepository(HttpClient client, AuthenticationStateProvider authStateProvider, ILocalStorageService localStorage)
+        public CategoryHttpRepository(HttpClient client)
         {
             _client = client;
-            _options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-            _authStateProvider = authStateProvider;
-            _localStorage = localStorage;
         }
 
         public async Task<PagedBindingEntity<CategoryBindingModel>> GetCategories(CategoryParameters parameters)

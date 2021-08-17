@@ -48,6 +48,7 @@ namespace BookCatalog.WebBlz.Pages.Book
             _bookParameters.Title = string.Empty;
             _bookParameters.Note = string.Empty;
             _bookParameters.Author = string.Empty;
+            _bookParameters.PageNumber = 0;
             await GetBooks();
         }
 
