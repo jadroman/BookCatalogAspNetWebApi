@@ -106,6 +106,7 @@ namespace BookCatalog.API.Controllers
         public async Task<IActionResult> DeleteCategory(int id)
         {
             var category = await _categoryService.GetCategoryById(id);
+
             if (category == null)
             {
                 return NotFound();

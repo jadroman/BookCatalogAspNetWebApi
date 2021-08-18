@@ -9,7 +9,7 @@ What is this?
 
 Very simple book catalog web application I created for the purpose of exercise. 
 
-![screenshot](doc/booksScreen.png "app screenshot")
+![screenshot](doc/blazorAppScreenshot.png "app screenshot")
 
 
 
@@ -33,33 +33,45 @@ What is utilized?
 How to run?
 -----------
 
-*	Clone or download code
-*	Open solution (Visual studio 2019 or later)
-*	Project "BookCatalog.Web" => set as startup project
-*	File "appsettings.json" => change "server name" and "database name" if needed
-*	Choose "BookCatalog.Web" (Kestrel) launch setting from upper menu
-*	Run the app ("play" icon from upper menu)
-*	When app starts, database is created (migrated) with few tables
-*	Open the database and execute the Serilog script from the folder "doc => seriLogSql.sql"
-*	Go back to the running app in browser
-*	Register a user (no email confirmation needed)
-*	Create a few categories
-*	Create a few books
+* Clone or download code
 
+* Open solution (Visual studio 2019 or later)
 
+* In the project "BookCatalog.API" => "appsettings.json", change "server name"  in the connection string if needed
+
+* To run the Blazor app:
+
+  * Click "Start" dropdown menu from the VS menu
+
+  * Choose "Set startup projects..." => "multiple startup projects"
+
+  * Pick two projects: "BookCatalog.API" and "BookCatalog.WebBlz" => "OK"
+
+  * Start the app (VS play button)
+
+  * When app starts, database is created (migrated) with few tables
+
+  * Open the database and execute the sql script from the folder "doc => updateDatabase.sql"
+
+  * Username and password for the running app:
+
+    * octopus@yahoo.com
+
+    * 2xSNzSa$
+
+      
+
+*	To run the Angular app:
+
+  *	TODO
+  *	
 
 ## Work in progress...
 
 - SSL/TLS Certificate is not setup
 - Add custom configuration provider to encrypt  connection string
-- Create partial view to share same html between "Create" and "Edit" views.
-  - The point is we reduce unneeded code repetition
-- Create partial view to share same html between "Details" and "Delete" views.
-  - The point is we reduce unneeded code repetition
 - Add "Result Pattern", a layer between service and controller which contains the logic of determining if result is eg. "Ok", "Invalid", "Unauthorized" etc. 
   - The point is to remove that logic from controller.
   - https://alexdunn.org/2019/02/25/clean-up-your-client-to-business-logic-relationship-with-a-result-pattern-c/
 - There is only one unit test for now. We could add more unit or integration tests
-- Account management module is not finished completely. 
-  - Forgot password is not working
-  - Email confirmation is disabled because I didn't setup smtp yet.
+- Account management module is not finished.
