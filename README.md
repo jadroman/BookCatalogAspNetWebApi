@@ -25,8 +25,8 @@ What is utilized?
 * Server-side paging and searching
 * Twitter-bootstrap 
 * Serilog
-*	Xunit
-*	Http interceptors
+* Xunit
+* Http interceptors
 
 
 
