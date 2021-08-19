@@ -2,6 +2,7 @@ using AutoMapper;
 using BookCatalog.Common.Entities;
 using BookCatalog.DAL;
 using BookCatalogAPI.Extensions;
+using Microsoft.AspNetCore.Authentication.Certificate;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -34,6 +35,9 @@ namespace BookCatalog
         {
             services.AddIdentity<User, IdentityRole>()
                     .AddEntityFrameworkStores<BookCatalogContext>();
+
+            services.AddAuthentication(CertificateAuthenticationDefaults.AuthenticationScheme)
+               .AddCertificate();
 
             var jwtSettings = Configuration.GetSection("JwtSettings");
 

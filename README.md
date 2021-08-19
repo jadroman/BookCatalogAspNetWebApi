@@ -17,7 +17,7 @@ Very simple book catalog web application I created for the purpose of exercise.
 What is utilized?
 -------------------
 
-* .NET 5.0 web API
+* .NET 5.0 Web API
 * MS SQL 2019
 * Entity framework 5
 * ASP.NET Identity
