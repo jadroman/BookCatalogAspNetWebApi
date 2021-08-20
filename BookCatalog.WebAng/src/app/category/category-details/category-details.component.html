@@ -1,25 +1,33 @@
-<div class="card card-body bg-light">
-  
-  <div class="row  text-center">
-    <div class="col-sm-12">
-      <div *ngIf="showError" class="alert alert-danger" role="alert">
-        <span [innerHTML]="errorMessage"></span>
-      </div>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-md-auto">
-      <strong>Name:</strong>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-md-auto">
-      {{category?.name}}
+<div class="row  text-center">
+  <div class="col-sm-12">
+    <div *ngIf="showError" class="alert alert-danger" role="alert">
+      <span [innerHTML]="errorMessage"></span>
     </div>
   </div>
 </div>
-<div class="row">
-    <div class="col-md-auto" style="margin-top: 15px;">
-      <button type="button" class="btn btn-info" (click)="redirectToCategoryList()">return to list</button>
+<div class="row justify-content-center">
+  <div class="col-sm-6">
+    <div class="row">
+      <div class="col-sm-auto mb-1 mt-2">
+        <h2>Category details</h2>
+      </div>
     </div>
+    <div class="card card-body bg-light">
+      <div class="row">
+        <div class="col-sm-12">
+          <strong>Name:</strong>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12 mb-1">
+          {{category?.name}}
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-auto" style="margin-top: 15px;">
+        <button type="button" class="btn btn-info" (click)="redirectToCategoryList()">return to list</button>
+      </div>
+    </div>
+  </div>
 </div>

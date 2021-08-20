@@ -1,138 +1,153 @@
-<div class="container-fluid">
-    <div class="row  text-center">
-        <div class="col-sm-12">
-            <div *ngIf="showError" class="alert alert-danger" role="alert">
-                <span [innerHTML]="errorMessage"></span>
-            </div>
+<div class="row  text-center">
+    <div class="col-sm-12">
+        <div *ngIf="showError" class="alert alert-danger" role="alert">
+            <span [innerHTML]="errorMessage"></span>
         </div>
     </div>
-    <form [formGroup]="bookForm" autocomplete="off" novalidate (ngSubmit)="createBook(bookForm.value)">
-        <div class="form-vertical card card-body bg-light">
-            <div class="form-group">
-                <div class="row">
-                    <div class="col-sm-auto">
-                        <label for="title" class="control-label">Title: </label>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-auto">
-                        <input type="text" formControlName="title" id="title" class="form-control" />
-                        <em *ngIf="isInvalid('title') && hasError('title', 'required')">title is required</em>
-                        <em *ngIf="isInvalid('title') && hasError('title', 'maxlength')">Maximum allowed length is 200</em>
-                    </div>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="row">
-                    <div class="col-sm-auto">
-                        <label for="name" class="control-label">Author: </label>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-auto">
-                        <input type="text" formControlName="author" id="author" class="form-control" />
-                        <em *ngIf="isInvalid('author') && hasError('author', 'maxlength')">Maximum allowed length is 56
-                            characters.</em>
-                    </div>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="row">
-                    <div class="col-sm-auto">
-                        <label for="name" class="control-label">Year: </label>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-auto">
-                        <input digitOnly type="number" formControlName="year" id="year" class="form-control" />
-                        <em *ngIf="isInvalid('year') && hasError('year', 'max')">Maximum allowed value is current year</em>
-                    </div>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="row">
-                    <div class="col-sm-auto">
-                        <label for="name" class="control-label">Publisher: </label>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-auto">
-                        <input type="text" formControlName="publisher" id="publisher" class="form-control" />
-                        <em *ngIf="isInvalid('publisher') && hasError('publisher', 'maxlength')">Maximum allowed length is 56
-                            characters.</em>
-                    </div>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="row">
-                    <div class="col-sm-auto">
-                        <label for="selectedCategory" class="control-label">Category: </label>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-auto">
-                        <select formControlName="selectedCategory" id="selectedCategory" class="form-control">
-                            <option selected value="0">Choose category</option>
-                            <option *ngFor="let allCategory of categories" [value]="allCategory.id">{{allCategory.name}}</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="row">
-                    <div class="col-sm-auto">
-                        <label for="read" class="control-label">Read: </label>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-auto">
-                        <select formControlName="read" id="read">
-                            <option selected value="false">Not yet</option>
-                            <option value="true">I've already read it</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="row">
-                    <div class="col-sm-auto">
-                        <label for="collection" class="control-label">Collection: </label>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-auto">
-                        <input type="text" formControlName="collection" id="collection" class="form-control" />
-                        <em *ngIf="isInvalid('collection') && hasError('collection', 'maxlength')">Maximum allowed length is 56
-                            characters.</em>
-                    </div>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="row">
-                    <div class="col-sm-auto">
-                        <label for="note" class="control-label">Note: </label>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-auto">
-                        <textarea formControlName="note" id="note" class="form-control">
-                                    </textarea>
-                        <em *ngIf="isInvalid('note') && hasError('note', 'maxlength')">Maximum allowed length is 1000
-                            characters.</em>
-                    </div>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="row">
-                    <div class="col-sm-auto">
-                        <button type="button" class="btn btn-danger" (click)="redirectToBookList()">Cancel</button>
-                    </div>
-                    <div class="col-sm-auto">
-                        <button type="submit" class="btn btn-info" [disabled]="!bookForm.valid">Create</button>
-                    </div>
-                </div>
-            </div>
+</div>
 
+<div class="row justify-content-center">
+    <div class="col-sm-6">
+        <div class="row">
+            <div class="col-sm-auto mb-1 mt-2">
+                <h2>Create book</h2>
+            </div>
         </div>
-    </form>
+        <form [formGroup]="bookForm" autocomplete="off" novalidate (ngSubmit)="createBook(bookForm.value)">
+            <div class="form-vertical card card-body bg-light">
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <label for="title" class="control-label">Title: </label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <input type="text" formControlName="title" id="title" class="form-control" />
+                            <em *ngIf="isInvalid('title') && hasError('title', 'required')">title is required</em>
+                            <em *ngIf="isInvalid('title') && hasError('title', 'maxlength')">Maximum allowed length is
+                                200</em>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <label for="name" class="control-label">Author: </label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <input type="text" formControlName="author" id="author" class="form-control" />
+                            <em *ngIf="isInvalid('author') && hasError('author', 'maxlength')">Maximum allowed length is
+                                56
+                                characters.</em>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <label for="name" class="control-label">Year: </label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <input digitOnly type="number" formControlName="year" id="year" class="form-control" />
+                            <em *ngIf="isInvalid('year') && hasError('year', 'max')">Maximum allowed value is current
+                                year</em>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <label for="name" class="control-label">Publisher: </label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <input type="text" formControlName="publisher" id="publisher" class="form-control" />
+                            <em *ngIf="isInvalid('publisher') && hasError('publisher', 'maxlength')">Maximum allowed
+                                length is 56
+                                characters.</em>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <label for="selectedCategory" class="control-label">Category: </label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <select formControlName="selectedCategory" id="selectedCategory" class="form-control">
+                                <option selected value="0">Choose category</option>
+                                <option *ngFor="let allCategory of categories" [value]="allCategory.id">
+                                    {{allCategory.name}}</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <label for="read" class="control-label">Read: </label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <select formControlName="read" id="read">
+                                <option selected value="false">Not yet</option>
+                                <option value="true">I've already read it</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <label for="collection" class="control-label">Collection: </label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <input type="text" formControlName="collection" id="collection" class="form-control" />
+                            <em *ngIf="isInvalid('collection') && hasError('collection', 'maxlength')">Maximum allowed
+                                length is 56
+                                characters.</em>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <label for="note" class="control-label">Note: </label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <textarea formControlName="note" id="note" class="form-control">
+                                    </textarea>
+                            <em *ngIf="isInvalid('note') && hasError('note', 'maxlength')">Maximum allowed length is
+                                1000
+                                characters.</em>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-sm-auto">
+                            <button type="button" class="btn btn-danger" (click)="redirectToBookList()">Cancel</button>
+                        </div>
+                        <div class="col-sm-auto">
+                            <button type="submit" class="btn btn-info" [disabled]="!bookForm.valid">Create</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </form>
+    </div>
 </div>

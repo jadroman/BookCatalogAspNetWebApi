@@ -6,19 +6,12 @@ using Microsoft.AspNetCore.Authentication.Certificate;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace BookCatalog
 {
@@ -60,7 +53,7 @@ namespace BookCatalog
                 };
             });
 
-            services.ConfigureCors();
+            services.ConfigureCors(Configuration);
             services.ConfigureIISIntegration();
             services.ConfigureDbContext(Configuration);
             services.ConfigureServices();
@@ -87,10 +80,11 @@ namespace BookCatalog
                 app.UseExceptionHandler("/api/Error");
             }
 
+            app.UseHttpsRedirection();
             app.UseStaticFiles();
-            app.UseCors("CorsPolicy");
 
             app.UseRouting();
+            app.UseCors("CorsPolicy");
 
             app.UseAuthentication();
             app.UseAuthorization();

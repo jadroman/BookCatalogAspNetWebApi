@@ -11,12 +11,13 @@ namespace BookCatalogAPI.Extensions
 {
     public static class ServiceExtensions
     {
-        public static void ConfigureCors(this IServiceCollection services)
+        public static void ConfigureCors(this IServiceCollection services, IConfiguration config)
         {
             services.AddCors(options =>
             {
                 options.AddPolicy("CorsPolicy",
-                    builder => builder.AllowAnyOrigin()
+                    builder => builder.WithOrigins(config["AllowedOrigins:angularClient"],
+                                                    config["AllowedOrigins:blazorClient"])
                     .AllowAnyMethod()
                     .AllowAnyHeader());
             });
