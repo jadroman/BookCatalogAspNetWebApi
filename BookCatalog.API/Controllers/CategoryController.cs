@@ -81,7 +81,7 @@ namespace BookCatalog.API.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateCategory(int id, [FromBody] CategoryEditBindingModel category)
+        public async Task<IActionResult> UpdateCategory([FromRoute] int id, [FromBody] CategoryEditBindingModel category)
         {
             if (category == null)
             {
@@ -103,7 +103,7 @@ namespace BookCatalog.API.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteCategory(int id)
+        public async Task<IActionResult> DeleteCategory([FromRoute] int id)
         {
             var category = await _categoryService.GetCategoryById(id);
 

@@ -79,7 +79,7 @@ namespace BookCatalog.API.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateBook(int id, [FromBody] BookEditBindingModel book)
+        public async Task<IActionResult> UpdateBook([FromRoute] int id, [FromBody] BookEditBindingModel book)
         {
             if (book == null)
             {
@@ -101,7 +101,7 @@ namespace BookCatalog.API.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteBook(int id)
+        public async Task<IActionResult> DeleteBook([FromRoute] int id)
         {
             var book = await _bookService.GetBookById(id);
             if (book == null)
