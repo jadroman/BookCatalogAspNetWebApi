@@ -29,7 +29,7 @@ export class LoginComponent implements OnInit {
     this._returnUrl = this._route.snapshot.queryParams['returnUrl'] || '/';
   }
 
-  public validateControl = (controlName: string) => {
+  public isInvalid = (controlName: string) => {
     return this.loginForm.controls[controlName].invalid && this.loginForm.controls[controlName].touched
   }
 
@@ -54,7 +54,6 @@ export class LoginComponent implements OnInit {
         this.SpinnerService.hide(); 
       },
         (error) => {
-          // log the error
           this.errorMessage = "Unexpected error occurred, sorry for the inconvenience.";
           this.showError = true;
           this.SpinnerService.hide(); 

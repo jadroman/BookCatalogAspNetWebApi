@@ -43,6 +43,7 @@ export class RegisterUserComponent implements OnInit {
   public registerUser = (registerFormValue: any) => {
     this.showError = false;
     const formValues = { ...registerFormValue };
+
     const user: UserForRegistration = {
       firstName: formValues.firstName,
       lastName: formValues.lastName,
@@ -50,6 +51,7 @@ export class RegisterUserComponent implements OnInit {
       password: formValues.password,
       confirmPassword: formValues.confirm
     };
+    
     this._authService.registerUser("api/accounts/registration", user)
       .subscribe(_ => {
         this._router.navigate(["/authentication/login"]);

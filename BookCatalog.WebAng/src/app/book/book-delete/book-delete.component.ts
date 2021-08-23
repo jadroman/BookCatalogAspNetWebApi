@@ -30,8 +30,8 @@ constructor(private repository: RepositoryService, private router: Router,
         this.book = res.body as Book;
       },
       (error) => {
-        /* this.errorHandler.handleError(error);
-        this.errorMessage = this.errorHandler.errorMessage; */
+        this.errorMessage = "Unexpected error occurred, sorry for the inconvenience";
+        this.showError = true;
       })
   }
   

@@ -58,23 +58,22 @@
                         <em *ngIf="isInvalid('password') && hasError('password', 'required')">Password is required</em>
                     </div>
                 </div>
-                <div class="row">
+                <div class="row mt-1">
                     <div class="col-sm-auto">
-                        <div class="alert alert-warning" role="alert">
-                            <ul>
-                                <li>
-                                    Passwords must be at least 6 characters.
-                                </li>
-                                <li>
-                                    Passwords must have at least one non alphanumeric character.
-                                </li>
-                                <li>
-                                    Passwords must have at least one lowercase ('a'-'z').
-                                </li>
-                                <li>
-                                    Passwords must have at least one uppercase ('A'-'Z').
-                                </li>
-                            </ul>
+                        <div class="alert alert-warning p-2" role="alert">
+
+                            <p>
+                                Passwords must be at least 6 characters.
+                            </p>
+                            <p>
+                                Passwords must have at least one non alphanumeric character.
+                            </p>
+                            <p>
+                                Passwords must have at least one lowercase ('a'-'z').
+                            </p>
+                            <p>
+                                Passwords must have at least one uppercase ('A'-'Z').
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -88,7 +87,8 @@
                 <div class="row">
                     <div class="col-sm-auto">
                         <input type="password" id="confirm" formControlName="confirm" class="form-control" />
-                        <em *ngIf="isInvalid('confirm') && hasError('confirm', 'required')">Confirmation is required</em>
+                        <em *ngIf="isInvalid('confirm') && hasError('confirm', 'required')">Confirmation is
+                            required</em>
                         <em *ngIf="hasError('confirm', 'mustMatch')">Passwords must match</em>
                     </div>
                 </div>

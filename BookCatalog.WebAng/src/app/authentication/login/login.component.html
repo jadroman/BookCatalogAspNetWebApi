@@ -21,7 +21,7 @@
                 <div class="row">
                     <div class="col-sm-auto">
                         <input type="text" id="username" formControlName="username" class="form-control" />
-                        <em *ngIf="validateControl('username') && hasError('username', 'required')">Username is
+                        <em *ngIf="isInvalid('username') && hasError('username', 'required')">Username is
                             required</em>
                     </div>
                 </div>
@@ -35,7 +35,7 @@
                 <div class="row">
                     <div class="col-sm-auto">
                         <input type="password" id="password" formControlName="password" class="form-control" />
-                        <em *ngIf="validateControl('password') && hasError('password', 'required')">Password is
+                        <em *ngIf="isInvalid('password') && hasError('password', 'required')">Password is
                             required</em>
                     </div>
                 </div>
