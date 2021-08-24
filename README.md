@@ -9,6 +9,15 @@ What is this?
 
 Very simple book catalog web application I created for the purpose of exercise. 
 
+Live test versions:
+
+- Blazor: https://bookcatalogblzstaging.jadro.space/
+- Angular: https://bookcatalogangstaging.jadro.space/
+
+- Username and password for the app should be in my CV
+
+
+
 ![screenshot](doc/blazorAppScreenshot.png "app screenshot")
 
 
@@ -21,7 +30,7 @@ What is utilized?
 * MS SQL 2019
 * Entity framework 5
 * ASP.NET Identity
-* Two front-end versions of the same application: Blazor and Angular
+* Two front-end versions of the same application: Blazor WebAssembly 5 and Angular 12
 * Server-side paging and searching
 * Twitter-bootstrap 
 * Serilog
