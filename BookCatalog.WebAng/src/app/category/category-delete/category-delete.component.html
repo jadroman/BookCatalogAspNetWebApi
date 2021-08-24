@@ -1,32 +1,37 @@
-<div class="container-fluid">
-    
-    <div class="row  text-center">
-        <div class="col-sm-12">
-            <div *ngIf="showError" class="alert alert-danger" role="alert">
-                <span [innerHTML]="errorMessage"></span>
-            </div>
+<div class="row  text-center">
+    <div class="col-sm-12">
+        <div *ngIf="showError" class="alert alert-danger" role="alert">
+            <span [innerHTML]="errorMessage"></span>
         </div>
     </div>
-    <div class="row" style="margin-top: 15px">
-            <div class="alert alert-danger" role="alert">
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-sm-6">
+        <div class="row">
+            <div class="col-sm-12 mb-1 mt-1 alert alert-danger" role="alert">
                 Are you sure you want to delete this category?
             </div>
-    </div>
-    <div class="row">
-        <div class="col-md-1">
-          <strong>Name:</strong>
         </div>
-        <div class="col-md-5">
-          {{category?.name}}
-        </div>
-      </div>
-    <br>
-    <div class="row">
-        <div class="col-md-offset-8 col-md-1">
-            <button type="submit" class="btn btn-info" (click)="deleteCategory()">Delete</button>
-        </div>
-        <div class="col-md-1">
-            <button type="button" class="btn btn-danger" (click)="redirectToCategoryList()">Cancel</button>
+        <div class="form-vertical card card-body bg-light">
+            <div class="row">
+                <div class="col-sm-12">
+                    <strong>Name:</strong>
+                </div>
+            </div>
+            <div class="row mb-1">
+                <div class="col-sm-12">
+                    {{category?.name}}
+                </div>
+            </div>
+            <div class="row mt-2">
+                <div class="col-sm-auto">
+                    <button type="submit" class="btn btn-info" (click)="deleteCategory()">Delete</button>
+                </div>
+                <div class="col-sm-auto">
+                    <button type="button" class="btn btn-danger" (click)="redirectToCategoryList()">Cancel</button>
+                </div>
+            </div>
         </div>
     </div>
 </div>

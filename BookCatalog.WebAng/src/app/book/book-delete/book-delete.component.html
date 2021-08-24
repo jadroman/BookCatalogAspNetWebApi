@@ -1,89 +1,109 @@
-<div class="container-fluid">
+<div class="row text-center">
+  <div class="col-sm-12">
+    <div *ngIf="showError" class="alert alert-danger" role="alert">
+      <span [innerHTML]="errorMessage"></span>
+    </div>
+  </div>
+</div>
 
-  <div class="row  text-center">
-    <div class="col-sm-12">
-      <div *ngIf="showError" class="alert alert-danger" role="alert">
-        <span [innerHTML]="errorMessage"></span>
+<div class="row justify-content-center">
+  <div class="col-sm-6">
+    <div class="row">
+      <div class="col-sm-12 mb-1 mt-1 alert alert-danger" role="alert">
+        Are you sure you want to delete this book?
       </div>
     </div>
-  </div>
-  <div class="row" style="margin-top: 15px">
-    <div class="alert alert-danger" role="alert">
-      Are you sure you want to delete this book?
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-md-2">
-      <strong>Title:</strong>
-    </div>
-    <div class="col-md-4">
-      {{book?.title}}
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-md-2">
-      <strong>Year:</strong>
-    </div>
-    <div class="col-md-4">
-      {{book?.year}}
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-md-2">
-      <strong>Publisher:</strong>
-    </div>
-    <div class="col-md-4">
-      {{book?.publisher}}
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-md-2">
-      <strong>Author:</strong>
-    </div>
-    <div class="col-md-4">
-      {{book?.author}}
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-md-2">
-      <strong>Category:</strong>
-    </div>
-    <div class="col-md-4">
-      {{book?.category?.name}}
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-md-2">
-      <strong>Note:</strong>
-    </div>
-    <div class="col-md-4">
-      {{book?.note}}
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-md-2">
-      <strong>Collection:</strong>
-    </div>
-    <div class="col-md-4">
-      {{book?.collection}}
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-md-2">
-      <strong>Read:</strong>
-    </div>
-    <div class="col-md-4">
-      <div *ngIf="book?.read; else elseBlock">Yes</div>
-      <ng-template #elseBlock>No</ng-template>
-    </div>
-  </div>
-  <br>
-  <div class="row">
-    <div class="col-md-offset-8 col-md-1">
-      <button type="submit" class="btn btn-info" (click)="deleteBook()">Delete</button>
-    </div>
-    <div class="col-md-1">
-      <button type="button" class="btn btn-danger" (click)="redirectToBookList()">Cancel</button>
+    <div class="form-vertical card card-body bg-light">
+      <div class="row">
+        <div class="col-sm-12">
+          <strong>Title:</strong>
+        </div>
+      </div>
+      <div class="row mb-1">
+        <div class="col-sm-12">
+          {{book?.title}}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12">
+          <strong>Year:</strong>
+        </div>
+      </div>
+      <div class="row mb-1">
+        <div class="col-sm-12">
+          {{book?.year}}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12">
+          <strong>Publisher:</strong>
+        </div>
+      </div>
+      <div class="row mb-1">
+        <div class="col-sm-12">
+          {{book?.publisher}}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12">
+          <strong>Author:</strong>
+        </div>
+      </div>
+      <div class="row mb-1">
+        <div class="col-sm-12">
+          {{book?.author}}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12">
+          <strong>Category:</strong>
+        </div>
+      </div>
+      <div class="row mb-1">
+        <div class="col-sm-12">
+          {{book?.category?.name}}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12">
+          <strong>Note:</strong>
+        </div>
+      </div>
+      <div class="row mb-1">
+        <div class="col-sm-12">
+          {{book?.note}}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12">
+          <strong>Collection:</strong>
+        </div>
+      </div>
+      <div class="row mb-1">
+        <div class="col-sm-12">
+          {{book?.collection}}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12">
+          <strong>Read:</strong>
+        </div>
+      </div>
+      <div class="row mb-1">
+        <div class="col-sm-12">
+          <div *ngIf="book?.read; else elseBlock">Yes</div>
+          <ng-template #elseBlock>No</ng-template>
+        </div>
+      </div>
+      <br>
+      <div class="row mt-2">
+        <div class="col-sm-auto">
+          <button type="submit" class="btn btn-info" (click)="deleteBook()">Delete</button>
+        </div>
+        <div class="col-sm-auto">
+          <button type="button" class="btn btn-danger" (click)="redirectToBookList()">Cancel</button>
+        </div>
+      </div>
     </div>
   </div>
 </div>

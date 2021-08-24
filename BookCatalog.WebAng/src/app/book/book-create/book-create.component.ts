@@ -27,7 +27,7 @@ export class BookCreateComponent implements OnInit {
       publisher: new FormControl('', [Validators.maxLength(56)]),
       collection: new FormControl('', [Validators.maxLength(56)]),
       read: new FormControl('', []),
-      selectedCategory: new FormControl('', []),
+      category: new FormControl('', []),
       note: new FormControl('', [Validators.maxLength(1000)])
     });
 
@@ -45,7 +45,7 @@ export class BookCreateComponent implements OnInit {
       .subscribe(res => {
         this.categories = res.body.items as Category[];
         this.bookForm.patchValue({
-          selectedCategory:  0
+          category:  0
         });
       },
       (error) => {
@@ -88,7 +88,7 @@ export class BookCreateComponent implements OnInit {
       read: bookFormValue.read,
       year: bookFormValue.year,
       collection: bookFormValue.collection,
-      categoryId: (bookFormValue.selectedCategory != 0) ? bookFormValue.selectedCategory : null
+      categoryId: (bookFormValue.category != 0) ? bookFormValue.category : null
     }
 
     const apiUrl = 'api/book';
