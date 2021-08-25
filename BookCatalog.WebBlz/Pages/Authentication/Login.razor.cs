@@ -36,6 +36,7 @@ namespace BookCatalog.WebBlz.Pages.Authentication
 
             var result = await AuthenticationService.Login(_userForAuthentication);
             _isLoading = false;
+
             if (!result.IsAuthSuccessful)
             {
                 Error = result.ErrorMessage;
