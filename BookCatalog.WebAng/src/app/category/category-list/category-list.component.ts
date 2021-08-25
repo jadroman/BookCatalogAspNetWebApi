@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { Category } from 'src/app/interfaces/category.model';
+import { Category } from 'src/app/interfaces/category/category.model';
 import { RepositoryService } from 'src/app/shared/services/repository.service';
 
 @Component({
