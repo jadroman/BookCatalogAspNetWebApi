@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { NgxSpinnerService } from 'ngx-spinner';
 import { Category } from 'src/app/interfaces/category/category.model';
 import { RepositoryService } from 'src/app/shared/services/repository.service';
 
@@ -12,10 +11,7 @@ import { RepositoryService } from 'src/app/shared/services/repository.service';
 })
 export class CategoryListComponent implements OnInit {
   public categories: Category[] = []; 
-  public errorMessage: string = '';
   public searchForm!: FormGroup;
-  public showError!: boolean;
-
   currentIndex = -1;
   page = 1;
   count = 0;
@@ -24,7 +20,7 @@ export class CategoryListComponent implements OnInit {
   pageSizes = [5, 10, 15];
 
   constructor(private repository: RepositoryService, 
-    private router: Router, private SpinnerService: NgxSpinnerService) { }
+    private router: Router) { }
 
   ngOnInit(): void {
     this.searchForm = new FormGroup({
@@ -78,7 +74,6 @@ export class CategoryListComponent implements OnInit {
   }
 
   public getAllCategories = () => {
-    this.SpinnerService.show(); 
     const params = this.getRequestParams(this.page, this.pageSize, this.name);
     let apiAddress: string = "api/category";
     this.repository.getData(apiAddress, params)
@@ -86,13 +81,6 @@ export class CategoryListComponent implements OnInit {
         const { items, metaData } = res.body;
         this.categories = items as Category[];
         this.count = metaData.totalCount;
-        this.SpinnerService.hide(); 
-      },
-      (error) => {
-        // log the error
-        this.errorMessage = "Unexpected error occurred, sorry for the inconvenience";
-        this.showError = true;
-        this.SpinnerService.hide();
       })
   }
 

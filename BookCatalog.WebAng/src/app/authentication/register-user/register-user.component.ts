@@ -12,8 +12,6 @@ import { AuthenticationService } from 'src/app/shared/services/authentication.se
 })
 export class RegisterUserComponent implements OnInit {
   public registerForm!: FormGroup;  
-  public errorMessage: string = '';
-  public showError!: boolean;
 
   constructor(private _authService: AuthenticationService, 
               private _passConfValidator: PasswordConfirmationValidatorService,
@@ -41,7 +39,6 @@ export class RegisterUserComponent implements OnInit {
   }
 
   public registerUser = (registerFormValue: any) => {
-    this.showError = false;
     const formValues = { ...registerFormValue };
 
     const user: UserForRegistration = {
@@ -55,15 +52,7 @@ export class RegisterUserComponent implements OnInit {
     this._authService.registerUser("api/accounts/registration", user)
       .subscribe(_ => {
         this._router.navigate(["/authentication/login"]);
-      },
-        (error) => {
-          // log the error
-          this.errorMessage = `
-            Unexpected error occurred, sorry for the inconvenience.
-            Please check the password creation rules bellow.
-          `;
-          this.showError = true;
-        })
+      })
   }
 
 }

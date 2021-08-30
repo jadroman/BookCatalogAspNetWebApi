@@ -10,9 +10,7 @@ import { RepositoryService } from 'src/app/shared/services/repository.service';
   styleUrls: ['./category-create.component.css']
 })
 export class CategoryCreateComponent implements OnInit {
-  public errorMessage: string = '';
   public categoryForm!: FormGroup;
-  public showError!: boolean;
 
   constructor(private repository: RepositoryService, private router: Router) { }
 
@@ -48,13 +46,7 @@ export class CategoryCreateComponent implements OnInit {
     this.repository.create(apiUrl, category)
       .subscribe(res => {
         this.redirectToCategoryList();
-      },
-        (error => {
-          // log the error
-          this.errorMessage = "Unexpected error occurred, sorry for the inconvenience";
-          this.showError = true;
-        })
-      )
+      })
   }
   public redirectToCategoryList() {
     this.router.navigate(['/category/list']);

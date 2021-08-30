@@ -10,9 +10,7 @@ import { RepositoryService } from 'src/app/shared/services/repository.service';
 })
 export class BookDeleteComponent implements OnInit {
 
-  public errorMessage: string = '';
   public book!: Book;
-  public showError!: boolean;
   
 constructor(private repository: RepositoryService, private router: Router,
   private activeRoute: ActivatedRoute) { }
@@ -28,10 +26,6 @@ constructor(private repository: RepositoryService, private router: Router,
     this.repository.getData(bookByIdUrl)
       .subscribe(res => {
         this.book = res.body as Book;
-      },
-      (error) => {
-        this.errorMessage = "Unexpected error occurred, sorry for the inconvenience";
-        this.showError = true;
       })
   }
   
@@ -45,11 +39,6 @@ constructor(private repository: RepositoryService, private router: Router,
     this.repository.delete(deleteUrl)
       .subscribe(res => {
         this.redirectToBookList();
-      },
-      (error) => {
-        // log the error
-        this.errorMessage = "Unexpected error occurred, sorry for the inconvenience";
-        this.showError = true;
       })
   }
 

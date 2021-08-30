@@ -11,8 +11,6 @@ import { RepositoryService } from 'src/app/shared/services/repository.service';
 export class BookDetailsComponent implements OnInit {
 
   public book!: Book;
-  public errorMessage: string = '';
-  public showError!: boolean;
 
   constructor(private repository: RepositoryService, private router: Router, 
               private activeRoute: ActivatedRoute) { }
@@ -27,11 +25,6 @@ export class BookDetailsComponent implements OnInit {
     this.repository.getData(apiUrl)
     .subscribe(res => {
       this.book = res.body as Book;
-    },
-    (error) =>{
-      // log the error
-      this.errorMessage = "Unexpected error occurred, sorry for the inconvenience";
-      this.showError = true;
     })
   }
 

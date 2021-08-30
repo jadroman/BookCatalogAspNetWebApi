@@ -1,6 +1,5 @@
-import { Component, isDevMode, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Book } from 'src/app/interfaces/book/book.model';
-import { NgxSpinnerService } from 'ngx-spinner';
 import { RepositoryService } from 'src/app/shared/services/repository.service';
 import { Router } from '@angular/router';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
@@ -13,9 +12,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 export class BookListComponent implements OnInit {
 
   public books: Book[] = []; 
-  public errorMessage: string = '';
   public searchForm!: FormGroup;
-  public showError!: boolean;
 
   currentIndex = -1;
   page = 1;
@@ -26,7 +23,7 @@ export class BookListComponent implements OnInit {
   pageSizes = [5, 10, 15];
 
   constructor(private repository: RepositoryService, 
-    private router: Router, private SpinnerService: NgxSpinnerService) { }
+    private router: Router) { }
 
   ngOnInit(): void {
     this.searchForm = new FormGroup({
@@ -90,7 +87,7 @@ export class BookListComponent implements OnInit {
   }
 
   public getAllBooks = () => {
-    this.SpinnerService.show(); 
+    //this.SpinnerService.show(); 
     const params = this.getRequestParams(this.page, this.pageSize, this.title, this.author);
     let apiAddress: string = "api/book";
     this.repository.getData(apiAddress, params)
@@ -98,13 +95,7 @@ export class BookListComponent implements OnInit {
         const { items, metaData } = res.body;
         this.books = items as Book[];
         this.count = metaData.totalCount;
-        this.SpinnerService.hide(); 
-      },
-      (error) => {
-        // log the error
-        this.errorMessage = "Unexpected error occurred, sorry for the inconvenience";
-        this.showError = true;
-        this.SpinnerService.hide();
+        //this.SpinnerService.hide(); 
       })
   }
 

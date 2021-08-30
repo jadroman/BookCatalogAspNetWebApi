@@ -12,11 +12,9 @@ import { RepositoryService } from 'src/app/shared/services/repository.service';
 })
 export class BookUpdateComponent implements OnInit {
 
-  public errorMessage: string = '';
   public book!: Book;
   public categories!: Category[];
   public bookForm!: FormGroup;
-  public showError!: boolean;
 
 
   constructor(private repository: RepositoryService, private router: Router,
@@ -47,11 +45,6 @@ export class BookUpdateComponent implements OnInit {
           this.book = res.body as Book;
           this.bookForm.patchValue(this.book);
           this.getCategories();
-        },
-        (error) => {
-          // log the error
-          this.errorMessage = "Unexpected error occurred, sorry for the inconvenience";
-          this.showError = true;
         })
     }
 
@@ -65,11 +58,6 @@ export class BookUpdateComponent implements OnInit {
           this.bookForm.patchValue({
             category:  (this.book?.category != null) ? this.book?.category.id : 0
           });
-        },
-        (error) => {
-          // log the error
-          this.errorMessage = "Unexpected error occurred, sorry for the inconvenience";
-          this.showError = true;
         })
     }
 
@@ -111,12 +99,7 @@ export class BookUpdateComponent implements OnInit {
       this.repository.update(apiUrl, this.book)
         .subscribe(res => {
           this.redirectToBookList();
-        },
-        (error => {
-          // log the error
-          this.errorMessage = "Unexpected error occurred, sorry for the inconvenience";
-          this.showError = true;
-        })
+        }
       )
     }
 

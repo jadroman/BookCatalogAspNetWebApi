@@ -10,9 +10,7 @@ import { RepositoryService } from 'src/app/shared/services/repository.service';
 })
 export class CategoryDeleteComponent implements OnInit {
 
-  public errorMessage: string = '';
   public category!: Category;
-  public showError!: boolean;
   
 constructor(private repository: RepositoryService, private router: Router,
   private activeRoute: ActivatedRoute) { }
@@ -28,11 +26,6 @@ constructor(private repository: RepositoryService, private router: Router,
     this.repository.getData(categoryByIdUrl)
       .subscribe(res => {
         this.category = res.body as Category;
-      },
-      (error) => {
-        // log the error
-        this.errorMessage = "Unexpected error occurred, sorry for the inconvenience";
-        this.showError = true;
       })
   }
   
@@ -46,11 +39,6 @@ constructor(private repository: RepositoryService, private router: Router,
     this.repository.delete(deleteUrl)
       .subscribe(res => {
         this.redirectToCategoryList();
-      },
-      (error) => {
-        // log the error
-        this.errorMessage = "Unexpected error occurred, sorry for the inconvenience";
-        this.showError = true;
       })
   }
 }

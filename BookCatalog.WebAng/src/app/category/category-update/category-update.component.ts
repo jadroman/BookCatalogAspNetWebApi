@@ -10,10 +10,8 @@ import { RepositoryService } from 'src/app/shared/services/repository.service';
   styleUrls: ['./category-update.component.css']
 })
 export class CategoryUpdateComponent implements OnInit {
-  public errorMessage: string = '';
   public category!: Category;
   public categoryForm!: FormGroup;
-  public showError!: boolean;
 
   constructor(private repository: RepositoryService, private router: Router,
     private activeRoute: ActivatedRoute) { }
@@ -35,11 +33,6 @@ export class CategoryUpdateComponent implements OnInit {
         .subscribe(res => {
           this.category = res.body as Category;
           this.categoryForm.patchValue(this.category);
-        },
-        (error) => {
-          // log the error
-          this.errorMessage = "Unexpected error occurred, sorry for the inconvenience";
-          this.showError = true;
         })
     }
 
@@ -74,12 +67,7 @@ export class CategoryUpdateComponent implements OnInit {
       this.repository.update(apiUrl, this.category)
         .subscribe(res => {
           this.redirectToCategoryList();
-        },
-        (error => {
-          // log the error
-          this.errorMessage = "Unexpected error occurred, sorry for the inconvenience";
-          this.showError = true;
-        })
+        }
       )
     }
 

@@ -1,11 +1,4 @@
 <div class="card">
-    <div class="row  text-center">
-        <div class="col-sm-12">
-            <div *ngIf="showError" class="alert alert-danger" role="alert">
-                <span [innerHTML]="errorMessage"></span>
-            </div>
-        </div>
-    </div>
     <div class="card-body col d-flex justify-content-center">
         <form [formGroup]="registerForm" autocomplete="off" novalidate (ngSubmit)="registerUser(registerForm.value)">
             <div class="form-group">

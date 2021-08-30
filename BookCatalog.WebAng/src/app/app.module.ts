@@ -10,6 +10,12 @@ import { NotFoundComponent } from './error-pages/not-found/not-found.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { JwtModule } from '@auth0/angular-jwt';
 import { AuthGuard } from './shared/guards/auth.guard';
+import { DialogInfoComponent } from './shared/dialog-info/dialog-info.component';
+import { MaterialModule } from './material.module';
+import { DialogInfoService } from './shared/dialog-info/dialog-info.service';
+import { DialogLoadingService } from './shared/dialog-loading/dialog-loading.service';
+import { DialogLoadingComponent } from './shared/dialog-loading/dialog-loading.component';
+import { CoreModule } from './core/core.module';
 
 export function tokenGetter() {
   return localStorage.getItem("token");
@@ -21,11 +27,15 @@ export function tokenGetter() {
     AppComponent,
     HomeComponent,
     MenuComponent,
-    NotFoundComponent
+    NotFoundComponent,
+    DialogInfoComponent,
+    DialogLoadingComponent
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
+    MaterialModule, 
+    CoreModule,
     RouterModule.forRoot([
       { path: 'home', component: HomeComponent },
       { path: 'category', loadChildren: () => 
@@ -47,7 +57,7 @@ export function tokenGetter() {
     }),
     BrowserAnimationsModule
   ],
-  providers: [],
+  providers: [DialogInfoService, DialogLoadingService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

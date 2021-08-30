@@ -1,12 +1,6 @@
-<div class="row text-center">
-  <div class="col-sm-12">
-    <div *ngIf="showError" class="alert alert-danger" role="alert">
-      <span [innerHTML]="errorMessage"></span>
-    </div>
-  </div>
-</div>
 <div class="row d-flex justify-content-center mt-2 mb-2">
   <div class="col-sm-auto">
+    
     <form autocomplete="off" [formGroup]="searchForm" novalidate (ngSubmit)="searchBooks(searchForm.value)">
       <span class="align-middle">
         Search by
@@ -62,9 +56,9 @@
               </tr>
             </tbody>
           </table>
-          <ngx-spinner size="medium" type="ball-spin-clockwise" [fullScreen]="false">
+          <!-- <ngx-spinner size="medium" type="ball-spin-clockwise" [fullScreen]="false">
             <p class="loading">Please Wait...</p>
-          </ngx-spinner>
+          </ngx-spinner> -->
         </div>
       </div>
     </div>
