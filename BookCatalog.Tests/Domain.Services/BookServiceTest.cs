@@ -60,9 +60,6 @@ namespace BookCatalog.Tests.Domain.Services
         [Theory]
         [InlineData("Title1", "Author1", 1, "Note1")]
         [InlineData("Title2", "Author2", 2, "Note2")]
-        [InlineData("Title3", "Author3", 3, "Note3")]
-        [InlineData("Title4", "Author4", 4, "Note4")]
-        [InlineData("Title5", "Author5", 5, "Note5")]
         public async Task GetBooks_ReturnsSearchedBooksOnly_WhenSearchingByParameters(string title, string author, uint year, string note)
         {
             // Arrange

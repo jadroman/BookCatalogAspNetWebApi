@@ -2,7 +2,6 @@
 using BookCatalog.Common.Helpers;
 using BookCatalog.Common.Interfaces;
 using BookCatalog.Domain.Services;
-using Microsoft.EntityFrameworkCore;
 using MockQueryable.Moq;
 using Moq;
 using System.Collections.Generic;
