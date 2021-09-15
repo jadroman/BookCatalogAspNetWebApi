@@ -58,9 +58,9 @@ namespace BookCatalog
             else
             {
                 app.UseExceptionHandler("/api/Error");
+                app.UseHsts();
             }
 
-            app.UseHsts();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
