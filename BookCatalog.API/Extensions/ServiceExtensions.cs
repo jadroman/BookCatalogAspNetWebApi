@@ -2,10 +2,13 @@
 using BookCatalog.Common.Interfaces;
 using BookCatalog.DAL;
 using BookCatalog.Domain.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace BookCatalogAPI.Extensions
 {
@@ -36,11 +39,26 @@ namespace BookCatalogAPI.Extensions
             services.AddScoped<IBookCatalogContext, BookCatalogContext>(); 
             services.AddScoped<JwtHandler>();
         }
-        public static void ConfigureIISIntegration(this IServiceCollection services)
-        {
-            services.Configure<IISOptions>(options =>
-            {
 
+        public static void ConfigureAuthentication(this IServiceCollection services, IConfiguration config)
+        {
+            services.AddAuthentication(opt =>
+            {
+                opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+
+                    ValidIssuer = config.GetSection("JwtSettings:validIssuer").Value,
+                    ValidAudience = config.GetSection("JwtSettings:validAudience").Value,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config.GetSection("JwtSettings:securityKey").Value))
+                };
             });
         }
     }
