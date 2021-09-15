@@ -3,7 +3,6 @@ using BookCatalog.Common.Interfaces;
 using BookCatalog.DAL;
 using BookCatalog.Domain.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

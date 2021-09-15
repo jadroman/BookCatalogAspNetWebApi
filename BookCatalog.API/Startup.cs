@@ -60,6 +60,7 @@ namespace BookCatalog
                 app.UseExceptionHandler("/api/Error");
             }
 
+            app.UseHsts();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
