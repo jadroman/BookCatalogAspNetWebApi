@@ -9,12 +9,16 @@ What is this?
 
 Very simple book catalog web application I created for the purpose of exercise. 
 
+- Web API 
+- Blazor client
+- Angular client
+
 Live test versions:
 
 - Blazor: https://bookcatalogblzstaging.jadro.space/
 - Angular: https://bookcatalogangstaging.jadro.space/
 
-- Username and password for the app should be in my CV
+- Username and password for the app should be in my cover letter or proposal
 
 
 
@@ -36,6 +40,7 @@ What is utilized?
 * Serilog
 * Xunit
 * Http interceptors
+* Angular material
 
 
 
@@ -50,13 +55,14 @@ How to run?
 
 * To run the Blazor app:
 
-  * Click "Start" dropdown menu from the VS menu
-  * Choose "Set startup projects..." => "multiple startup projects"
+  * Left click on solution => "Set startup projects"
+  * "Multiple startup projects" => "multiple startup projects"
   * Pick two projects: "BookCatalog.API" and "BookCatalog.WebBlz" => "OK"
+  * "BookCatalog.WebBlz" proj => left click "libman.json" => "Restore client-side libraries"
   * Start the app (VS play button)
-  * When app starts, database is created (migrated) with few tables
+  * When app starts, database is created (migration is executed) with few tables
   * Open the database and execute the sql script from the folder "doc => updateDatabase.sql"
-  * Username and password for the app should be in my CV
+  * Username and password for the app should be in my cover letter or proposal
 
   
 
@@ -66,7 +72,7 @@ How to run?
   *	Go to the folder "BookCatalog.WebAng" using cmder or powershell 
   *	run "npm install" to install the packages
   *	run "ng serve -o" to run the Angular app
-  *	Username and password for the app should be in my CV
+  *	Username and password for the app should be in my cover letter or proposal
   
   
 
@@ -76,5 +82,5 @@ How to run?
 - Add "Result Pattern", a layer between service and controller which contains the logic of determining if result is eg. "Ok", "Invalid", "Unauthorized" etc. 
   - The point is to remove that logic from controller.
   - https://alexdunn.org/2019/02/25/clean-up-your-client-to-business-logic-relationship-with-a-result-pattern-c/
-- There is only one unit test in the "BookCatalog.API" for now. We could add more unit or integration tests
+- There is only few unit tests in the "BookCatalog.API" for now. We could add more unit or integration tests
 - Account management module is not finished.

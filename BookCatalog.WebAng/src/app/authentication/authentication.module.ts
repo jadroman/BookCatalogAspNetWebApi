@@ -5,6 +5,7 @@ import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 import { LoginComponent } from './login/login.component';
 import { NgxSpinnerModule } from 'ngx-spinner';
+import { AuthGuard } from '../shared/guards/auth.guard';
 
 
 
@@ -17,7 +18,7 @@ import { NgxSpinnerModule } from 'ngx-spinner';
     CommonModule,
     ReactiveFormsModule,
     RouterModule.forChild([
-      { path: 'register', component: RegisterUserComponent },
+      { path: 'register', component: RegisterUserComponent, canActivate: [AuthGuard] },
       { path: 'login', component: LoginComponent }
     ]),  
     NgxSpinnerModule
