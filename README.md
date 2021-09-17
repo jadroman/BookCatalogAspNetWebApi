@@ -66,15 +66,15 @@ How to run?
 
   
 
-*	To run the Angular app:
+* To run the Angular app:
+  * From VS run just single project "BookCatalog.API"
 
-  *	From VS run just single project "BookCatalog.API"
-  *	Go to the folder "BookCatalog.WebAng" using cmder or powershell 
-  *	run "npm install" to install the packages
-  *	run "ng serve -o" to run the Angular app
-  *	Username and password for the app should be in my cover letter or proposal
-  
-  
+  - Go to the folder "BookCatalog.WebAng" using cmder or powershell 
+  - run "npm install" to install the packages
+  - run "ng serve -o" to run the Angular app
+  - Username and password for the app should be in my cover letter or proposal
+
+
 
 ## Work in progress...
 
