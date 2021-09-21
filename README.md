@@ -76,11 +76,12 @@ How to run?
 
 
 
-## Work in progress...
+## Work in progress (best practices implementation)
 
 - Create some shared components to reduce code redundancy for:
   - update and create
   - details and delete (Angular project only)
+- Use a separate routing module for the router
 - Add custom configuration provider to encrypt  connection string
 - Add "Result Pattern", a layer between service and controller which contains the logic of determining if result is eg. "Ok", "Invalid", "Unauthorized" etc. 
   - The point is to remove that logic from controller.

@@ -87,7 +87,6 @@ export class BookListComponent implements OnInit {
   }
 
   public getAllBooks = () => {
-    //this.SpinnerService.show(); 
     const params = this.getRequestParams(this.page, this.pageSize, this.title, this.author);
     let apiAddress: string = "api/book";
     this.repository.getData(apiAddress, params)
@@ -95,7 +94,6 @@ export class BookListComponent implements OnInit {
         const { items, metaData } = res.body;
         this.books = items as Book[];
         this.count = metaData.totalCount;
-        //this.SpinnerService.hide(); 
       })
   }
 
