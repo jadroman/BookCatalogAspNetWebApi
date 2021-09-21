@@ -9,6 +9,7 @@ import { CategoryUpdateComponent } from './category-update/category-update.compo
 import { CategoryDeleteComponent } from './category-delete/category-delete.component';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { NgxSpinnerModule } from 'ngx-spinner';
+import { CategoryEditComponent } from './shared/category-edit/category-edit.component';
 
 
 @NgModule({
@@ -17,7 +18,8 @@ import { NgxSpinnerModule } from 'ngx-spinner';
     CategoryDetailsComponent,
     CategoryCreateComponent,
     CategoryUpdateComponent,
-    CategoryDeleteComponent
+    CategoryDeleteComponent,
+    CategoryEditComponent
   ],
   imports: [
     CommonModule,

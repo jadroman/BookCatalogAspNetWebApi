@@ -5,7 +5,11 @@
         <h2>Create category</h2>
       </div>
     </div>
-    <form [formGroup]="categoryForm" autocomplete="off" novalidate (ngSubmit)="createCategory(categoryForm.value)">
+    <app-category-edit
+    (commitCategoryRequest)="executeCategoryCreation($event)"
+    (cancelEditRequest)="redirectToCategoryList()">
+    </app-category-edit>
+    <!-- <form [formGroup]="categoryForm" autocomplete="off" novalidate (ngSubmit)="createCategory(categoryForm.value)">
       <div class="card card-body bg-light">
         <div class="form-group">
           <div class="row">
@@ -33,6 +37,6 @@
           </div>
         </div>
       </div>
-    </form>
+    </form> -->
   </div>
 </div>
