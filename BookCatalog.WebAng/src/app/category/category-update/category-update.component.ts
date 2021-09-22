@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Category } from 'src/app/interfaces/category/category.model';
+import { CategoryForCommit } from 'src/app/interfaces/category/category-for-commit.model';
 import { RepositoryService } from 'src/app/shared/services/repository.service';
 
 @Component({
@@ -10,20 +10,16 @@ import { RepositoryService } from 'src/app/shared/services/repository.service';
   styleUrls: ['./category-update.component.css']
 })
 export class CategoryUpdateComponent implements OnInit {
-  public category!: Category;
+  public category!: CategoryForCommit;
   public categoryForm!: FormGroup;
 
   constructor(private repository: RepositoryService, private router: Router,
     private activeRoute: ActivatedRoute) { }
     
-    ngOnInit() {
-      this.categoryForm = new FormGroup({
-        name: new FormControl('', [Validators.required, Validators.maxLength(60)])
-      });
-    
+    ngOnInit() {    
       this.getCategoryById();
     }
-    
+
     private getCategoryById = () => {
       let categoryId: string = this.activeRoute.snapshot.params['id'];
         
@@ -31,41 +27,20 @@ export class CategoryUpdateComponent implements OnInit {
     
       this.repository.getData(categoryByIdUrl)
         .subscribe(res => {
-          this.category = res.body as Category;
-          this.categoryForm.patchValue(this.category);
+          this.category = res.body as CategoryForCommit;
         })
     }
 
-    public isInvalid = (controlName: string) => {
-      if (this.categoryForm.controls[controlName].invalid && this.categoryForm.controls[controlName].touched)
-        return true;
-    
-      return false;
-    }
-    
-    public hasError = (controlName: string, errorName: string)  => {
-      if (this.categoryForm.controls[controlName].hasError(errorName))
-        return true;
-    
-      return false;
-    }
-        
     public redirectToCategoryList = () => {
       this.router.navigate(['/category/list']);
     }
 
-    public updateCategory = (categoryFormValue: any) => {
-      if (this.categoryForm.valid) {
-        this.executeCategoryUpdate(categoryFormValue);
-      }
-    }
-    
-    private executeCategoryUpdate = (categoryFormValue: { name: string; }) => {
+    public executeCategoryUpdate = (categoryFormValue: { name: string; }) => {
       this.category.name = categoryFormValue.name;
     
       let apiUrl = `api/category/${this.category.id}`;
       this.repository.update(apiUrl, this.category)
-        .subscribe(res => {
+        .subscribe(() => {
           this.redirectToCategoryList();
         }
       )

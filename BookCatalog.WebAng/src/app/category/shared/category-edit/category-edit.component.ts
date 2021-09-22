@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { CategoryForCommit } from 'src/app/interfaces/category/category-for-commit.model';
 
@@ -7,8 +7,10 @@ import { CategoryForCommit } from 'src/app/interfaces/category/category-for-comm
   templateUrl: './category-edit.component.html',
   styleUrls: ['./category-edit.component.css']
 })
-export class CategoryEditComponent implements OnInit {
+export class CategoryEditComponent implements OnInit, OnChanges {
   public categoryForm!: FormGroup;
+
+  @Input() categToUpdate?:CategoryForCommit;
   @Output() commitCategoryRequest = new EventEmitter<CategoryForCommit>();
   @Output() cancelEditRequest = new EventEmitter();
 
@@ -18,6 +20,13 @@ export class CategoryEditComponent implements OnInit {
     this.categoryForm = new FormGroup({
       name: new FormControl('', [Validators.required, Validators.maxLength(60)])
     });
+  }
+
+  ngOnChanges(){
+    
+    if(this.categToUpdate != null){
+      this.categoryForm.patchValue(this.categToUpdate)
+    }
   }
 
   public isInvalid = (controlName: string) => {
