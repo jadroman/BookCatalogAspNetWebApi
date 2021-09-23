@@ -7,7 +7,13 @@
                 <h2>Create book</h2>
             </div>
         </div>
-        <form [formGroup]="bookForm" autocomplete="off" novalidate (ngSubmit)="createBook(bookForm.value)">
+        <app-book-edit
+        [categories] = "categories"
+        (commitBookRequest)="executeBookCreation($event)"
+        (cancelEditRequest)="redirectToBookList()">
+
+        </app-book-edit>
+        <!-- <form [formGroup]="bookForm" autocomplete="off" novalidate (ngSubmit)="createBook(bookForm.value)">
             <div class="form-vertical card card-body bg-light">
                 <div class="form-group">
                     <div class="row">
@@ -139,6 +145,6 @@
                 </div>
 
             </div>
-        </form>
+        </form> -->
     </div>
 </div>

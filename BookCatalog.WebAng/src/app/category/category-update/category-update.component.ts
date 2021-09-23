@@ -11,7 +11,6 @@ import { RepositoryService } from 'src/app/shared/services/repository.service';
 })
 export class CategoryUpdateComponent implements OnInit {
   public category!: CategoryForCommit;
-  public categoryForm!: FormGroup;
 
   constructor(private repository: RepositoryService, private router: Router,
     private activeRoute: ActivatedRoute) { }
@@ -35,7 +34,7 @@ export class CategoryUpdateComponent implements OnInit {
       this.router.navigate(['/category/list']);
     }
 
-    public executeCategoryUpdate = (categoryFormValue: { name: string; }) => {
+    public executeCategoryUpdate = (categoryFormValue: CategoryForCommit) => {
       this.category.name = categoryFormValue.name;
     
       let apiUrl = `api/category/${this.category.id}`;

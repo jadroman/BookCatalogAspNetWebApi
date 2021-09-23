@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { BookForCommit } from 'src/app/interfaces/book/book-for-commit.model';
 import { Book } from 'src/app/interfaces/book/book.model';
 import { Category } from 'src/app/interfaces/category/category.model';
 import { RepositoryService } from 'src/app/shared/services/repository.service';
@@ -12,26 +12,14 @@ import { RepositoryService } from 'src/app/shared/services/repository.service';
 })
 export class BookUpdateComponent implements OnInit {
 
-  public book!: Book;
+  public book!: BookForCommit;
   public categories!: Category[];
-  public bookForm!: FormGroup;
 
 
   constructor(private repository: RepositoryService, private router: Router,
     private activeRoute: ActivatedRoute) { }
     
     ngOnInit() {
-      this.bookForm = new FormGroup({
-        title: new FormControl('', [Validators.required, Validators.maxLength(200)]),
-        author: new FormControl('', [Validators.maxLength(56)]),
-        year: new FormControl('', [Validators.max((new Date()).getFullYear())]),
-        publisher: new FormControl('', [Validators.maxLength(56)]),
-        collection: new FormControl('', [Validators.maxLength(56)]),
-        read: new FormControl('', []),
-        category: new FormControl('', []),
-        note: new FormControl('', [Validators.maxLength(1000)])
-      });
-    
       this.getBookById();
     }
     
@@ -43,7 +31,6 @@ export class BookUpdateComponent implements OnInit {
       this.repository.getData(bookByIdUrl)
         .subscribe(res => {
           this.book = res.body as Book;
-          this.bookForm.patchValue(this.book);
           this.getCategories();
         })
     }
@@ -55,37 +42,14 @@ export class BookUpdateComponent implements OnInit {
       this.repository.getData(categoryByUrl)
         .subscribe(res => {
           this.categories = res.body.items as Category[];
-          this.bookForm.patchValue({
-            category:  (this.book?.category != null) ? this.book?.category.id : 0
-          });
         })
-    }
-
-    public isInvalid = (controlName: string) => {
-      if (this.bookForm.controls[controlName].invalid && this.bookForm.controls[controlName].touched)
-        return true;
-    
-      return false;
-    }
-    
-    public hasError = (controlName: string, errorName: string)  => {
-      if (this.bookForm.controls[controlName].hasError(errorName))
-        return true;
-    
-      return false;
     }
         
     public redirectToBookList = () => {
       this.router.navigate(['/book/list']);
     }
-
-    public updateBook = (bookFormValue: any) => {
-      if (this.bookForm.valid) {
-        this.executeBookUpdate(bookFormValue);
-      }
-    }
     
-    private executeBookUpdate = (bookFormValue: any) => {
+    public executeBookUpdate = (bookFormValue: BookForCommit) => {
       this.book!.title = bookFormValue.title;
       this.book!.author = bookFormValue.author;
       this.book!.note = bookFormValue.note;
@@ -93,11 +57,11 @@ export class BookUpdateComponent implements OnInit {
       this.book!.read = bookFormValue.read;
       this.book!.year = bookFormValue.year;
       this.book!.collection = bookFormValue.collection;
-      this.book!.categoryId = (bookFormValue.category == 0) ? null : bookFormValue.category;
+      this.book!.categoryId = bookFormValue.categoryId;
     
       let apiUrl = `api/book/${this.book?.id}`;
       this.repository.update(apiUrl, this.book)
-        .subscribe(res => {
+        .subscribe(() => {
           this.redirectToBookList();
         }
       )

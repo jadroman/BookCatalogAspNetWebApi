@@ -5,7 +5,13 @@
                 <h2>Update book</h2>
             </div>
         </div>
-        <form [formGroup]="bookForm" autocomplete="off" novalidate (ngSubmit)="updateBook(bookForm.value)">
+        <app-book-edit
+        [categories] = "categories"
+        [bookToUpdate] = "book"
+        (commitBookRequest)="executeBookUpdate($event)"
+        (cancelEditRequest)="redirectToBookList()">
+        </app-book-edit>
+        <!-- <form [formGroup]="bookForm" autocomplete="off" novalidate (ngSubmit)="updateBook(bookForm.value)">
             <div class="form-vertical card card-body bg-light">
                 <div class="form-group">
                     <div class="row">
@@ -139,6 +145,6 @@
                     </div>
                 </div>
             </div>
-        </form>
+        </form> -->
     </div>
 </div>

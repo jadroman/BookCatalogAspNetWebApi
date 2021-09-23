@@ -8,18 +8,15 @@ import { RepositoryService } from 'src/app/shared/services/repository.service';
   templateUrl: './category-create.component.html',
   styleUrls: ['./category-create.component.css']
 })
-export class CategoryCreateComponent implements OnInit {
+export class CategoryCreateComponent {
 
   constructor(private repository: RepositoryService, private router: Router) { }
-
-  ngOnInit() {
-  }
 
   public executeCategoryCreation = (category: CategoryForCommit) => {
     const apiUrl = 'api/category';
     
     this.repository.create(apiUrl, category)
-      .subscribe(res => {
+      .subscribe(() => {
         this.redirectToCategoryList();
       })
   }

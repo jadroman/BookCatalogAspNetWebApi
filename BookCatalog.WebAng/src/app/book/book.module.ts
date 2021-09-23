@@ -10,6 +10,7 @@ import { BookUpdateComponent } from './book-update/book-update.component';
 import { BookCreateComponent } from './book-create/book-create.component';
 import { BookDeleteComponent } from './book-delete/book-delete.component';
 import { DigitOnlyDirective } from '../shared/helpers/digit-only.directive';
+import { BookEditComponent } from './shared/book-edit/book-edit.component';
 
 
 
@@ -20,7 +21,8 @@ import { DigitOnlyDirective } from '../shared/helpers/digit-only.directive';
     BookUpdateComponent,
     BookCreateComponent,
     BookDeleteComponent,
-    DigitOnlyDirective
+    DigitOnlyDirective,
+    BookEditComponent
   ],
   imports: [
     NgxPaginationModule,  

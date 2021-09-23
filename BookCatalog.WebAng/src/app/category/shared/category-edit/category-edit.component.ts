@@ -23,7 +23,6 @@ export class CategoryEditComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(){
-    
     if(this.categToUpdate != null){
       this.categoryForm.patchValue(this.categToUpdate)
     }
