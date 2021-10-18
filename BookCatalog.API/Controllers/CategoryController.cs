@@ -105,13 +105,17 @@ namespace BookCatalog.API.Controllers
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> DeleteCategory([FromRoute] int id)
         {
-            var category = await _categoryService.GetCategoryById(id);
+            var category = await _categoryService.GetCategoryByIdWithBooks(id);
 
             if (category == null)
             {
                 return NotFound();
             }
-            await _categoryService.DeleteCategory(category);
+
+            var deleteResult = await _categoryService.DeleteCategory(category);
+
+            if (!deleteResult.IsSuccessful && deleteResult.Type == ResultType.Invalid) 
+                return BadRequest(deleteResult.Error);
 
             return NoContent();
         }
