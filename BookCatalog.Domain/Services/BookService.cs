@@ -90,15 +90,8 @@ namespace BookCatalog.Domain.Services
 
         public async Task<int> DeleteBook(Book book)
         {
-            try
-            {
-                _context.Books.Remove(book);
-                return await _context.SaveChangesAsync();
-            }
-            catch (Exception)
-            {
-                return await Task.FromResult(0);
-            }
+            _context.Books.Remove(book);
+            return await _context.SaveChangesAsync();
         }
 
         public Task<List<Category>> GetAllCategories()
