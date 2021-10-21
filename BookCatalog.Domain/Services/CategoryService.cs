@@ -12,16 +12,23 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System;
+using AutoMapper;
+using BookCatalog.Common.BindingModels.Book;
+using BookCatalog.Common.BindingModels.Category;
 
 namespace BookCatalog.Domain.Services
 {
     public class CategoryService : ICategoryService
     {
         private readonly IBookCatalogContext _context;
+        private readonly ICategoryRepository _categoryRepo;
+        private readonly IMapper _mapper;
 
-        public CategoryService(IBookCatalogContext context)
+        public CategoryService(IBookCatalogContext context, ICategoryRepository categoryRepo, IMapper mapper)
         {
             _context = context;
+            _categoryRepo = categoryRepo;
+            _mapper = mapper;
         }
 
         /// <summary>
@@ -93,33 +100,10 @@ namespace BookCatalog.Domain.Services
             entities = entities.OrderBy(entityQuery);
         }
 
-        public Task<List<Category>> GetAllCategories()
+        public async Task<CategoryBindingModel> GetCategoryById(int id, bool trackEntity = false)
         {
-            return _context.Categories.OrderBy(c => c.Name).AsNoTracking().ToListAsync();
-        }
-
-        public Task<int> CountAllCategories()
-        {
-            return _context.Categories.AsNoTracking().CountAsync();
-        }
-
-        public async Task<Category> GetCategoryById(int id, bool trackEntity = false)
-        {
-            Category category;
-
-            if (trackEntity)
-            {
-                category = await _context.Categories
-                     .FirstOrDefaultAsync(c => c.Id == id);
-            }
-            else
-            {
-                category = await _context.Categories
-                     .AsNoTracking()
-                     .FirstOrDefaultAsync(c => c.Id == id);
-            }
-
-            return category;
+            Category category = await _categoryRepo.GetCategoryById(id, trackEntity);
+            return _mapper.Map<CategoryBindingModel>(category);
         }
 
         public async Task<Category> GetCategoryByIdWithBooks(int id)
@@ -131,16 +115,21 @@ namespace BookCatalog.Domain.Services
             return category;
         }
 
-        public async Task<int> SaveCategory(Category category)
+        public async Task<int> UpdateCategory(CategoryEditBindingModel category, int id)
         {
-            if (category.Id == 0)
-            {
-                await _context.Categories.AddAsync(category);
-            }
+            var categoryEntity = await _categoryRepo.GetCategoryById(id, true);
+            _mapper.Map(category, categoryEntity);
 
-            return await _context.SaveChangesAsync();
+            //await _context.Categories.AddAsync(category);
+
+            return await _categoryRepo.UpdateCategory();
         }
 
+        public async Task InsertCategory(CategoryEditBindingModel category)
+        {
+            var categoryEntity = _mapper.Map<Category>(category);
+            await _categoryRepo.InsertCategory(categoryEntity); 
+        }
 
         public async Task<Result<int>> DeleteCategory(Category category)
         {

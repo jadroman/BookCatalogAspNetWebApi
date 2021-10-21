@@ -1,4 +1,5 @@
 ﻿using BookCatalog.Common.BindingModels.Book;
+using BookCatalog.Common.BindingModels.Category;
 using BookCatalog.Common.Entities;
 using BookCatalog.Common.Helpers;
 using Microsoft.EntityFrameworkCore;
@@ -12,11 +13,11 @@ namespace BookCatalog.Common.Interfaces
 {
     public interface ICategoryService
     {
-        Task<Category> GetCategoryById(int id, bool trackEntity = false);
-        Task<int> SaveCategory(Category category);
+        Task<CategoryBindingModel> GetCategoryById(int id, bool trackEntity = false);
+        Task<int> UpdateCategory(CategoryEditBindingModel category, int id);
+        Task InsertCategory(CategoryEditBindingModel category);
         Task<Result<int>> DeleteCategory(Category category);
         Task<Category> GetCategoryByIdWithBooks(int id);
-        Task<List<Category>> GetAllCategories();
         Task<PagedList<Category>> GetCategories(CategoryParameters categoryParameters);
     }
 }

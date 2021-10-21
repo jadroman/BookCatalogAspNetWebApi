@@ -47,14 +47,15 @@ namespace BookCatalog.API.Controllers
         public async Task<IActionResult> GetCategoryById(int? id)
         {
             var category = await _categoryService.GetCategoryById(id.Value);
+
             if (category == null)
             {
                 return NotFound();
             }
             else
             {
-                var categoryResult = _mapper.Map<CategoryBindingModel>(category);
-                return Ok(categoryResult);
+                //var categoryResult = _mapper.Map<CategoryBindingModel>(category);
+                return Ok(category);
             }
         }
 
@@ -71,13 +72,9 @@ namespace BookCatalog.API.Controllers
                 return BadRequest("Invalid category object");
             }
 
-            var categoryEntity = _mapper.Map<Category>(category);
+            await _categoryService.InsertCategory(category);
 
-            await _categoryService.SaveCategory(categoryEntity);
-
-            var createdCategory = _mapper.Map<CategoryBindingModel>(categoryEntity);
-
-            return CreatedAtRoute("CategoryById", new { id = createdCategory.Id }, createdCategory);
+            return CreatedAtRoute("CategoryById", new { id = category.Id }, category);
         }
 
         [HttpPut("{id:int}")]
@@ -93,11 +90,11 @@ namespace BookCatalog.API.Controllers
                 return BadRequest("Invalid model object");
             }
 
-            var categoryEntity = await _categoryService.GetCategoryById(id, true);
+            //var categoryEntity = await _categoryService.GetCategoryById(id, true);
 
-            _mapper.Map(category, categoryEntity);
+            //_mapper.Map(category, categoryEntity);
 
-            await _categoryService.SaveCategory(categoryEntity);
+            await _categoryService.UpdateCategory(category, id);
 
             return NoContent();
         }

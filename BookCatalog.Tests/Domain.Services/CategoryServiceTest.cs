@@ -1,4 +1,5 @@
-﻿using BookCatalog.Common.Entities;
+﻿using AutoMapper;
+using BookCatalog.Common.Entities;
 using BookCatalog.Common.Helpers;
 using BookCatalog.Common.Interfaces;
 using BookCatalog.Domain.Services;
@@ -14,13 +15,17 @@ namespace BookCatalog.Tests.Domain.Services
     public class CategoryServiceTest
     {
         private readonly Mock<IBookCatalogContext> _dbContext;
+        private readonly Mock<ICategoryRepository> _categoryRepo;
+        private readonly Mock<IMapper> _mapper;
 
         private readonly ICategoryService _sut;
 
         public CategoryServiceTest()
         {
             _dbContext = new Mock<IBookCatalogContext>();
-            _sut = new CategoryService(_dbContext.Object);
+            _categoryRepo = new Mock<ICategoryRepository>();
+            _mapper = new Mock<IMapper>();
+            _sut = new CategoryService(_dbContext.Object, _categoryRepo.Object, _mapper.Object);
 
             var cats = new List<Category> { new Category { Id = 1, Name = "Categ" } };
             var catsMock = cats.AsQueryable().BuildMockDbSet();
