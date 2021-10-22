@@ -25,7 +25,7 @@ namespace BookCatalog.Tests.Domain.Services
             _dbContext = new Mock<IBookCatalogContext>();
             _categoryRepo = new Mock<ICategoryRepository>();
             _mapper = new Mock<IMapper>();
-            _sut = new CategoryService(_dbContext.Object, _categoryRepo.Object, _mapper.Object);
+            _sut = new CategoryService(_categoryRepo.Object, _mapper.Object);
 
             var cats = new List<Category> { new Category { Id = 1, Name = "Categ" } };
             var catsMock = cats.AsQueryable().BuildMockDbSet();
@@ -46,7 +46,7 @@ namespace BookCatalog.Tests.Domain.Services
             };
 
             // Act
-            var result = await _sut.DeleteCategory(category);
+            var result = await _sut.DeleteCategory(category.Id);
 
             // Assert
             Assert.IsType<InvalidResult<int>>(result);

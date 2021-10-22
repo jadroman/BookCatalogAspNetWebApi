@@ -9,8 +9,12 @@ namespace BookCatalog.Common.Interfaces
 {
     public interface ICategoryRepository
     {
+        IQueryable<Category> GetCategories();
+        IQueryable<Category> GetCategoriesByName(string categoryName);
         Task<Category> GetCategoryById(int id, bool trackEntity = false);
+        Task<Category> GetCategoryByIdWithBooks(int id);
         Task<int> UpdateCategory();
-        Task InsertCategory(Category category);
+        Task<int> InsertCategory(Category category);
+        Task<int> DeleteCategory(Category category);
     }
 }

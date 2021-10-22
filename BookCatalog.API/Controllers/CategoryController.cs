@@ -28,19 +28,12 @@ namespace BookCatalog.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllCategories([FromQuery] CategoryParameters categoryParameters)
+        public async Task<IActionResult> GetCategories([FromQuery] CategoryParameters categoryParameters)
         {
             var categories = await _categoryService.GetCategories(categoryParameters);
-
             Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(categories.MetaData));
 
-            var categoryResult = new PagedBindingEntity<CategoryBindingModel>
-            {
-                Items = _mapper.Map<IEnumerable<CategoryBindingModel>>(categories),
-                MetaData = categories.MetaData
-            };
-
-            return Ok(categoryResult);
+            return Ok(categories);
         }
 
         [HttpGet("{id}", Name = "CategoryById")]
@@ -54,7 +47,6 @@ namespace BookCatalog.API.Controllers
             }
             else
             {
-                //var categoryResult = _mapper.Map<CategoryBindingModel>(category);
                 return Ok(category);
             }
         }
@@ -90,10 +82,6 @@ namespace BookCatalog.API.Controllers
                 return BadRequest("Invalid model object");
             }
 
-            //var categoryEntity = await _categoryService.GetCategoryById(id, true);
-
-            //_mapper.Map(category, categoryEntity);
-
             await _categoryService.UpdateCategory(category, id);
 
             return NoContent();
@@ -102,14 +90,7 @@ namespace BookCatalog.API.Controllers
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> DeleteCategory([FromRoute] int id)
         {
-            var category = await _categoryService.GetCategoryByIdWithBooks(id);
-
-            if (category == null)
-            {
-                return NotFound();
-            }
-
-            var deleteResult = await _categoryService.DeleteCategory(category);
+            var deleteResult = await _categoryService.DeleteCategory(id);
 
             if (!deleteResult.IsSuccessful && deleteResult.Type == ResultType.Invalid) 
                 return BadRequest(deleteResult.Error);

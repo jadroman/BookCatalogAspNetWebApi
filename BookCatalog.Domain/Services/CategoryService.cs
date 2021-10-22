@@ -1,10 +1,7 @@
-﻿
-using BookCatalog.Common.BindingModels;
+﻿using BookCatalog.Common.BindingModels;
 using BookCatalog.Common.Entities;
 using BookCatalog.Common.Helpers;
 using BookCatalog.Common.Interfaces;
-using BookCatalog.DAL;
-using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq.Dynamic.Core;
@@ -20,13 +17,11 @@ namespace BookCatalog.Domain.Services
 {
     public class CategoryService : ICategoryService
     {
-        private readonly IBookCatalogContext _context;
         private readonly ICategoryRepository _categoryRepo;
         private readonly IMapper _mapper;
 
-        public CategoryService(IBookCatalogContext context, ICategoryRepository categoryRepo, IMapper mapper)
+        public CategoryService(ICategoryRepository categoryRepo, IMapper mapper)
         {
-            _context = context;
             _categoryRepo = categoryRepo;
             _mapper = mapper;
         }
@@ -36,9 +31,9 @@ namespace BookCatalog.Domain.Services
         /// </summary>
         /// <param name="categoryParameters">eg. ".../category?pageNumber=1&pageSize=5&orderBy=name desc&name=na"</param>
         /// <returns></returns>
-        public Task<PagedList<Category>> GetCategories(CategoryParameters categoryParameters)
+        public async Task<PagedBindingEntity<CategoryBindingModel>> GetCategories(CategoryParameters categoryParameters)
         {
-            var categories = _context.Categories.AsNoTracking();
+            var categories = _categoryRepo.GetCategories();
 
             // 1. Search for specific
             Search(ref categories, categoryParameters);
@@ -47,17 +42,25 @@ namespace BookCatalog.Domain.Services
             Sort(ref categories, categoryParameters.OrderBy);
 
             // 3. Do paging of the final results
-            return PagedList<Category>.ToPagedList(categories, categoryParameters.PageNumber, categoryParameters.PageSize);
+            var pagedList = await PagedList<Category>.ToPagedList(categories, categoryParameters.PageNumber, categoryParameters.PageSize);
+
+            var categoryResult = new PagedBindingEntity<CategoryBindingModel>
+            {
+                Items = _mapper.Map<IEnumerable<CategoryBindingModel>>(pagedList),
+                MetaData = pagedList.MetaData
+            };
+
+            return categoryResult;
         }
 
 
-        private void Search(ref IQueryable<Category> categories, CategoryParameters categoryParameters)
+        private void Search<T>(ref IQueryable<T> categories, CategoryParameters categoryParameters)
         {
             if (!categories.Any())
                 return;
 
             if (!string.IsNullOrWhiteSpace(categoryParameters.Name))
-                categories = categories.Where(o => o.Name.ToLower().Contains(categoryParameters.Name.Trim().ToLower()));
+                categories = (IQueryable<T>)_categoryRepo.GetCategoriesByName(categoryParameters.Name.Trim().ToLower());
         }
 
         private void Sort<T>(ref IQueryable<T> entities, string orderByQueryString)
@@ -106,41 +109,32 @@ namespace BookCatalog.Domain.Services
             return _mapper.Map<CategoryBindingModel>(category);
         }
 
-        public async Task<Category> GetCategoryByIdWithBooks(int id)
-        {
-            var category = await _context.Categories.Include(c => c.Books)
-                 .AsNoTracking()
-                 .FirstOrDefaultAsync(c => c.Id == id);
-
-            return category;
-        }
+      
 
         public async Task<int> UpdateCategory(CategoryEditBindingModel category, int id)
         {
             var categoryEntity = await _categoryRepo.GetCategoryById(id, true);
             _mapper.Map(category, categoryEntity);
 
-            //await _context.Categories.AddAsync(category);
-
             return await _categoryRepo.UpdateCategory();
         }
 
-        public async Task InsertCategory(CategoryEditBindingModel category)
+        public async Task<int> InsertCategory(CategoryEditBindingModel category)
         {
             var categoryEntity = _mapper.Map<Category>(category);
-            await _categoryRepo.InsertCategory(categoryEntity); 
+            return await _categoryRepo.InsertCategory(categoryEntity); 
         }
 
-        public async Task<Result<int>> DeleteCategory(Category category)
+        public async Task<Result<int>> DeleteCategory(int id)
         {
+            var category = await _categoryRepo.GetCategoryByIdWithBooks(id);
+
             if (category.Books != null && category.Books.Any())
             {
                 return new InvalidResult<int>("There are some books related with this category.");
             }
 
-            _context.Categories.Remove(category);
-
-            return new SuccessResult<int>(await _context.SaveChangesAsync());
+            return new SuccessResult<int>(await _categoryRepo.DeleteCategory(category));
         }
     }
 }

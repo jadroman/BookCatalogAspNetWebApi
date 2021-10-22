@@ -1,4 +1,5 @@
-﻿using BookCatalog.Common.BindingModels.Book;
+﻿using BookCatalog.Common.BindingModels;
+using BookCatalog.Common.BindingModels.Book;
 using BookCatalog.Common.BindingModels.Category;
 using BookCatalog.Common.Entities;
 using BookCatalog.Common.Helpers;
@@ -15,9 +16,8 @@ namespace BookCatalog.Common.Interfaces
     {
         Task<CategoryBindingModel> GetCategoryById(int id, bool trackEntity = false);
         Task<int> UpdateCategory(CategoryEditBindingModel category, int id);
-        Task InsertCategory(CategoryEditBindingModel category);
-        Task<Result<int>> DeleteCategory(Category category);
-        Task<Category> GetCategoryByIdWithBooks(int id);
-        Task<PagedList<Category>> GetCategories(CategoryParameters categoryParameters);
+        Task<int> InsertCategory(CategoryEditBindingModel category);
+        Task<Result<int>> DeleteCategory(int id);
+        Task<PagedBindingEntity<CategoryBindingModel>> GetCategories(CategoryParameters categoryParameters);
     }
 }
