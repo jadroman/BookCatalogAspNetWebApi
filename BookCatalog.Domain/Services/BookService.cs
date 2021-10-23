@@ -1,6 +1,5 @@
 ﻿using BookCatalog.Common.Entities;
 using BookCatalog.Common.Interfaces;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -9,124 +8,64 @@ using System.Linq;
 using BookCatalog.Common.Helpers;
 using System.Reflection;
 using System.Text;
+using AutoMapper;
+using BookCatalog.Common.BindingModels;
+using BookCatalog.Common.BindingModels.Book;
 
 namespace BookCatalog.Domain.Services
 {
     public class BookService : IBookService
     {
-        private readonly IBookCatalogContext _context;
+        private readonly IBookRepository _bookRepo;
+        private readonly IMapper _mapper;
 
-        public BookService(IBookCatalogContext context)
+        public BookService(IBookRepository bookRepo, IMapper mapper)
         {
-            _context = context;
+            _bookRepo = bookRepo;
+            _mapper = mapper;
         }
 
         /// <summary>
         /// Gets Books by params
         /// </summary>
-        /// <param name="bookParameters">eg. ".../book?pageNumber=1&pageSize=500&orderBy=title desc&minYear=2000&maxYear=2005&title=the"</param>
+        /// <param name="bookParameters">eg. ".../book?pageNumber=1&pageSize=5&orderBy=title desc&name=na"</param>
         /// <returns></returns>
-        public Task<PagedList<Book>> GetBooks(BookParameters bookParameters)
+        public async Task<PagedBindingEntity<BookBindingModel>> GetBooks(BookParameters bookParameters)
         {
-            // 1. Filter all results
-            var books = Filter(bookParameters);
+            var books = _bookRepo.GetBooks();
 
-            // 2. Search for specific
+            // 1. Search for specific
             Search(ref books, bookParameters);
 
-            // 3. sort by params
+            // 2. Sort by params
             Sort(ref books, bookParameters.OrderBy);
 
-            // 4. Do paging of the final results
-            return PagedList<Book>.ToPagedList(books, bookParameters.PageNumber, bookParameters.PageSize);
-        }
+            // 3. Do paging of the final results
+            var pagedList = await PagedList<Book>.ToPagedList(books, bookParameters.PageNumber, bookParameters.PageSize);
 
-        public Task<int> CountAllBooks()
-        {
-            return _context.Books.AsNoTracking().CountAsync();
-        }
-
-
-        public async Task<Book> GetBookById(int id, bool trackEntity = false)
-        {
-            Book book;
-
-            if (trackEntity)
+            var bookResult = new PagedBindingEntity<BookBindingModel>
             {
-                book = await _context.Books.Include(b => b.Category)
-                 .FirstOrDefaultAsync(c => c.Id == id);
-            }
-            else
-            {
-                book = await _context.Books.Include(b => b.Category)
-                 .AsNoTracking()
-                 .FirstOrDefaultAsync(c => c.Id == id);
-            }
+                Items = _mapper.Map<IEnumerable<BookBindingModel>>(pagedList),
+                MetaData = pagedList.MetaData
+            };
 
-
-
-            return book;
+            return bookResult;
         }
 
 
-        public async Task<Category> GetCategoryById(int id)
-        {
-            var category = await _context.Categories
-                 .AsNoTracking()
-                 .FirstOrDefaultAsync(c => c.Id == id);
-
-            return category;
-        }
-
-        public async Task<int> SaveBook(Book book)
-        {
-            if (book.Id == 0)
-            {
-                await _context.Books.AddAsync(book);
-            }
-
-            return await _context.SaveChangesAsync();
-        }
-
-        public async Task<int> DeleteBook(Book book)
-        {
-            _context.Books.Remove(book);
-            return await _context.SaveChangesAsync();
-        }
-
-        public Task<List<Category>> GetAllCategories()
-        {
-            return _context.Categories.OrderBy(c => c.Name).AsNoTracking().ToListAsync();
-        }
-
-        private void Search(ref IQueryable<Book> books, BookParameters bookParameters)
+        private void Search<T>(ref IQueryable<T> books, BookParameters bookParameters)
         {
             if (!books.Any())
                 return;
 
             if (!string.IsNullOrWhiteSpace(bookParameters.Title))
-                books = books.Where(o => o.Title.ToLower().Contains(bookParameters.Title.Trim().ToLower()));
-
-            if (!string.IsNullOrWhiteSpace(bookParameters.Note))
-                books = books.Where(o => o.Note.ToLower().Contains(bookParameters.Note.Trim().ToLower()));
+                books = (IQueryable<T>)_bookRepo.GetBooksByTitle(bookParameters.Title.Trim().ToLower());
 
             if (!string.IsNullOrWhiteSpace(bookParameters.Author))
-                books = books.Where(o => o.Author.ToLower().Contains(bookParameters.Author.Trim().ToLower()));
-        }
+                books = (IQueryable<T>)_bookRepo.GetBooksByAuthor(bookParameters.Author.Trim().ToLower());
 
-        private IQueryable<Book> Filter(BookParameters bookParameters)
-        {
-            var books = _context.Books.OrderBy(b => b.Title)
-                                                    .AsNoTracking();
-
-            if (bookParameters.MinYear > 0 && bookParameters.MaxYear > 0)
-            {
-                books = books.Where(b => b.Year >= bookParameters.MinYear &&
-                                                b.Year <= bookParameters.MaxYear).OrderBy(on => on.Title)
-                                                    .AsNoTracking();
-            }
-
-            return books;
+            if (!string.IsNullOrWhiteSpace(bookParameters.Note))
+                books = (IQueryable<T>)_bookRepo.GetBooksByNote(bookParameters.Note.Trim().ToLower());
         }
 
         private void Sort<T>(ref IQueryable<T> entities, string orderByQueryString)
@@ -167,6 +106,35 @@ namespace BookCatalog.Domain.Services
             }
 
             entities = entities.OrderBy(entityQuery);
+        }
+
+        public async Task<BookBindingModel> GetBookById(int id, bool trackEntity = false)
+        {
+            Book book = await _bookRepo.GetBookById(id, trackEntity);
+            return _mapper.Map<BookBindingModel>(book);
+        }
+
+
+
+        public async Task<int> UpdateBook(BookEditBindingModel book, int id)
+        {
+            var bookEntity = await _bookRepo.GetBookById(id, true);
+            _mapper.Map(book, bookEntity);
+
+            return await _bookRepo.UpdateBook();
+        }
+
+        public async Task<int> InsertBook(BookEditBindingModel book)
+        {
+            var bookEntity = _mapper.Map<Book>(book);
+            return await _bookRepo.InsertBook(bookEntity);
+        }
+
+        public async Task<Result<int>> DeleteBook(int id)
+        {
+            var book = await _bookRepo.GetBookById(id);
+
+            return new SuccessResult<int>(await _bookRepo.DeleteBook(book));
         }
     }
 }

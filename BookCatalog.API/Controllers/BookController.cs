@@ -1,13 +1,9 @@
-﻿using AutoMapper;
-using BookCatalog.Common.BindingModels;
-using BookCatalog.Common.BindingModels.Book;
-using BookCatalog.Common.Entities;
+﻿using BookCatalog.Common.BindingModels.Book;
 using BookCatalog.Common.Helpers;
 using BookCatalog.Common.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace BookCatalog.API.Controllers
@@ -18,12 +14,10 @@ namespace BookCatalog.API.Controllers
     public class BookController : ControllerBase
     {
         private readonly IBookService _bookService;
-        private IMapper _mapper;
 
-        public BookController(IBookService bookService, IMapper mapper)
+        public BookController(IBookService bookService)
         {
             _bookService = bookService;
-            _mapper = mapper;
         }
 
         [HttpGet]
@@ -32,27 +26,21 @@ namespace BookCatalog.API.Controllers
             var books = await _bookService.GetBooks(bookParameters);
             Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(books.MetaData));
 
-            var bookResult = new PagedBindingEntity<BookBindingModel>
-            {
-                Items = _mapper.Map<IEnumerable<BookBindingModel>>(books),
-                MetaData= books.MetaData
-            };
-
-            return Ok(bookResult);
+            return Ok(books);
         }
 
         [HttpGet("{id}", Name = "BookById")]
         public async Task<IActionResult> GetBookById(int? id)
         {
             var book = await _bookService.GetBookById(id.Value);
+
             if (book == null)
             {
                 return NotFound();
             }
             else
             {
-                var bookResult = _mapper.Map<BookBindingModel>(book);
-                return Ok(bookResult);
+                return Ok(book);
             }
         }
 
@@ -69,16 +57,12 @@ namespace BookCatalog.API.Controllers
                 return BadRequest("Invalid book object");
             }
 
-            var bookEntity = _mapper.Map<Book>(book);
+            await _bookService.InsertBook(book);
 
-            await _bookService.SaveBook(bookEntity);
-
-            var createdBook = _mapper.Map<BookBindingModel>(bookEntity);
-
-            return CreatedAtRoute("BookById", new { id = createdBook.Id }, createdBook);
+            return CreatedAtRoute("BookById", new { id = book.Id }, book);
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("{id:int}")]
         public async Task<IActionResult> UpdateBook([FromRoute] int id, [FromBody] BookEditBindingModel book)
         {
             if (book == null)
@@ -91,24 +75,15 @@ namespace BookCatalog.API.Controllers
                 return BadRequest("Invalid model object");
             }
 
-            var bookEntity = await _bookService.GetBookById(id, true);
-
-            _mapper.Map(book, bookEntity);
-
-            await _bookService.SaveBook(bookEntity);
+            await _bookService.UpdateBook(book, id);
 
             return NoContent();
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id:int}")]
         public async Task<IActionResult> DeleteBook([FromRoute] int id)
         {
-            var book = await _bookService.GetBookById(id);
-            if (book == null)
-            {
-                return NotFound();
-            }
-            await _bookService.DeleteBook(book);
+            await _bookService.DeleteBook(id);
 
             return NoContent();
         }

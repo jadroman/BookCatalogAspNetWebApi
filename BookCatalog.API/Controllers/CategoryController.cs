@@ -1,14 +1,9 @@
-﻿using AutoMapper;
-using BookCatalog.Common.BindingModels;
-using BookCatalog.Common.BindingModels.Book;
-using BookCatalog.Common.BindingModels.Category;
-using BookCatalog.Common.Entities;
+﻿using BookCatalog.Common.BindingModels.Category;
 using BookCatalog.Common.Helpers;
 using BookCatalog.Common.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace BookCatalog.API.Controllers
@@ -19,12 +14,10 @@ namespace BookCatalog.API.Controllers
     public class CategoryController : ControllerBase
     {
         private readonly ICategoryService _categoryService;
-        private readonly IMapper _mapper; 
 
-        public CategoryController(ICategoryService categoryService, IMapper mapper)
+        public CategoryController(ICategoryService categoryService)
         {
             _categoryService = categoryService;
-            _mapper = mapper; 
         }
 
         [HttpGet]

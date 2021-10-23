@@ -1,6 +1,8 @@
-﻿using BookCatalog.Common.Entities;
+﻿using AutoMapper;
+using BookCatalog.Common.Entities;
 using BookCatalog.Common.Helpers;
 using BookCatalog.Common.Interfaces;
+using BookCatalog.DAL;
 using BookCatalog.Domain.Services;
 using MockQueryable.Moq;
 using Moq;
@@ -14,13 +16,24 @@ namespace BookCatalog.Tests.Domain.Services
     public class BookServiceTest
     {
         private readonly Mock<IBookCatalogContext> _dbContext;
+        private readonly IBookRepository _bookRepo;
+        private readonly IMapper _mapper;
 
         private readonly IBookService _sut;
 
         public BookServiceTest()
         {
             _dbContext = new Mock<IBookCatalogContext>();
-            _sut = new BookService(_dbContext.Object);
+            _bookRepo = new BookRepository(_dbContext.Object);
+
+            var config = new MapperConfiguration(c =>
+            {
+                c.AddProfile<MappingProfile>();
+            });
+
+            _mapper = config.CreateMapper();
+
+            _sut = new BookService(_bookRepo, _mapper);
 
             var books = new List<Book>
                 {
@@ -77,7 +90,7 @@ namespace BookCatalog.Tests.Domain.Services
             var result = await _sut.GetBooks(_bookParams);
 
             // Assert
-            Assert.True(result.Count == 1);
+            Assert.True(result.Items.Count() == 1);
         }
 
     }
