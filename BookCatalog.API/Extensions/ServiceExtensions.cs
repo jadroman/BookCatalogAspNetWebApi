@@ -19,7 +19,8 @@ namespace BookCatalogAPI.Extensions
             {
                 options.AddPolicy("CorsPolicy",
                     builder => builder.WithOrigins(config["AllowedOrigins:angularClient"],
-                                                    config["AllowedOrigins:blazorClient"])
+                                                    config["AllowedOrigins:blazorClient"],
+                                                    config["AllowedOrigins:reactClient"])
                     .AllowAnyMethod()
                     .AllowAnyHeader());
             });
