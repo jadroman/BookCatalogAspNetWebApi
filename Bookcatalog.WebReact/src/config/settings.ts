@@ -1,15 +1,12 @@
-
-
-
 const enum ApiUrl {
     Local = 'https://localhost:5001/api/',
     Staging = '',
     Production = ''
 }
 
-const getApiUrl = () => {
-    console.log('process.env.NODE_ENV=> '+ process.env.NODE_ENV);
+export const getApiUrl = () => {
     let url;
+
     switch (process.env.NODE_ENV) {
         case 'development':
             url = ApiUrl.Local
@@ -21,5 +18,3 @@ const getApiUrl = () => {
 
     return url;
 }
-
-export default getApiUrl;

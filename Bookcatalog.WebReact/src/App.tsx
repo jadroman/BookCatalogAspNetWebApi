@@ -2,7 +2,7 @@ import React from 'react';
 import logo from './logo.svg';
 import { Button } from 'react-bootstrap';
 import './App.scss';
-import getApiUrl from './helpers/url';
+import { getApiUrl } from './config/settings';
 
 function App() {
   return (
