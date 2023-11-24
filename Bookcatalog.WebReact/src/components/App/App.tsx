@@ -1,8 +1,7 @@
-import React from 'react';
-import logo from './logo.svg';
 import { Button } from 'react-bootstrap';
 import './App.scss';
-import { getApiUrl } from './config/settings';
+import { getApiUrl } from '../../config/settings';
+import "@fortawesome/fontawesome-free/js/all.js";
 
 function App() {
   return (
