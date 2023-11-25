@@ -1,24 +1,48 @@
-import { Button } from 'react-bootstrap';
+import { Button, Col, Container, Nav, NavDropdown, Navbar, Row } from 'react-bootstrap';
 import './App.scss';
-import { getApiUrl } from '../../config/settings';
 import "@fortawesome/fontawesome-free/js/all.js";
+import { Routes, Route, Link } from 'react-router-dom';
+import Home from 'components/Home/Home';
+import BookList from 'components/Book/BookList';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        {getApiUrl()}
-        <Button variant="primary">Primary</Button>{' '}
-        <Button variant="secondary">Secondary</Button>{' '}
-        <Button variant="success">Success</Button>{' '}
-        <Button variant="warning">Warning</Button>{' '}
-        <Button variant="danger">Danger</Button>{' '}
-        <Button variant="info">Info</Button>{' '}
-        <Button variant="light">Light</Button>{' '}
-        <Button variant="dark">Dark</Button>
-        <Button variant="link">Link</Button>
-      </header>
-    </div>
+    <>
+      <Navbar expand="lg" className="bg-body-tertiary">
+        <Container>
+          <Navbar.Brand href="/home">React-Bootstrap</Navbar.Brand>
+          <Navbar.Toggle aria-controls="basic-navbar-nav" />
+          <Navbar.Collapse id="basic-navbar-nav">
+            <Nav className="me-auto">
+              <Nav.Link href="/home">Home</Nav.Link>
+              <Nav.Link href="/booklist">Books</Nav.Link>
+              {/* <NavDropdown title="Dropdown" id="basic-nav-dropdown">
+                <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
+                <NavDropdown.Item href="#action/3.2">
+                  Another action
+                </NavDropdown.Item>
+                <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
+                <NavDropdown.Divider />
+                <NavDropdown.Item href="#action/3.4">
+                  Separated link
+                </NavDropdown.Item>
+              </NavDropdown> */}
+            </Nav>
+          </Navbar.Collapse>
+        </Container>
+      </Navbar>
+      <Container fluid>
+        <Row>
+          <Col>
+            <Routes>
+              <Route path="" element={<Home/>} />
+              <Route path="/home" element={<Home/>} />
+              <Route path="/booklist" element={<BookList/>} />
+            </Routes>
+          </Col>
+        </Row>
+      </Container>
+    </>
   );
 }
 
