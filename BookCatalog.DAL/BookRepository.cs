@@ -35,6 +35,11 @@ namespace BookCatalog.DAL
             return _context.Books.Where(o => o.Note.ToLower().Contains(bookNote)).AsNoTracking();
         }
 
+        public IQueryable<Book> GetBooksByCategory(string categoryName)
+        {
+            return _context.Books.Include(b => b.Category).Where(b => b.Category.Name == categoryName).AsNoTracking();
+        }
+
         public async Task<Book> GetBookById(int id, bool trackEntity = false)
         {
             Book book;

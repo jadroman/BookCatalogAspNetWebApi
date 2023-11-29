@@ -11,10 +11,17 @@ import {
 type Book = {
   id: number,
   title: string,
-  author: string
+  author: string,
+  category: Category,
+  note: string
 }
 
-type UserApiResponse = {
+type Category = {
+  id: number,
+  name: string
+}
+
+type BookApiResponse = {
   items: Array<Book>;
   metaData: {
     totalCount: number;
@@ -70,17 +77,24 @@ const BookList = () => {
             url.searchParams.set('author', cf.value)
           }
         }
+        else if(cf.id === 'category.name'){
+          if(cf.value !== '' && typeof cf.value === 'string'){
+            url.searchParams.set('category', cf.value)
+          }
+        }
+        else if(cf.id === 'note'){
+          if(cf.value !== '' && typeof cf.value === 'string'){
+            url.searchParams.set('note', cf.value)
+          }
+        }
       })
-      
-      //url.searchParams.set('filters', JSON.stringify(columnFilters ?? []));
-      
       
       url.searchParams.set('globalFilter', globalFilter ?? '');
       url.searchParams.set('sorting', JSON.stringify(sorting ?? []));
 
       try {
         const response = await fetch(url.href);
-        const json = (await response.json()) as UserApiResponse;
+        const json = (await response.json()) as BookApiResponse;
         setData(json.items);
         setRowCount(json.metaData.totalCount);
       } catch (error) {
@@ -111,6 +125,14 @@ const BookList = () => {
       {
         accessorKey: 'author',
         header: 'Author',
+      },
+      {
+        accessorKey: 'category.name',
+        header: 'Category',
+      },
+      {
+        accessorKey: 'note',
+        header: 'Note',
       }
     ],
     [],

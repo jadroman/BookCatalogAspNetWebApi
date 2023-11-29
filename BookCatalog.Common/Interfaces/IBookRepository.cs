@@ -13,6 +13,7 @@ namespace BookCatalog.Common.Interfaces
         IQueryable<Book> GetBooksByTitle(string bookTitle);
         IQueryable<Book> GetBooksByAuthor(string bookAuthor);
         IQueryable<Book> GetBooksByNote(string bookNote);
+        IQueryable<Book> GetBooksByCategory(string categoryName);
         Task<Book> GetBookById(int id, bool trackEntity = false);
         Task<int> UpdateBook();
         Task<int> InsertBook(Book book);

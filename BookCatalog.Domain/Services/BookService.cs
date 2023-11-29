@@ -66,6 +66,9 @@ namespace BookCatalog.Domain.Services
 
             if (!string.IsNullOrWhiteSpace(bookParameters.Note))
                 books = (IQueryable<T>)_bookRepo.GetBooksByNote(bookParameters.Note.Trim().ToLower());
+
+            if (!string.IsNullOrWhiteSpace(bookParameters.Category))
+                books = (IQueryable<T>)_bookRepo.GetBooksByCategory(bookParameters.Category.Trim().ToLower());
         }
 
         private void Sort<T>(ref IQueryable<T> entities, string orderByQueryString)
