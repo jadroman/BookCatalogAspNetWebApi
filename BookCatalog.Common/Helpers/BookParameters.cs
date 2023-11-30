@@ -13,12 +13,9 @@ namespace BookCatalog.Common.Helpers
             OrderBy = "title";
         }
 
-        // filtering
         public uint MinYear { get; set; }
         public uint MaxYear { get; set; } 
         public bool ValidYearRange => MaxYear > MinYear;
-
-        // searching
         public string Title { get; set; }
         public string Note { get; set; }
         public string Author { get; set; }

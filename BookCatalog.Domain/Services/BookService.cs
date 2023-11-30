@@ -34,8 +34,8 @@ namespace BookCatalog.Domain.Services
         {
             var books = _bookRepo.GetBooks();
 
-            // 1. Search for specific
-            Search(ref books, bookParameters);
+            // 1. Filter books by params
+            Filter(ref books, bookParameters);
 
             // 2. Sort by params
             Sort(ref books, bookParameters.OrderBy);
@@ -53,22 +53,18 @@ namespace BookCatalog.Domain.Services
         }
 
 
-        private void Search<T>(ref IQueryable<T> books, BookParameters bookParameters)
+        private void Filter<T>(ref IQueryable<T> books, BookParameters bookParameters)
         {
             if (!books.Any())
                 return;
 
-            if (!string.IsNullOrWhiteSpace(bookParameters.Title))
-                books = (IQueryable<T>)_bookRepo.GetBooksByTitle(bookParameters.Title.Trim().ToLower());
-
-            if (!string.IsNullOrWhiteSpace(bookParameters.Author))
-                books = (IQueryable<T>)_bookRepo.GetBooksByAuthor(bookParameters.Author.Trim().ToLower());
-
-            if (!string.IsNullOrWhiteSpace(bookParameters.Note))
-                books = (IQueryable<T>)_bookRepo.GetBooksByNote(bookParameters.Note.Trim().ToLower());
-
-            if (!string.IsNullOrWhiteSpace(bookParameters.Category))
-                books = (IQueryable<T>)_bookRepo.GetBooksByCategory(bookParameters.Category.Trim().ToLower());
+            if (!string.IsNullOrWhiteSpace(bookParameters.Title) ||
+                !string.IsNullOrWhiteSpace(bookParameters.Author) ||
+                   !string.IsNullOrWhiteSpace(bookParameters.Note) ||
+                        !string.IsNullOrWhiteSpace(bookParameters.Category))
+            {
+                books = (IQueryable<T>)_bookRepo.GetFilteredBooks(bookParameters);
+            }
         }
 
         private void Sort<T>(ref IQueryable<T> entities, string orderByQueryString)
