@@ -1,7 +1,9 @@
 ﻿using BookCatalog.Common.Entities;
 using BookCatalog.Common.Helpers;
 using BookCatalog.Common.Interfaces;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -55,28 +57,47 @@ namespace BookCatalog.DAL
 
             string sqlWhere = string.Empty;
 
+
+
+            var pTitle = new SqlParameter("@title", System.Data.SqlDbType.VarChar);
+            var pAuthor = new SqlParameter("@author", System.Data.SqlDbType.VarChar);
+            var pNote = new SqlParameter("@note", System.Data.SqlDbType.VarChar);
+            var pCategory = new SqlParameter("@category", System.Data.SqlDbType.VarChar);
+
+            var paramsList = new List<SqlParameter>();
+
             if (!string.IsNullOrWhiteSpace(bookParameters.Title))
-                sqlWhere = $"((N'{bookParameters.Title}' LIKE N'') OR (CHARINDEX(N'{bookParameters.Title}', LOWER([b].[Title])) > 0))";
+            {
+                pTitle.Value = bookParameters.Title;
+                sqlWhere = $"((@title LIKE N'') OR (CHARINDEX(@title, LOWER([b].[Title])) > 0))";
+                paramsList.Add(pTitle);
+            }
 
             if (!string.IsNullOrWhiteSpace(bookParameters.Author))
             {
+                pAuthor.Value = bookParameters.Author;
                 sqlWhere += (!string.IsNullOrWhiteSpace(sqlWhere)) ? " AND " : "" ;
-                sqlWhere += $"((N'{bookParameters.Author}' LIKE N'') OR (CHARINDEX(N'{bookParameters.Author}', LOWER([b].[Author])) > 0))";
+                sqlWhere += $"((@author LIKE N'') OR (CHARINDEX(@author, LOWER([b].[Author])) > 0))";
+                paramsList.Add(pAuthor);
             }
 
             if (!string.IsNullOrWhiteSpace(bookParameters.Note))
             {
+                pNote.Value = bookParameters.Note;
                 sqlWhere += (!string.IsNullOrWhiteSpace(sqlWhere)) ? " AND " : "";
-                sqlWhere += $"((N'{bookParameters.Note}' LIKE N'') OR (CHARINDEX(N'{bookParameters.Note}', LOWER([b].[Note])) > 0))";
+                sqlWhere += $"((@note LIKE N'') OR (CHARINDEX(@note, LOWER([b].[Note])) > 0))";
+                paramsList.Add(pNote);
             }
 
             if (!string.IsNullOrWhiteSpace(bookParameters.Category))
             {
+                pCategory.Value = bookParameters.Category;
                 sqlWhere += (!string.IsNullOrWhiteSpace(sqlWhere)) ? " AND " : "";
-                sqlWhere += $"((N'{bookParameters.Category}' LIKE N'') OR (CHARINDEX(N'{bookParameters.Category}', LOWER([c].[Name])) > 0))";
+                sqlWhere += $"((@category LIKE N'') OR (CHARINDEX(@category, LOWER([c].[Name])) > 0))";
+                paramsList.Add(pCategory);
             }
 
-            return _context.Books.FromSqlRaw(sqlSelect + sqlWhere).Include(b => b.Category).AsNoTracking();
+            return _context.Books.FromSqlRaw(sqlSelect + sqlWhere, paramsList.ToArray()).Include(b => b.Category).AsNoTracking();
         }
 
         public async Task<Book> GetBookById(int id, bool trackEntity = false)
