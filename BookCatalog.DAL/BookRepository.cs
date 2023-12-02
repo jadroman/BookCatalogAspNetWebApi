@@ -1,10 +1,13 @@
 ﻿using BookCatalog.Common.Entities;
 using BookCatalog.Common.Helpers;
 using BookCatalog.Common.Interfaces;
+using LinqKit;
 using Microsoft.Data.SqlClient;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace BookCatalog.DAL
@@ -45,61 +48,31 @@ namespace BookCatalog.DAL
 
         public IQueryable<Book> GetFilteredBooks(BookParameters bookParameters)
         {
-            string sqlSelect = @"
-                                SELECT 
-                                    [b].[Id], [b].[Author], [b].[CategoryId], [b].[Collection], 
-                                    [b].[Note], [b].[Publisher], [b].[Read], [b].[Title], 
-                                    [b].[Year]
-                                FROM [Book] AS [b]
-                                LEFT JOIN [Category] AS [c] ON [b].[CategoryId] = [c].[Id]
-                                WHERE 
-            ";
-
-            string sqlWhere = string.Empty;
-
-
-
-            var pTitle = new SqlParameter("@title", System.Data.SqlDbType.VarChar);
-            var pAuthor = new SqlParameter("@author", System.Data.SqlDbType.VarChar);
-            var pNote = new SqlParameter("@note", System.Data.SqlDbType.VarChar);
-            var pCategory = new SqlParameter("@category", System.Data.SqlDbType.VarChar);
-
-            var paramsList = new List<SqlParameter>();
+            var predicate = PredicateBuilder.New<Book>();
 
             if (!string.IsNullOrWhiteSpace(bookParameters.Title))
             {
-                pTitle.Value = bookParameters.Title;
-                sqlWhere = $"((@title LIKE N'') OR (CHARINDEX(@title, LOWER([b].[Title])) > 0))";
-                paramsList.Add(pTitle);
+                predicate = predicate.And(p => p.Title.Contains(bookParameters.Title));
             }
 
             if (!string.IsNullOrWhiteSpace(bookParameters.Author))
             {
-                pAuthor.Value = bookParameters.Author;
-                sqlWhere += (!string.IsNullOrWhiteSpace(sqlWhere)) ? " AND " : "" ;
-                sqlWhere += $"((@author LIKE N'') OR (CHARINDEX(@author, LOWER([b].[Author])) > 0))";
-                paramsList.Add(pAuthor);
+                predicate = predicate.And(p => p.Author.Contains(bookParameters.Author));
             }
 
             if (!string.IsNullOrWhiteSpace(bookParameters.Note))
             {
-                pNote.Value = bookParameters.Note;
-                sqlWhere += (!string.IsNullOrWhiteSpace(sqlWhere)) ? " AND " : "";
-                sqlWhere += $"((@note LIKE N'') OR (CHARINDEX(@note, LOWER([b].[Note])) > 0))";
-                paramsList.Add(pNote);
+                predicate = predicate.And(p => p.Note.Contains(bookParameters.Note));
             }
 
             if (!string.IsNullOrWhiteSpace(bookParameters.Category))
             {
-                pCategory.Value = bookParameters.Category;
-                sqlWhere += (!string.IsNullOrWhiteSpace(sqlWhere)) ? " AND " : "";
-                sqlWhere += $"((@category LIKE N'') OR (CHARINDEX(@category, LOWER([c].[Name])) > 0))";
-                paramsList.Add(pCategory);
+                predicate = predicate.And(p => p.Category.Name.Contains(bookParameters.Category));
             }
 
-            return _context.Books.FromSqlRaw(sqlSelect + sqlWhere, paramsList.ToArray()).Include(b => b.Category).AsNoTracking();
+            return _context.Books.Include(b => b.Category).Where(predicate).AsNoTracking();
         }
-
+            
         public async Task<Book> GetBookById(int id, bool trackEntity = false)
         {
             Book book;
