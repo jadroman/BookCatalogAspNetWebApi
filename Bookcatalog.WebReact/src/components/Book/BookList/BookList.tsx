@@ -88,9 +88,11 @@ const BookList = () => {
           }
         }
       })
-      
-      url.searchParams.set('globalFilter', globalFilter ?? '');
-      url.searchParams.set('sorting', JSON.stringify(sorting ?? []));
+
+      if (sorting && sorting.length > 0) {
+        let showDescAsc = sorting[0].desc ? "desc" : "asc";
+        url.searchParams.set('OrderBy', `${sorting[0].id}` + " " + showDescAsc);
+      }
 
       try {
         const response = await fetch(url.href);
