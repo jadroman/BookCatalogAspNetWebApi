@@ -26,26 +26,6 @@ namespace BookCatalog.DAL
             return _context.Books.Include(b => b.Category).AsNoTracking(); 
         }
 
-        public IQueryable<Book> GetBooksByTitle(string bookTitle)
-        {
-            return _context.Books.Include(b => b.Category).Where(o => o.Title.ToLower().Contains(bookTitle)).AsNoTracking();
-        }
-
-        public IQueryable<Book> GetBooksByAuthor(string bookAuthor)
-        {
-            return _context.Books.Include(b => b.Category).Where(o => o.Author.ToLower().Contains(bookAuthor)).AsNoTracking();
-        }
-
-        public IQueryable<Book> GetBooksByNote(string bookNote)
-        {
-            return _context.Books.Include(b => b.Category).Where(o => o.Note.ToLower().Contains(bookNote)).AsNoTracking();
-        }
-
-        public IQueryable<Book> GetBooksByCategory(string categoryName)
-        {
-            return _context.Books.Include(b => b.Category).Where(b => b.Category.Name.ToLower().Contains(categoryName)).AsNoTracking();
-        }
-
         public IQueryable<Book> GetFilteredBooks(BookParameters bookParameters)
         {
             var predicate = PredicateBuilder.New<Book>();
