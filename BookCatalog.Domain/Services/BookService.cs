@@ -86,13 +86,20 @@ namespace BookCatalog.Domain.Services
                 if (string.IsNullOrWhiteSpace(param))
                     continue;
 
-                var propertyFromQueryName = param.Split(" ")[0];
-                var objectProperty = propertyInfos.FirstOrDefault(pi => pi.Name.Equals(propertyFromQueryName, StringComparison.InvariantCultureIgnoreCase));
+                var categoryNameProperty = "category.name";
+                var sortingOrder = param.EndsWith(" desc") ? "descending" : "ascending"; ;
+                var propertyFromQuery = param.Split(" ")[0];
+                var objectProperty = propertyInfos.FirstOrDefault(pi => pi.Name.Equals(propertyFromQuery, StringComparison.InvariantCultureIgnoreCase));
 
                 if (objectProperty == null)
-                    continue;
+                {
+                    if(propertyFromQuery.Equals(categoryNameProperty, StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        entityQueryBuilder.Append($"{propertyFromQuery} {sortingOrder}, ");
+                    }
 
-                var sortingOrder = param.EndsWith(" desc") ? "descending" : "ascending";
+                    continue;
+                }
 
                 entityQueryBuilder.Append($"{objectProperty.Name} {sortingOrder}, ");
             }
