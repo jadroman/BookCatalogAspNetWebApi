@@ -7,6 +7,7 @@ import {
   type MRT_PaginationState,
   type MRT_SortingState,
 } from 'material-react-table';
+import { getApiUrl } from 'config/url';
 
 type Book = {
   id: number,
@@ -37,9 +38,7 @@ const BookList = () => {
   const [rowCount, setRowCount] = useState(0);
 
   //table state
-  const [columnFilters, setColumnFilters] = useState<MRT_ColumnFiltersState>(
-    [],
-  );
+  const [columnFilters, setColumnFilters] = useState<MRT_ColumnFiltersState>([],);
   const [globalFilter, setGlobalFilter] = useState('');
   const [sorting, setSorting] = useState<MRT_SortingState>([]);
   const [pagination, setPagination] = useState<MRT_PaginationState>({
@@ -58,7 +57,7 @@ const BookList = () => {
       }
 
       const url = new URL(
-        '/api/book','https://localhost:5001',
+        'book', getApiUrl(),
       );
 
       // URL e.g. api/book?PageNumber=0&pageSize=10&title=long&author=nick&globalFilter=&sorting=[]
@@ -122,11 +121,11 @@ const BookList = () => {
     () => [
       {
         accessorKey: 'title',
-        header: 'Title',
+        header: 'Title'
       },
       {
         accessorKey: 'author',
-        header: 'Author',
+        header: 'Author'
       },
       {
         accessorKey: 'category.name',
@@ -134,7 +133,7 @@ const BookList = () => {
       },
       {
         accessorKey: 'note',
-        header: 'Note',
+        header: 'Note'
       }
     ],
     [],
