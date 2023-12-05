@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import {
   MaterialReactTable,
   useMaterialReactTable,
@@ -8,6 +8,14 @@ import {
   type MRT_SortingState,
 } from 'material-react-table';
 import { getApiUrl } from 'config/url';
+import {
+  QueryClient,
+  QueryClientProvider,
+  keepPreviousData,
+  useQuery,
+} from '@tanstack/react-query'; //note: this is TanStack React Query V5
+import { IconButton, Tooltip } from '@mui/material';
+import RefreshIcon from '@mui/icons-material/Refresh';
 
 type Book = {
   id: number,
@@ -30,14 +38,7 @@ type BookApiResponse = {
 };
 
 const BookList = () => {  
-  //data and fetching state
-  const [data, setData] = useState<Book[]>([]);
-  const [isError, setIsError] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isRefetching, setIsRefetching] = useState(false);
-  const [rowCount, setRowCount] = useState(0);
-
-  //table state
+  //manage our own state for stuff we want to pass to the API
   const [columnFilters, setColumnFilters] = useState<MRT_ColumnFiltersState>([],);
   const [globalFilter, setGlobalFilter] = useState('');
   const [sorting, setSorting] = useState<MRT_SortingState>([]);
@@ -46,23 +47,30 @@ const BookList = () => {
     pageSize: 10,
   });  
   
-  //if you want to avoid useEffect, look at the React Query example instead
-  useEffect(() => {
-    console.log('useEffect');
-    const fetchData = async () => {
-      if (!data.length) {
-        setIsLoading(true);
-      } else {
-        setIsRefetching(true);
-      }
-
+  //consider storing this code in a custom hook (i.e useFetchUsers)
+  const {
+    data: { items = [], metaData } = {}, //your data and api response will probably be different
+    isError,
+    isRefetching,
+    isLoading,
+    refetch,
+  } = useQuery<BookApiResponse>({
+    queryKey: [
+      'table-data',
+      columnFilters, //refetch when columnFilters changes
+      globalFilter, //refetch when globalFilter changes
+      pagination.pageIndex, //refetch when pagination.pageIndex changes
+      pagination.pageSize, //refetch when pagination.pageSize changes
+      sorting, //refetch when sorting changes
+    ],
+    queryFn: async () => {
       const url = new URL(
         'book', getApiUrl(),
       );
+    
+      // URL e.g. api/book?PageNumber=0&pageSize=10&title=long&author=nick&globalFilter=&OrderBy=author+asc
 
-      // URL e.g. api/book?PageNumber=0&pageSize=10&title=long&author=nick&globalFilter=&sorting=[]
-
-      url.searchParams.set('PageNumber', `${pagination.pageIndex}`);
+      url.searchParams.set('pageNumber', `${pagination.pageIndex}`);
       url.searchParams.set('pageSize', `${pagination.pageSize}`);
       
       columnFilters.forEach((cf) => {
@@ -90,32 +98,15 @@ const BookList = () => {
 
       if (sorting && sorting.length > 0) {
         let showDescAsc = sorting[0].desc ? "desc" : "asc";
-        url.searchParams.set('OrderBy', `${sorting[0].id}` + " " + showDescAsc);
+        url.searchParams.set('orderBy', `${sorting[0].id}` + " " + showDescAsc);
       }
 
-      try {
-        const response = await fetch(url.href);
-        const json = (await response.json()) as BookApiResponse;
-        setData(json.items);
-        setRowCount(json.metaData.totalCount);
-      } catch (error) {
-        setIsError(true);
-        console.error(error);
-        return;
-      }
-      setIsError(false);
-      setIsLoading(false);
-      setIsRefetching(false);
-    };
-    fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    columnFilters, //re-fetch when column filters change
-    globalFilter, //re-fetch when global filter changes
-    pagination.pageIndex, //re-fetch when page index changes
-    pagination.pageSize, //re-fetch when page size changes
-    sorting //re-fetch when sorting changes
-  ]);
+      const response = await fetch(url.href);
+      const json = (await response.json()) as BookApiResponse;
+      return json;
+    },
+    placeholderData: keepPreviousData, //don't go to 0 rows when refetching or paginating to next page
+  });
 
   const columns = useMemo<MRT_ColumnDef<Book>[]>(
     () => [
@@ -141,8 +132,7 @@ const BookList = () => {
 
   const table = useMaterialReactTable({
     columns,
-    data,
-    enableRowSelection: true,
+    data: items,
     getRowId: (row) => row.id?.toString(),
     initialState: { showColumnFilters: true },
     manualFiltering: true,
@@ -158,7 +148,14 @@ const BookList = () => {
     onGlobalFilterChange: setGlobalFilter,
     onPaginationChange: setPagination,
     onSortingChange: setSorting,
-    rowCount,
+    renderTopToolbarCustomActions: () => (
+      <Tooltip arrow title="Refresh Data">
+        <IconButton onClick={() => refetch()}>
+          <RefreshIcon />
+        </IconButton>
+      </Tooltip>
+    ),
+    rowCount: metaData?.totalCount,
     state: {
       columnFilters,
       globalFilter,
@@ -173,5 +170,13 @@ const BookList = () => {
     return <MaterialReactTable table={table} />;
 }
 
+const queryClient = new QueryClient();
 
-export default BookList;
+const BookListQueryProvider = () => (
+  //App.tsx or AppProviders file. Don't just wrap this component with QueryClientProvider! Wrap your whole App!
+  <QueryClientProvider client={queryClient}>
+    <BookList />
+  </QueryClientProvider>
+);
+
+export default BookListQueryProvider;
