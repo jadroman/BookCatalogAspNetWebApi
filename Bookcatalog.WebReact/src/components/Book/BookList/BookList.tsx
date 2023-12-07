@@ -40,6 +40,13 @@ type CategoryItem = {
   value: string
 }
 
+type BookApiData = {
+  bookItems: Array<Book>;
+  booksMetaData: {
+    totalCount: number;
+  };
+};
+
 type BookApiResponse = {
   items: Array<Book>;
   metaData: {
@@ -47,9 +54,16 @@ type BookApiResponse = {
   };
 };
 
-type CategoryApiResponse = {
+type CategoriesApiResponse = {
   items: Array<Category>;
   metaData: {
+    totalCount: number;
+  };
+};
+
+type CategoryApiData = {
+  categoryItems: Array<Category>;
+  categoriesMetaData: {
     totalCount: number;
   };
 };
@@ -57,6 +71,7 @@ type CategoryApiResponse = {
 const BookList = () => {  
   const [validationErrors, setValidationErrors] = useState<Record<string, string | undefined>>({});
   const [selectedCategory, setSelectedCategory] = useState<string>('0');
+  //const [proba, setProba] = useState<number>(0);
 
 
   //manage our own state for stuff we want to pass to the API
@@ -68,66 +83,93 @@ const BookList = () => {
     pageSize: 10,
   });  
   
-  //consider storing this code in a custom hook (i.e useFetchUsers)
-  const {
-    data: { items = [], metaData } = {}, //your data and api response will probably be different
-    isError,
-    isRefetching,
-    isLoading,
-    refetch,
-  } = useQuery<BookApiResponse>({
-    queryKey: [
-      'table-data',
-      columnFilters, //refetch when columnFilters changes
-      globalFilter, //refetch when globalFilter changes
-      pagination.pageIndex, //refetch when pagination.pageIndex changes
-      pagination.pageSize, //refetch when pagination.pageSize changes
-      sorting, //refetch when sorting changes
-    ],
-    queryFn: async () => {
-      const getBooksUrl = new URL(
-        'book', getApiUrl(),
-      );
-    
-      // URL e.g. api/book?PageNumber=0&pageSize=10&title=long&author=nick&globalFilter=&OrderBy=author+asc
-
-      getBooksUrl.searchParams.set('pageNumber', `${pagination.pageIndex}`);
-      getBooksUrl.searchParams.set('pageSize', `${pagination.pageSize}`);
+  
+  function useGetBooks() {
+    return useQuery<BookApiData>({
+      queryKey: [
+        'bookData',
+        columnFilters, //refetch when columnFilters changes
+        globalFilter, //refetch when globalFilter changes
+        pagination.pageIndex, //refetch when pagination.pageIndex changes
+        pagination.pageSize, //refetch when pagination.pageSize changes
+        sorting, //refetch when sorting changes
+      ],
+      queryFn: async () => {
+        const getBooksUrl = new URL(
+          'book', getApiUrl(),
+        );
       
-      columnFilters.forEach((cf) => {
-        if(cf.id === 'title'){
-          if(cf.value !== '' && typeof cf.value === 'string'){
-            getBooksUrl.searchParams.set('title', cf.value)
+        // URL e.g. api/book?PageNumber=0&pageSize=10&title=long&author=nick&globalFilter=&OrderBy=author+asc
+  
+        getBooksUrl.searchParams.set('pageNumber', `${pagination.pageIndex}`);
+        getBooksUrl.searchParams.set('pageSize', `${pagination.pageSize}`);
+        
+        columnFilters.forEach((cf) => {
+          if(cf.id === 'title'){
+            if(cf.value !== '' && typeof cf.value === 'string'){
+              getBooksUrl.searchParams.set('title', cf.value)
+            }
           }
-        }
-        else if(cf.id === 'author'){
-          if(cf.value !== '' && typeof cf.value === 'string'){
-            getBooksUrl.searchParams.set('author', cf.value)
+          else if(cf.id === 'author'){
+            if(cf.value !== '' && typeof cf.value === 'string'){
+              getBooksUrl.searchParams.set('author', cf.value)
+            }
           }
-        }
-        else if(cf.id === 'category.name'){
-          if(cf.value !== '' && typeof cf.value === 'string'){
-            getBooksUrl.searchParams.set('category', cf.value)
+          else if(cf.id === 'category.name'){
+            if(cf.value !== '' && typeof cf.value === 'string'){
+              getBooksUrl.searchParams.set('category', cf.value)
+            }
           }
-        }
-        else if(cf.id === 'note'){
-          if(cf.value !== '' && typeof cf.value === 'string'){
-            getBooksUrl.searchParams.set('note', cf.value)
+          else if(cf.id === 'note'){
+            if(cf.value !== '' && typeof cf.value === 'string'){
+              getBooksUrl.searchParams.set('note', cf.value)
+            }
           }
+        })
+  
+        if (sorting && sorting.length > 0) {
+          let showDescAsc = sorting[0].desc ? "desc" : "asc";
+          getBooksUrl.searchParams.set('orderBy', `${sorting[0].id}` + " " + showDescAsc);
         }
-      })
+  
+        const response = await fetch(getBooksUrl.href);
+        const json: BookApiResponse = await response.json();
+  
+        return { bookItems: json.items, booksMetaData: json.metaData} as BookApiData;
+      },
+      placeholderData: keepPreviousData, //don't go to 0 rows when refetching or paginating to next page
+    });
+  }
 
-      if (sorting && sorting.length > 0) {
-        let showDescAsc = sorting[0].desc ? "desc" : "asc";
-        getBooksUrl.searchParams.set('orderBy', `${sorting[0].id}` + " " + showDescAsc);
-      }
+  function useGetCategories() {
+    return useQuery<CategoryApiData>({
+      queryKey: [
+        'categoryData'
+      ],
+      queryFn: async () => {
+        const getCategoriesUrl = new URL(
+          'category', getApiUrl(),
+        );
+      
+        // URL e.g. api/book?PageNumber=0&pageSize=10&title=long&author=nick&globalFilter=&OrderBy=author+asc
+  
+        getCategoriesUrl.searchParams.set('pageSize', '100');
+        
+        const response = await fetch(getCategoriesUrl.href);
+        const json: CategoriesApiResponse = await response.json();
+  
+        return { categoryItems: json.items, categoriesMetaData: json.metaData} as CategoryApiData;
+      },
+    });
+  }
 
-      const response = await fetch(getBooksUrl.href);
-      const json = (await response.json()) as BookApiResponse;
-      return json;
-    },
-    placeholderData: keepPreviousData, //don't go to 0 rows when refetching or paginating to next page
-  });
+  const {
+    data: { bookItems = [], booksMetaData } = {}, 
+    isError: isLoadingBooksError,
+    isRefetching: isRefetchingBooks,
+    isLoading: isLoadingBooks,
+    refetch: refetchBook,
+  } = useGetBooks();
 
   const onSelectCategory = (selectedCategory: string): void => {
     //console.log('onSelectCategory => ' + selectedCategory);
@@ -141,20 +183,6 @@ const BookList = () => {
   }) => {
       console.log("handleSaveUser=> " + selectedCategory);
   };
-
-  const fetchCategories = async (): Promise<Array<CategoryItem>> => {
-    const getCategiriesUrl = new URL(
-      'category', getApiUrl(),
-    );
-    
-    const response = await fetch(getCategiriesUrl.href);
-    const json = (await response.json()) as CategoryApiResponse;
-    let categoryItems: Array<CategoryItem> = json.items.map(c=>{
-      return {label: c.name, value: c.id.toString()};
-    });
-
-    return categoryItems;
-  }
 
   const fetchMockCategs4 : Array<Category> = [
     {
@@ -170,11 +198,6 @@ const BookList = () => {
       name: 'Stručna literatura-engleski',
     }
   ];
-
-  const handleMenuItemClick = (event: any, index: string)=>{
-    console.log("event=>" + JSON.stringify(event ?? []));
-    console.log("index=>" + JSON.stringify(index ?? ""));
-  }
 
   const columns = useMemo<MRT_ColumnDef<Book>[]>(
     () => [
@@ -216,10 +239,16 @@ const BookList = () => {
         accessorKey: 'category.name',
         header: 'Category',
         Edit: ({ cell, column, row, table }) => {
+                  
+          const {
+            data: { categoryItems = [], categoriesMetaData } = {}, 
+            isError: isLoadingCategoryError,
+            isLoading: isLoadingCategories,
+          } = useGetCategories();
+
+          //setTableIsInEditMode(true);
           const selectedCategory = row.original.category.id || '0';
-          return <CategorySelection onSelectCategory={onSelectCategory} selectedCategory={selectedCategory} inputData={fetchMockCategs4} />;
-        
-          
+          return <CategorySelection onSelectCategory={onSelectCategory} selectedCategory={selectedCategory} inputData={categoryItems} />;
         },
         /* editVariant: 'select',
         editSelectOptions: fetchMockCategs2,
@@ -262,7 +291,7 @@ const BookList = () => {
   
   const table = useMaterialReactTable({
     columns,
-    data: items,
+    data: bookItems,
     createDisplayMode: 'modal',
     editDisplayMode: 'modal', 
     enableEditing: true,
@@ -271,7 +300,7 @@ const BookList = () => {
     manualFiltering: true,
     manualPagination: true,
     manualSorting: true,
-    muiToolbarAlertBannerProps: isError
+    muiToolbarAlertBannerProps: isLoadingBooksError
       ? {
           color: 'error',
           children: 'Error loading data',
@@ -288,7 +317,7 @@ const BookList = () => {
 
     renderTopToolbarCustomActions: () => (
       <Tooltip arrow title="Refresh Data">
-        <IconButton onClick={() => refetch()}>
+        <IconButton onClick={() => refetchBook()}>
           <RefreshIcon />
         </IconButton>
       </Tooltip>
@@ -307,14 +336,14 @@ const BookList = () => {
         </Tooltip>
       </Box>
     ),
-    rowCount: metaData?.totalCount,
+    rowCount: booksMetaData?.totalCount,
     state: {
       columnFilters,
       globalFilter,
-      isLoading,
+      isLoading: isLoadingBooks,
       pagination,
-      showAlertBanner: isError,
-      showProgressBars: isRefetching,
+      showAlertBanner: isLoadingBooksError,
+      showProgressBars: isRefetchingBooks,
       sorting,
     },
   });
