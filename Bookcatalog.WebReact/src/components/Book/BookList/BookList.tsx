@@ -1,4 +1,4 @@
-import { SyntheticEvent, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import {
   MaterialReactTable,
   useMaterialReactTable,
@@ -14,9 +14,11 @@ import {
   QueryClient,
   QueryClientProvider,
   keepPreviousData,
+  useMutation,
   useQuery,
+  useQueryClient,
 } from '@tanstack/react-query'; //note: this is TanStack React Query V5
-import { Box, IconButton, MenuItem, Tooltip } from '@mui/material';
+import { Box, CircularProgress, IconButton, Tooltip } from '@mui/material';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -27,17 +29,29 @@ type Book = {
   title: string,
   author: string,
   category: Category,
-  note: string
+  categoryId: string,
+  note: string, 
+  publisher: string, 
+  collection: string, 
+  read: boolean,
+  year: number
+}
+
+type BookUpdate = {
+  id: number,
+  title: string,
+  author: string,
+  categoryId: string,
+  note: string, 
+  publisher: string, 
+  collection: string, 
+  read: boolean,
+  year: number
 }
 
 type Category = {
   id: string,
   name: string
-}
-
-type CategoryItem = {
-  label: string,
-  value: string
 }
 
 type BookApiData = {
@@ -84,94 +98,132 @@ const BookList = () => {
   });  
   
   
-  function useGetBooks() {
-    return useQuery<BookApiData>({
-      queryKey: [
-        'bookData',
-        columnFilters, //refetch when columnFilters changes
-        globalFilter, //refetch when globalFilter changes
-        pagination.pageIndex, //refetch when pagination.pageIndex changes
-        pagination.pageSize, //refetch when pagination.pageSize changes
-        sorting, //refetch when sorting changes
-      ],
-      queryFn: async () => {
-        const getBooksUrl = new URL(
-          'book', getApiUrl(),
-        );
-      
-        // URL e.g. api/book?PageNumber=0&pageSize=10&title=long&author=nick&globalFilter=&OrderBy=author+asc
-  
-        getBooksUrl.searchParams.set('pageNumber', `${pagination.pageIndex}`);
-        getBooksUrl.searchParams.set('pageSize', `${pagination.pageSize}`);
-        
-        columnFilters.forEach((cf) => {
-          if(cf.id === 'title'){
-            if(cf.value !== '' && typeof cf.value === 'string'){
-              getBooksUrl.searchParams.set('title', cf.value)
-            }
-          }
-          else if(cf.id === 'author'){
-            if(cf.value !== '' && typeof cf.value === 'string'){
-              getBooksUrl.searchParams.set('author', cf.value)
-            }
-          }
-          else if(cf.id === 'category.name'){
-            if(cf.value !== '' && typeof cf.value === 'string'){
-              getBooksUrl.searchParams.set('category', cf.value)
-            }
-          }
-          else if(cf.id === 'note'){
-            if(cf.value !== '' && typeof cf.value === 'string'){
-              getBooksUrl.searchParams.set('note', cf.value)
-            }
-          }
-          else if(cf.id === 'publisher'){
-            if(cf.value !== '' && typeof cf.value === 'string'){
-              getBooksUrl.searchParams.set('publisher', cf.value)
-            }
-          }
-          else if(cf.id === 'collection'){
-            if(cf.value !== '' && typeof cf.value === 'string'){
-              getBooksUrl.searchParams.set('collection', cf.value)
-            }
-          }
-        })
-  
-        if (sorting && sorting.length > 0) {
-          let showDescAsc = sorting[0].desc ? "desc" : "asc";
-          getBooksUrl.searchParams.set('orderBy', `${sorting[0].id}` + " " + showDescAsc);
-        }
-  
-        const response = await fetch(getBooksUrl.href);
-        const json: BookApiResponse = await response.json();
-  
-        return { bookItems: json.items, booksMetaData: json.metaData} as BookApiData;
-      },
-      placeholderData: keepPreviousData, //don't go to 0 rows when refetching or paginating to next page
-    });
-  }
+function useGetBooks() {
+  return useQuery<BookApiData>({
+    queryKey: [
+      'bookData',
+      columnFilters, //refetch when columnFilters changes
+      globalFilter, //refetch when globalFilter changes
+      pagination.pageIndex, //refetch when pagination.pageIndex changes
+      pagination.pageSize, //refetch when pagination.pageSize changes
+      sorting, //refetch when sorting changes
+    ],
+    queryFn: async () => {
+      const getBooksUrl = new URL(
+        'book', getApiUrl(),
+      );
+    
+      // URL e.g. api/book?PageNumber=0&pageSize=10&title=long&author=nick&globalFilter=&OrderBy=author+asc
 
-  function useGetCategories() {
-    return useQuery<CategoryApiData>({
-      queryKey: [
-        'categoryData'
-      ],
-      queryFn: async () => {
-        const getCategoriesUrl = new URL(
-          'category', getApiUrl(),
-        );
+      getBooksUrl.searchParams.set('pageNumber', `${pagination.pageIndex}`);
+      getBooksUrl.searchParams.set('pageSize', `${pagination.pageSize}`);
       
-        // URL e.g. api/book?PageNumber=0&pageSize=10&title=long&author=nick&globalFilter=&OrderBy=author+asc
+      columnFilters.forEach((cf) => {
+        if(cf.id === 'title'){
+          if(cf.value !== '' && typeof cf.value === 'string'){
+            getBooksUrl.searchParams.set('title', cf.value)
+          }
+        }
+        else if(cf.id === 'author'){
+          if(cf.value !== '' && typeof cf.value === 'string'){
+            getBooksUrl.searchParams.set('author', cf.value)
+          }
+        }
+        else if(cf.id === 'category.name'){
+          if(cf.value !== '' && typeof cf.value === 'string'){
+            getBooksUrl.searchParams.set('category', cf.value)
+          }
+        }
+        else if(cf.id === 'note'){
+          if(cf.value !== '' && typeof cf.value === 'string'){
+            getBooksUrl.searchParams.set('note', cf.value)
+          }
+        }
+        else if(cf.id === 'publisher'){
+          if(cf.value !== '' && typeof cf.value === 'string'){
+            getBooksUrl.searchParams.set('publisher', cf.value)
+          }
+        }
+        else if(cf.id === 'collection'){
+          if(cf.value !== '' && typeof cf.value === 'string'){
+            getBooksUrl.searchParams.set('collection', cf.value)
+          }
+        }
+      })
+
+      if (sorting && sorting.length > 0) {
+        let showDescAsc = sorting[0].desc ? "desc" : "asc";
+        getBooksUrl.searchParams.set('orderBy', `${sorting[0].id}` + " " + showDescAsc);
+      }
+
+      const response = await fetch(getBooksUrl.href);
+      const json: BookApiResponse = await response.json();
+
+      return { bookItems: json.items, booksMetaData: json.metaData} as BookApiData;
+    },
+    placeholderData: keepPreviousData, //don't go to 0 rows when refetching or paginating to next page
+  });
+}
+
+function useGetCategories() {
+  return useQuery<CategoryApiData>({
+    queryKey: [
+      'categoryData'
+    ],
+    queryFn: async () => {
+      const getCategoriesUrl = new URL(
+        'category', getApiUrl(),
+      );
+    
+      // URL e.g. api/book?PageNumber=0&pageSize=10&title=long&author=nick&globalFilter=&OrderBy=author+asc
+
+      getCategoriesUrl.searchParams.set('pageSize', '100');
+      
+      const response = await fetch(getCategoriesUrl.href);
+      const json: CategoriesApiResponse = await response.json();
+
+      return { categoryItems: json.items, categoriesMetaData: json.metaData} as CategoryApiData;
+    },
+  });
+}
+
+const { mutateAsync: updateBook, isPending: isUpdatingBook } =
+useUpdateBook();
+
+function useUpdateBook() {
+
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (book: BookUpdate) => {
+    const reqOpt = {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(book)
+    };
+    
+    const putBookUrl = new URL(
+      `book/${book.id}`, getApiUrl(),
+    );
   
-        getCategoriesUrl.searchParams.set('pageSize', '100');
-        
-        const response = await fetch(getCategoriesUrl.href);
-        const json: CategoriesApiResponse = await response.json();
-  
-        return { categoryItems: json.items, categoriesMetaData: json.metaData} as CategoryApiData;
-      },
+    fetch(putBookUrl, reqOpt)
+    .then(response => response.json())
+    .then(data => {
+      console.log('update resp=>' + JSON.stringify(data));
     });
-  }
+  },
+    //client side optimistic update
+    /* onMutate: (newUserInfo: User) => {
+      queryClient.setQueryData(
+        ['users'],
+        (prevUsers: any) =>
+          prevUsers?.map((prevUser: User) =>
+            prevUser.id === newUserInfo.id ? newUserInfo : prevUser,
+          ),
+      );
+    }, */
+    // onSettled: () => queryClient.invalidateQueries({ queryKey: ['users'] }), //refetch users after mutation, disabled for demo
+  });
+} 
 
   const {
     data: { bookItems = [], booksMetaData } = {}, 
@@ -187,30 +239,35 @@ const BookList = () => {
   }
 
   //UPDATE action
-  const handleSaveUser: MRT_TableOptions<Book>['onEditingRowSave'] = async ({
+  const handleSaveBook: MRT_TableOptions<Book>['onEditingRowSave'] = async ({
     values,
     table
   }) => {
-      console.log("handleSaveUser=> " + selectedCategory);
+    let bookUpdated: BookUpdate = values;
+    bookUpdated.categoryId = selectedCategory;
+    
+    await updateBook(bookUpdated);
+    console.log('handleSaveBook=>' + JSON.stringify(handleSaveBook));
+      //console.log("handleSaveBook=> " + selectedCategory);
   };
-
-  const fetchMockCategs4 : Array<Category> = [
-    {
-      id: '1',
-      name: 'Književnost na hrvatskom',
-    },
-    {
-      id: '6',
-      name: 'Publicistika'
-    },
-    {
-      id: '2',
-      name: 'Stručna literatura-engleski',
-    }
-  ];
 
   const columns = useMemo<MRT_ColumnDef<Book>[]>(
     () => [
+      {
+        accessorKey: 'id',
+        header: 'Id',
+        enableEditing: false,
+        enableColumnFilter: false,
+        enableColumnActions: false,
+        enableColumnOrdering: false,
+        enableSorting: false, 
+        enableHiding: false, 
+        size: 1, 
+        muiEditTextFieldProps: {
+          type: 'email',
+          required: false
+        }
+      },
       {
         accessorKey: 'title',
         header: 'Title', 
@@ -256,9 +313,12 @@ const BookList = () => {
             isLoading: isLoadingCategories,
           } = useGetCategories();
 
-          //setTableIsInEditMode(true);
-          const selectedCategory = row.original.category.id || '0';
-          return <CategorySelection onSelectCategory={onSelectCategory} selectedCategory={selectedCategory} inputData={categoryItems} />;
+          console.log('isLoadingCategories=>'+isLoadingCategories);
+          const selectedCategory = row.original.category.id;
+
+          return isLoadingCategories ?
+            <CircularProgress /> :
+            <CategorySelection onSelectCategory={onSelectCategory} selectedCategory={selectedCategory} inputData={categoryItems} />;
         },
       },
       {
@@ -306,6 +366,44 @@ const BookList = () => {
               note: undefined,
             }),
         }
+      },
+      {
+        accessorKey: 'year',
+        header: 'Year',
+        enableColumnFilter: false,
+        enableColumnActions: false,
+        enableColumnOrdering: false,
+        enableSorting: false, 
+        muiEditTextFieldProps: {
+          type: 'email',
+          required: false,
+          error: !!validationErrors?.note,
+          helperText: validationErrors?.note,
+          onFocus: () =>
+            setValidationErrors({
+              ...validationErrors,
+              note: undefined,
+            }),
+        }
+      },
+      {
+        accessorKey: 'read',
+        header: 'Read',
+        enableColumnFilter: false,
+        enableColumnActions: false,
+        enableColumnOrdering: false,
+        enableSorting: false, 
+        muiEditTextFieldProps: {
+          type: 'email',
+          required: false,
+          error: !!validationErrors?.note,
+          helperText: validationErrors?.note,
+          onFocus: () =>
+            setValidationErrors({
+              ...validationErrors,
+              note: undefined,
+            }),
+        }
       }
     ],
     [],
@@ -320,8 +418,13 @@ const BookList = () => {
   
   const table = useMaterialReactTable({
     columns,
-    data: bookItems,
-    initialState: { columnVisibility: { note: false, collection: false, publisher: false, 'category.name': false }, showColumnFilters: true },
+    data: bookItems, 
+    initialState: { 
+      columnVisibility: { id: false, note: false, collection: false, 
+                          publisher: false, 'category.name': false, 
+                          year: false, read: false }, 
+      showColumnFilters: true 
+    },
     createDisplayMode: 'modal',
     editDisplayMode: 'modal', 
     enableEditing: true,
@@ -342,7 +445,7 @@ const BookList = () => {
 
     onCreatingRowCancel: () => setValidationErrors({}),
     onEditingRowCancel: () => setValidationErrors({}),
-    onEditingRowSave: handleSaveUser,
+    onEditingRowSave: handleSaveBook,
 
     renderTopToolbarCustomActions: () => (
       <Tooltip arrow title="Refresh Data">
