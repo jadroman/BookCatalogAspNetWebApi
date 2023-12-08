@@ -50,6 +50,16 @@ namespace BookCatalog.DAL
                 predicate = predicate.And(p => p.Category.Name.Contains(bookParameters.Category));
             }
 
+            if (!string.IsNullOrWhiteSpace(bookParameters.Collection))
+            {
+                predicate = predicate.And(p => p.Collection.Contains(bookParameters.Collection));
+            }
+
+            if (!string.IsNullOrWhiteSpace(bookParameters.Publisher))
+            {
+                predicate = predicate.And(p => p.Publisher.Contains(bookParameters.Publisher));
+            }
+
             return _context.Books.Include(b => b.Category).Where(predicate).AsNoTracking();
         }
             

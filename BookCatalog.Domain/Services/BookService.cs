@@ -88,7 +88,9 @@ namespace BookCatalog.Domain.Services
             if (!string.IsNullOrWhiteSpace(bookParameters.Title) ||
                 !string.IsNullOrWhiteSpace(bookParameters.Author) ||
                    !string.IsNullOrWhiteSpace(bookParameters.Note) ||
-                        !string.IsNullOrWhiteSpace(bookParameters.Category))
+                      !string.IsNullOrWhiteSpace(bookParameters.Category) ||
+                         !string.IsNullOrWhiteSpace(bookParameters.Collection) ||
+                            !string.IsNullOrWhiteSpace(bookParameters.Publisher))
             {
                 books = (IQueryable<T>)_bookRepo.GetFilteredBooks(bookParameters);
             }
