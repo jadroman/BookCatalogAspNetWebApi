@@ -125,6 +125,16 @@ const BookList = () => {
               getBooksUrl.searchParams.set('note', cf.value)
             }
           }
+          else if(cf.id === 'publisher'){
+            if(cf.value !== '' && typeof cf.value === 'string'){
+              getBooksUrl.searchParams.set('publisher', cf.value)
+            }
+          }
+          else if(cf.id === 'collection'){
+            if(cf.value !== '' && typeof cf.value === 'string'){
+              getBooksUrl.searchParams.set('collection', cf.value)
+            }
+          }
         })
   
         if (sorting && sorting.length > 0) {
@@ -250,16 +260,6 @@ const BookList = () => {
           const selectedCategory = row.original.category.id || '0';
           return <CategorySelection onSelectCategory={onSelectCategory} selectedCategory={selectedCategory} inputData={categoryItems} />;
         },
-        /* editVariant: 'select',
-        editSelectOptions: fetchMockCategs2,
-        muiEditTextFieldProps: {
-          children: fetchMockCategs2.map(item => <MenuItem key={item.value} value={item.value}>
-                    {item.label}
-                  </MenuItem>),
-          select: true,
-          error: !!validationErrors?.state,
-          helperText: validationErrors?.state,
-        }, */
       },
       {
         accessorKey: 'note',
@@ -275,7 +275,36 @@ const BookList = () => {
               ...validationErrors,
               note: undefined,
             }),
-          //optionally add validation checking for onBlur or onChange
+        }
+      },
+      {
+        accessorKey: 'publisher',
+        header: 'Publisher',
+        muiEditTextFieldProps: {
+          type: 'email',
+          required: false,
+          error: !!validationErrors?.note,
+          helperText: validationErrors?.note,
+          onFocus: () =>
+            setValidationErrors({
+              ...validationErrors,
+              note: undefined,
+            }),
+        }
+      },
+      {
+        accessorKey: 'collection',
+        header: 'Collection',
+        muiEditTextFieldProps: {
+          type: 'email',
+          required: false,
+          error: !!validationErrors?.note,
+          helperText: validationErrors?.note,
+          onFocus: () =>
+            setValidationErrors({
+              ...validationErrors,
+              note: undefined,
+            }),
         }
       }
     ],
@@ -292,11 +321,11 @@ const BookList = () => {
   const table = useMaterialReactTable({
     columns,
     data: bookItems,
+    initialState: { columnVisibility: { note: false, collection: false, publisher: false, 'category.name': false }, showColumnFilters: true },
     createDisplayMode: 'modal',
     editDisplayMode: 'modal', 
     enableEditing: true,
     getRowId: (row) => row.id?.toString(),
-    initialState: { showColumnFilters: true },
     manualFiltering: true,
     manualPagination: true,
     manualSorting: true,
