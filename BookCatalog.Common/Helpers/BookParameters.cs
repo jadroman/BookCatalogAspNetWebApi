@@ -20,6 +20,8 @@ namespace BookCatalog.Common.Helpers
         public string Note { get; set; }
         public string Author { get; set; }
         public string Category { get; set; }
+        public string Collection { get; set; }
+        public string Publisher { get; set; }
 
         public string OrderBy { get; set; }
     }
