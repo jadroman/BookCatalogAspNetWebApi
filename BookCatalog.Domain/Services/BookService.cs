@@ -45,13 +45,40 @@ namespace BookCatalog.Domain.Services
 
             var bookResult = new PagedBindingEntity<BookBindingModel>
             {
-                Items = _mapper.Map<IEnumerable<BookBindingModel>>(pagedList),
+                Items = ReplaceNullsWithEmptyStrings(_mapper.Map<IEnumerable<BookBindingModel>>(pagedList)),
                 MetaData = pagedList.MetaData
             };
 
             return bookResult;
         }
 
+        private IEnumerable<BookBindingModel> ReplaceNullsWithEmptyStrings(IEnumerable<BookBindingModel> bookItems)
+        {
+            foreach (BookBindingModel item in bookItems)
+            {
+                if (item.Note == null)
+                {
+                    item.Note = string.Empty;
+                }
+
+                if (item.Author == null)
+                {
+                    item.Author = string.Empty;
+                }
+
+                if (item.Publisher == null)
+                {
+                    item.Publisher = string.Empty;
+                }
+
+                if (item.Collection == null)
+                {
+                    item.Collection = string.Empty;
+                }
+            }
+
+            return bookItems;
+        }
 
         private void Filter<T>(ref IQueryable<T> books, BookParameters bookParameters)
         {
