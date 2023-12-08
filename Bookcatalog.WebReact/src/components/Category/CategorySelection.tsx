@@ -25,8 +25,6 @@ export default function CategorySelection(props: CategorySelectionProps): JSX.El
 
     const selectHandleChange = (event: SelectChangeEvent) => {
         setSelectedCategory(event.target.value as string);
-        //props.onSelectCategory(selectedCategory);
-        //console.log('selectedCategory=>'+ selectedCategory);
     };
 
     const menuItems = props.inputData.map(i => <MenuItem key={i.id} value={i.id}>{i.name}</MenuItem>)
@@ -39,12 +37,8 @@ export default function CategorySelection(props: CategorySelectionProps): JSX.El
             label="Category"
             onChange={selectHandleChange}
         >
+            <MenuItem key='0' value='0'>- Choose a category -</MenuItem>
             {menuItems}
         </Select>
-            /* <MenuItem value={10}>Ten</MenuItem>
-            <MenuItem value={20}>Twenty</MenuItem>
-            <MenuItem value={30}>Thirty</MenuItem> */
-
-
     )
 }
