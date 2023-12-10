@@ -85,6 +85,7 @@ type CategoryApiData = {
 const BookList = () => {  
   const [validationErrors, setValidationErrors] = useState<Record<string, string | undefined>>({});
   const [selectedCategory, setSelectedCategory] = useState<string>('0');
+  const [selectedBookCategory, setSelectedBookCategory] = useState<string>('0');
   //const [proba, setProba] = useState<number>(0);
 
 
@@ -194,34 +195,22 @@ function useUpdateBook() {
 
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async (book: BookUpdate) => {
-    const reqOpt = {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(book)
-    };
-    
-    const putBookUrl = new URL(
-      `book/${book.id}`, getApiUrl(),
-    );
-  
-    fetch(putBookUrl, reqOpt)
-    .then(response => response.json())
-    .then(data => {
-      console.log('update resp=>' + JSON.stringify(data));
-    });
-  },
-    //client side optimistic update
-    /* onMutate: (newUserInfo: User) => {
-      queryClient.setQueryData(
-        ['users'],
-        (prevUsers: any) =>
-          prevUsers?.map((prevUser: User) =>
-            prevUser.id === newUserInfo.id ? newUserInfo : prevUser,
-          ),
+    mutationFn: async (book: Book) => {
+      const reqOpt = {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(book)
+      };
+
+      const putBookUrl = new URL(
+        `book/${book.id}`, getApiUrl(),
       );
-    }, */
-    // onSettled: () => queryClient.invalidateQueries({ queryKey: ['users'] }), //refetch users after mutation, disabled for demo
+
+      return fetch(putBookUrl, reqOpt);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['bookData'] })
+    },
   });
 } 
 
@@ -243,12 +232,10 @@ function useUpdateBook() {
     values,
     table
   }) => {
-    let bookUpdated: BookUpdate = values;
-    bookUpdated.categoryId = selectedCategory;
+    values.category = { id: selectedBookCategory, name: values['category.name'] };
+    values.categoryId = selectedCategory;
     
-    await updateBook(bookUpdated);
-    console.log('handleSaveBook=>' + JSON.stringify(handleSaveBook));
-      //console.log("handleSaveBook=> " + selectedCategory);
+    await updateBook(values);
   };
 
   const columns = useMemo<MRT_ColumnDef<Book>[]>(
@@ -313,8 +300,8 @@ function useUpdateBook() {
             isLoading: isLoadingCategories,
           } = useGetCategories();
 
-          console.log('isLoadingCategories=>'+isLoadingCategories);
           const selectedCategory = row.original.category.id;
+          setSelectedBookCategory(row.original.category.id);
 
           return isLoadingCategories ?
             <CircularProgress /> :
