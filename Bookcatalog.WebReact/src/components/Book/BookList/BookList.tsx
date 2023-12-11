@@ -30,9 +30,9 @@ type Book = {
   author: string,
   category: Category,
   categoryId: string,
-  note: string, 
-  publisher: string, 
-  collection: string, 
+  note: string,
+  publisher: string,
+  collection: string,
   read: boolean,
   year: number
 }
@@ -70,7 +70,7 @@ type CategoryApiData = {
   };
 };
 
-const BookList = () => {  
+const BookList = () => {
   const [validationErrors, setValidationErrors] = useState<Record<string, string | undefined>>({});
   const [selectedCategoryId, setSelectedCategoryId] = useState<string>('0');
   const [selectedBookId, setSelectedBookId] = useState<string>('0');
@@ -82,125 +82,122 @@ const BookList = () => {
   const [pagination, setPagination] = useState<MRT_PaginationState>({
     pageIndex: 0,
     pageSize: 10,
-  });  
-    
-function useGetBooks() {
-  return useQuery<BookApiData>({
-    queryKey: [
-      'bookData',
-      columnFilters, //refetch when columnFilters changes
-      globalFilter, //refetch when globalFilter changes
-      pagination.pageIndex, //refetch when pagination.pageIndex changes
-      pagination.pageSize, //refetch when pagination.pageSize changes
-      sorting, //refetch when sorting changes
-    ],
-    queryFn: async () => {
-      const getBooksUrl = new URL(
-        'book', getApiUrl(),
-      );
-    
-      // URL e.g. api/book?PageNumber=0&pageSize=10&title=long&author=nick&globalFilter=&OrderBy=author+asc
-
-      getBooksUrl.searchParams.set('pageNumber', `${pagination.pageIndex}`);
-      getBooksUrl.searchParams.set('pageSize', `${pagination.pageSize}`);
-      
-      columnFilters.forEach((cf) => {
-        if(cf.id === 'title'){
-          if(cf.value !== '' && typeof cf.value === 'string'){
-            getBooksUrl.searchParams.set('title', cf.value)
-          }
-        }
-        else if(cf.id === 'author'){
-          if(cf.value !== '' && typeof cf.value === 'string'){
-            getBooksUrl.searchParams.set('author', cf.value)
-          }
-        }
-        else if(cf.id === 'category.name'){
-          if(cf.value !== '' && typeof cf.value === 'string'){
-            getBooksUrl.searchParams.set('category', cf.value)
-          }
-        }
-        else if(cf.id === 'note'){
-          if(cf.value !== '' && typeof cf.value === 'string'){
-            getBooksUrl.searchParams.set('note', cf.value)
-          }
-        }
-        else if(cf.id === 'publisher'){
-          if(cf.value !== '' && typeof cf.value === 'string'){
-            getBooksUrl.searchParams.set('publisher', cf.value)
-          }
-        }
-        else if(cf.id === 'collection'){
-          if(cf.value !== '' && typeof cf.value === 'string'){
-            getBooksUrl.searchParams.set('collection', cf.value)
-          }
-        }
-      })
-
-      if (sorting && sorting.length > 0) {
-        let showDescAsc = sorting[0].desc ? "desc" : "asc";
-        getBooksUrl.searchParams.set('orderBy', `${sorting[0].id}` + " " + showDescAsc);
-      }
-
-      const response = await fetch(getBooksUrl.href);
-      const json: BookApiResponse = await response.json();
-
-      return { bookItems: json.items, booksMetaData: json.metaData} as BookApiData;
-    },
-    placeholderData: keepPreviousData, //don't go to 0 rows when refetching or paginating to next page
   });
-}
 
-function useGetCategories() {
-  return useQuery<CategoryApiData>({
-    queryKey: [
-      'categoryData'
-    ],
-    queryFn: async () => {
-      const getCategoriesUrl = new URL(
-        'category', getApiUrl(),
-      );
-    
-      // URL e.g. api/book?PageNumber=0&pageSize=10&title=long&author=nick&globalFilter=&OrderBy=author+asc
+  function useGetBooks() {
+    return useQuery<BookApiData>({
+      queryKey: [
+        'bookData',
+        columnFilters, //refetch when columnFilters changes
+        globalFilter, //refetch when globalFilter changes
+        pagination.pageIndex, //refetch when pagination.pageIndex changes
+        pagination.pageSize, //refetch when pagination.pageSize changes
+        sorting, //refetch when sorting changes
+      ],
+      queryFn: async () => {
+        const getBooksUrl = new URL(
+          'book', getApiUrl(),
+        );
 
-      getCategoriesUrl.searchParams.set('pageSize', '100');
-      
-      const response = await fetch(getCategoriesUrl.href);
-      const json: CategoriesApiResponse = await response.json();
+        // URL e.g. api/book?PageNumber=0&pageSize=10&title=long&author=nick&globalFilter=&OrderBy=author+asc
 
-      return { categoryItems: json.items, categoriesMetaData: json.metaData} as CategoryApiData;
-    },
-  });
-}
+        getBooksUrl.searchParams.set('pageNumber', `${pagination.pageIndex}`);
+        getBooksUrl.searchParams.set('pageSize', `${pagination.pageSize}`);
 
-const { mutateAsync: updateBook, isPending: isUpdatingBook } =
-useUpdateBook();
+        columnFilters.forEach((cf) => {
+          if (cf.id === 'title') {
+            if (cf.value !== '' && typeof cf.value === 'string') {
+              getBooksUrl.searchParams.set('title', cf.value)
+            }
+          }
+          else if (cf.id === 'author') {
+            if (cf.value !== '' && typeof cf.value === 'string') {
+              getBooksUrl.searchParams.set('author', cf.value)
+            }
+          }
+          else if (cf.id === 'category.name') {
+            if (cf.value !== '' && typeof cf.value === 'string') {
+              getBooksUrl.searchParams.set('category', cf.value)
+            }
+          }
+          else if (cf.id === 'note') {
+            if (cf.value !== '' && typeof cf.value === 'string') {
+              getBooksUrl.searchParams.set('note', cf.value)
+            }
+          }
+          else if (cf.id === 'publisher') {
+            if (cf.value !== '' && typeof cf.value === 'string') {
+              getBooksUrl.searchParams.set('publisher', cf.value)
+            }
+          }
+          else if (cf.id === 'collection') {
+            if (cf.value !== '' && typeof cf.value === 'string') {
+              getBooksUrl.searchParams.set('collection', cf.value)
+            }
+          }
+        })
 
-function useUpdateBook() {
+        if (sorting && sorting.length > 0) {
+          let showDescAsc = sorting[0].desc ? "desc" : "asc";
+          getBooksUrl.searchParams.set('orderBy', `${sorting[0].id}` + " " + showDescAsc);
+        }
 
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: async (book: Book) => {
-      const reqOpt = {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(book)
-      };
+        const response = await fetch(getBooksUrl.href);
+        const json: BookApiResponse = await response.json();
 
-      const putBookUrl = new URL(
-        `book/${book.id}`, getApiUrl(),
-      );
+        return { bookItems: json.items, booksMetaData: json.metaData } as BookApiData;
+      },
+      placeholderData: keepPreviousData, //don't go to 0 rows when refetching or paginating to next page
+    });
+  }
 
-      return fetch(putBookUrl, reqOpt);
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ['bookData'] })
-    },
-  });
-} 
+  function useGetCategories() {
+    return useQuery<CategoryApiData>({
+      queryKey: [
+        'categoryData'
+      ],
+      queryFn: async () => {
+        const getCategoriesUrl = new URL(
+          'category', getApiUrl(),
+        );
+        // URL e.g. api/book?PageNumber=0&pageSize=10&title=long&author=nick&globalFilter=&OrderBy=author+asc
+        getCategoriesUrl.searchParams.set('pageSize', '100');
+        const response = await fetch(getCategoriesUrl.href);
+        const json: CategoriesApiResponse = await response.json();
+
+        return { categoryItems: json.items, categoriesMetaData: json.metaData } as CategoryApiData;
+      },
+    });
+  }
+
+  const { mutateAsync: updateBook, isPending: isUpdatingBook } =
+    useUpdateBook();
+
+  function useUpdateBook() {
+
+    const queryClient = useQueryClient();
+    return useMutation({
+      mutationFn: async (book: Book) => {
+        const reqOpt = {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(book)
+        };
+
+        const putBookUrl = new URL(
+          `book/${book.id}`, getApiUrl(),
+        );
+
+        return fetch(putBookUrl, reqOpt);
+      },
+      onSettled: () => {
+        queryClient.invalidateQueries({ queryKey: ['bookData'] })
+      },
+    });
+  }
 
   const {
-    data: { bookItems = [], booksMetaData } = {}, 
+    data: { bookItems = [], booksMetaData } = {},
     isError: isLoadingBooksError,
     isRefetching: isRefetchingBooks,
     isLoading: isLoadingBooks,
@@ -224,7 +221,7 @@ function useUpdateBook() {
     () => [
       {
         accessorKey: 'title',
-        header: 'Title', 
+        header: 'Title',
         muiEditTextFieldProps: {
           type: 'email',
           required: true,
@@ -260,13 +257,13 @@ function useUpdateBook() {
         accessorKey: 'category.name',
         header: 'Category',
         Edit: ({ cell, column, row, table }) => {
-                  
+
           useEffect(() => {
             setSelectedBookId(row.id);
           }, []);
 
           const {
-            data: { categoryItems = [], categoriesMetaData } = {}, 
+            data: { categoryItems = [], categoriesMetaData } = {},
             isError: isLoadingCategoryError,
             isLoading: isLoadingCategories,
           } = useGetCategories();
@@ -330,7 +327,7 @@ function useUpdateBook() {
         enableColumnFilter: false,
         enableColumnActions: false,
         enableColumnOrdering: false,
-        enableSorting: false, 
+        enableSorting: false,
         muiEditTextFieldProps: {
           type: 'email',
           required: false,
@@ -349,7 +346,7 @@ function useUpdateBook() {
         enableColumnFilter: false,
         enableColumnActions: false,
         enableColumnOrdering: false,
-        enableSorting: false, 
+        enableSorting: false,
         muiEditTextFieldProps: {
           type: 'email',
           required: false,
@@ -372,18 +369,20 @@ function useUpdateBook() {
       //deleteUser(row.original.id);
     }
   };
-  
+
   const table = useMaterialReactTable({
     columns,
-    data: bookItems, 
-    initialState: { 
-      columnVisibility: { note: false, collection: false, 
-                          publisher: false, 'category.name': false, 
-                          year: false, read: false }, 
-      showColumnFilters: true 
+    data: bookItems,
+    initialState: {
+      columnVisibility: {
+        note: false, collection: false,
+        publisher: false, 'category.name': false,
+        year: false, read: false
+      },
+      showColumnFilters: true
     },
     createDisplayMode: 'modal',
-    editDisplayMode: 'modal', 
+    editDisplayMode: 'modal',
     enableEditing: true,
     getRowId: (row) => row.id?.toString(),
     manualFiltering: true,
@@ -391,9 +390,9 @@ function useUpdateBook() {
     manualSorting: true,
     muiToolbarAlertBannerProps: isLoadingBooksError
       ? {
-          color: 'error',
-          children: 'Error loading data',
-        }
+        color: 'error',
+        children: 'Error loading data',
+      }
       : undefined,
     onColumnFiltersChange: setColumnFilters,
     onGlobalFilterChange: setGlobalFilter,
@@ -437,7 +436,7 @@ function useUpdateBook() {
     },
   });
 
-    return <MaterialReactTable table={table} />;
+  return <MaterialReactTable table={table} />;
 }
 
 const queryClient = new QueryClient();
