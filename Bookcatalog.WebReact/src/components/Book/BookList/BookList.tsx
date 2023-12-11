@@ -85,9 +85,6 @@ type CategoryApiData = {
 const BookList = () => {  
   const [validationErrors, setValidationErrors] = useState<Record<string, string | undefined>>({});
   const [selectedCategory, setSelectedCategory] = useState<string>('0');
-  const [selectedBookCategory, setSelectedBookCategory] = useState<string>('0');
-  //const [proba, setProba] = useState<number>(0);
-
 
   //manage our own state for stuff we want to pass to the API
   const [columnFilters, setColumnFilters] = useState<MRT_ColumnFiltersState>([],);
@@ -232,9 +229,7 @@ function useUpdateBook() {
     values,
     table
   }) => {
-    values.category = { id: selectedBookCategory, name: values['category.name'] };
     values.categoryId = selectedCategory;
-    
     await updateBook(values);
   };
 
@@ -300,12 +295,11 @@ function useUpdateBook() {
             isLoading: isLoadingCategories,
           } = useGetCategories();
 
-          const selectedCategory = row.original.category.id;
-          setSelectedBookCategory(row.original.category.id);
-
+          const originalBookCategory = row.original.category.id;
+          
           return isLoadingCategories ?
             <CircularProgress /> :
-            <CategorySelection onSelectCategory={onSelectCategory} selectedCategory={selectedCategory} inputData={categoryItems} />;
+            <CategorySelection onSelectCategory={onSelectCategory} selectedCategory={originalBookCategory} inputData={categoryItems} />;
         },
       },
       {
