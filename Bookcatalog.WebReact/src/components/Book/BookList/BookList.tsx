@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
+import { object, string, number, date } from 'yup';
 import {
   MaterialReactTable,
   useMaterialReactTable,
@@ -214,7 +215,30 @@ const BookList = () => {
   }) => {
     values.categoryId = selectedCategoryId;
     values.id = selectedBookId;
+
+    //const newValidationErrors = validateUser(values);
+    
+    let tempVal =  {title: "", author: ""}; 
+
+    const newValidationErrors = await bookValidationSchema2.validate(tempVal, {abortEarly:false}).then(v=> 
+      {
+        console.log();
+    }).catch(e=>
+      {
+        console.log();
+        return;
+      });
+
+
+
+    /* if (Object.values(newValidationErrors).some((error) => error)) {
+      setValidationErrors(newValidationErrors);
+      return;
+    } */
+
+    setValidationErrors({});
     await updateBook(values);
+    table.setEditingRow(null); //exit editing mode
   };
 
   const columns = useMemo<MRT_ColumnDef<Book>[]>(
@@ -280,7 +304,6 @@ const BookList = () => {
         header: 'Note',
         muiEditTextFieldProps: {
           type: 'email',
-          required: true,
           error: !!validationErrors?.note,
           helperText: validationErrors?.note,
           //remove any previous validation errors when user focuses on the input
@@ -296,9 +319,8 @@ const BookList = () => {
         header: 'Publisher',
         muiEditTextFieldProps: {
           type: 'email',
-          required: false,
-          error: !!validationErrors?.note,
-          helperText: validationErrors?.note,
+          error: !!validationErrors?.publisher,
+          helperText: validationErrors?.publisher,
           onFocus: () =>
             setValidationErrors({
               ...validationErrors,
@@ -311,9 +333,8 @@ const BookList = () => {
         header: 'Collection',
         muiEditTextFieldProps: {
           type: 'email',
-          required: false,
-          error: !!validationErrors?.note,
-          helperText: validationErrors?.note,
+          error: !!validationErrors?.collection,
+          helperText: validationErrors?.collection,
           onFocus: () =>
             setValidationErrors({
               ...validationErrors,
@@ -329,10 +350,9 @@ const BookList = () => {
         enableColumnOrdering: false,
         enableSorting: false,
         muiEditTextFieldProps: {
-          type: 'email',
-          required: false,
-          error: !!validationErrors?.note,
-          helperText: validationErrors?.note,
+          type: 'number',
+          error: !!validationErrors?.year,
+          helperText: validationErrors?.year,
           onFocus: () =>
             setValidationErrors({
               ...validationErrors,
@@ -348,10 +368,9 @@ const BookList = () => {
         enableColumnOrdering: false,
         enableSorting: false,
         muiEditTextFieldProps: {
-          type: 'email',
-          required: false,
-          error: !!validationErrors?.note,
-          helperText: validationErrors?.note,
+          type: 'checkbox',
+          error: !!validationErrors?.read,
+          helperText: validationErrors?.read,
           onFocus: () =>
             setValidationErrors({
               ...validationErrors,
@@ -360,7 +379,7 @@ const BookList = () => {
         }
       }
     ],
-    [],
+    [validationErrors],
   );
 
   //DELETE action
@@ -447,5 +466,27 @@ const BookListQueryProvider = () => (
     <BookList />
   </QueryClientProvider>
 );
+
+const bookValidationSchema2 = object({
+  title: string().required('Title is required.').max(180),
+  author: string().required('Author is required.').max(180)
+  /* age: number().required().positive().integer(),
+  email: string().email(),
+  website: string().url().nullable(),
+  createdOn: date().default(() => new Date()), */
+});
+
+const validateRequired = (value: string) => !!value.length;
+
+function validateUser(book: Book) {
+  return {
+    title: !validateRequired(book.title)
+      ? 'Title is Required'
+      : '',
+    author: !validateRequired(book.author)
+      ? 'author is Required'
+      : '',
+  };
+}
 
 export default BookListQueryProvider;
