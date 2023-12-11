@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   MaterialReactTable,
   useMaterialReactTable,
@@ -29,18 +29,6 @@ type Book = {
   title: string,
   author: string,
   category: Category,
-  categoryId: string,
-  note: string, 
-  publisher: string, 
-  collection: string, 
-  read: boolean,
-  year: number
-}
-
-type BookUpdate = {
-  id: number,
-  title: string,
-  author: string,
   categoryId: string,
   note: string, 
   publisher: string, 
@@ -84,7 +72,8 @@ type CategoryApiData = {
 
 const BookList = () => {  
   const [validationErrors, setValidationErrors] = useState<Record<string, string | undefined>>({});
-  const [selectedCategory, setSelectedCategory] = useState<string>('0');
+  const [selectedCategoryId, setSelectedCategoryId] = useState<string>('0');
+  const [selectedBookId, setSelectedBookId] = useState<string>('0');
 
   //manage our own state for stuff we want to pass to the API
   const [columnFilters, setColumnFilters] = useState<MRT_ColumnFiltersState>([],);
@@ -94,8 +83,7 @@ const BookList = () => {
     pageIndex: 0,
     pageSize: 10,
   });  
-  
-  
+    
 function useGetBooks() {
   return useQuery<BookApiData>({
     queryKey: [
@@ -220,36 +208,20 @@ function useUpdateBook() {
   } = useGetBooks();
 
   const onSelectCategory = (selectedCategory: string): void => {
-    //console.log('onSelectCategory => ' + selectedCategory);
-    setSelectedCategory(selectedCategory);
+    setSelectedCategoryId(selectedCategory);
   }
 
-  //UPDATE action
   const handleSaveBook: MRT_TableOptions<Book>['onEditingRowSave'] = async ({
     values,
     table
   }) => {
-    values.categoryId = selectedCategory;
+    values.categoryId = selectedCategoryId;
+    values.id = selectedBookId;
     await updateBook(values);
   };
 
   const columns = useMemo<MRT_ColumnDef<Book>[]>(
     () => [
-      {
-        accessorKey: 'id',
-        header: 'Id',
-        enableEditing: false,
-        enableColumnFilter: false,
-        enableColumnActions: false,
-        enableColumnOrdering: false,
-        enableSorting: false, 
-        enableHiding: false, 
-        size: 1, 
-        muiEditTextFieldProps: {
-          type: 'email',
-          required: false
-        }
-      },
       {
         accessorKey: 'title',
         header: 'Title', 
@@ -289,6 +261,10 @@ function useUpdateBook() {
         header: 'Category',
         Edit: ({ cell, column, row, table }) => {
                   
+          useEffect(() => {
+            setSelectedBookId(row.id);
+          }, []);
+
           const {
             data: { categoryItems = [], categoriesMetaData } = {}, 
             isError: isLoadingCategoryError,
@@ -296,7 +272,7 @@ function useUpdateBook() {
           } = useGetCategories();
 
           const originalBookCategory = row.original.category.id;
-          
+
           return isLoadingCategories ?
             <CircularProgress /> :
             <CategorySelection onSelectCategory={onSelectCategory} selectedCategory={originalBookCategory} inputData={categoryItems} />;
@@ -401,7 +377,7 @@ function useUpdateBook() {
     columns,
     data: bookItems, 
     initialState: { 
-      columnVisibility: { id: false, note: false, collection: false, 
+      columnVisibility: { note: false, collection: false, 
                           publisher: false, 'category.name': false, 
                           year: false, read: false }, 
       showColumnFilters: true 
