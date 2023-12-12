@@ -216,25 +216,45 @@ const BookList = () => {
     values.categoryId = selectedCategoryId;
     values.id = selectedBookId;
 
-    //const newValidationErrors = validateUser(values);
-    
     let tempVal =  {title: "", author: ""}; 
 
-    const newValidationErrors = await bookValidationSchema2.validate(tempVal, {abortEarly:false}).then(v=> 
-      {
-        console.log();
-    }).catch(e=>
-      {
-        console.log();
-        return;
-      });
+    //const newValidationErrors = validateUser2(tempVal);
+    let newValidationErrors: any =  {}; 
+    
+
+    //let bla: Array<Record<string,string>> = new Array<Record<string,string>>();
+    
+    let bla2 = new Map();
+
+    bla2.set('proba1', 1);
+    bla2.set('proba2', 2);
+    /* console.log('map size=>'+bla2.size);
+    console.log('map values=>'+Array.from(bla2.values())); */
 
 
 
-    /* if (Object.values(newValidationErrors).some((error) => error)) {
+    let proba: string = "";
+    let bla = new Map();
+
+    await bookValidationSchema.validate(values, { abortEarly: false }).then(v => {
+      console.log();
+    }).catch(e => {
+      e.errors.forEach((error: string) => {
+        bla.set(error.toLowerCase().split(" ")[0], error);  
+
+        //proba+=error;
+      }); 
+
+      // console.log('proba=>'+ proba);
+      newValidationErrors = Object.fromEntries(bla);
+    });
+
+
+
+    if (Object.values(newValidationErrors).some((error) => error)) {
       setValidationErrors(newValidationErrors);
       return;
-    } */
+    }
 
     setValidationErrors({});
     await updateBook(values);
@@ -467,18 +487,30 @@ const BookListQueryProvider = () => (
   </QueryClientProvider>
 );
 
-const bookValidationSchema2 = object({
-  title: string().required('Title is required.').max(180),
-  author: string().required('Author is required.').max(180)
-  /* age: number().required().positive().integer(),
-  email: string().email(),
-  website: string().url().nullable(),
-  createdOn: date().default(() => new Date()), */
+// TODO: extract max values
+const bookValidationSchema = object({
+  title: string().required('Title is required.').max(195, `Title maximum length limit is 195`),
+  author: string().max(55, `Author maximum length limit is 55`),
+  note: string().max(4000, `Note maximum length limit is 4000`),
+  publisher: string().max(55, `Publisher maximum length limit is 55`),
+  collection: string().max(55, `Collection maximum length limit is 55`),
+  year: number().positive('Year must be a positive number').integer('Year must be an integer')
 });
 
 const validateRequired = (value: string) => !!value.length;
 
 function validateUser(book: Book) {
+  return {
+    title: !validateRequired(book.title)
+      ? 'Title is Required'
+      : '',
+    author: !validateRequired(book.author)
+      ? 'author is Required'
+      : '',
+  };
+}
+
+function validateUser2(book: any) {
   return {
     title: !validateRequired(book.title)
       ? 'Title is Required'
