@@ -24,6 +24,7 @@ import RefreshIcon from '@mui/icons-material/Refresh';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CategorySelection from 'components/Category/CategorySelection';
+import { EmojiEvents, Close } from '@mui/icons-material';
 
 type Book = {
   id: number,
@@ -84,7 +85,7 @@ const BookList = () => {
     pageIndex: 0,
     pageSize: 10,
   });
-
+  
   function useGetBooks() {
     return useQuery<BookApiData>({
       queryKey: [
@@ -151,9 +152,9 @@ const BookList = () => {
       placeholderData: keepPreviousData, //don't go to 0 rows when refetching or paginating to next page
     });
   }
-
+  
   function useGetCategories() {
-    return useQuery<CategoryApiData>({
+    return useQuery<Array<Category>>({
       queryKey: [
         'categoryData'
       ],
@@ -166,7 +167,7 @@ const BookList = () => {
         const response = await fetch(getCategoriesUrl.href);
         const json: CategoriesApiResponse = await response.json();
 
-        return { categoryItems: json.items, categoriesMetaData: json.metaData } as CategoryApiData;
+        return json.items;
       },
     });
   }
@@ -261,6 +262,13 @@ const BookList = () => {
     table.setEditingRow(null); //exit editing mode
   };
 
+  
+  const {
+    data: categoryItems = [],
+    isError: isErrorCategorySelectItems,
+    isLoading: isLoadingCategorySelectItems,
+  } = useGetCategories();
+
   const columns = useMemo<MRT_ColumnDef<Book>[]>(
     () => [
       {
@@ -306,18 +314,12 @@ const BookList = () => {
             setSelectedBookId(row.id);
           }, []);
 
-          const {
-            data: { categoryItems = [], categoriesMetaData } = {},
-            isError: isLoadingCategoryError,
-            isLoading: isLoadingCategories,
-          } = useGetCategories();
-
           const originalBookCategory = row.original.category.id;
 
-          return isLoadingCategories ?
-            <CircularProgress /> :
-            <CategorySelection onSelectCategory={onSelectCategory} selectedCategory={originalBookCategory} inputData={categoryItems} />;
+          return <CategorySelection onSelectCategory={onSelectCategory} selectedCategory={originalBookCategory} inputData={categoryItems} />; 
         },
+        filterVariant: 'select',
+        filterSelectOptions: categoryItems.map(c => { return { label: c.name, value: c.name } })
       },
       {
         accessorKey: 'note',
@@ -387,19 +389,19 @@ const BookList = () => {
         enableColumnActions: false,
         enableColumnOrdering: false,
         enableSorting: false,
+        editVariant: 'select',
+        editSelectOptions: [{label: 'already read', value: true}, {label: 'not yet', value: false}],
         muiEditTextFieldProps: {
-          type: 'checkbox',
+          select: true,
           error: !!validationErrors?.read,
-          helperText: validationErrors?.read,
-          onFocus: () =>
-            setValidationErrors({
-              ...validationErrors,
-              note: undefined,
-            }),
-        }
+          helperText: validationErrors?.read
+        },
+        Cell: ({ cell }) => (
+          cell.getValue<boolean>() ? <EmojiEvents color="primary" /> : <Close color="primary" />
+        )
       }
     ],
-    [validationErrors],
+    [validationErrors, categoryItems],
   );
 
   //DELETE action
