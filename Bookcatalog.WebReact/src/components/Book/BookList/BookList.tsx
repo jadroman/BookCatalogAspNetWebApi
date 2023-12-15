@@ -9,6 +9,7 @@ import {
   type MRT_SortingState,
   MRT_Row,
   MRT_TableOptions,
+  createRow,
 } from 'material-react-table';
 import { getApiUrl } from 'config/url';
 import {
@@ -19,7 +20,7 @@ import {
   useQuery,
   useQueryClient,
 } from '@tanstack/react-query'; //note: this is TanStack React Query V5
-import { Box, CircularProgress, IconButton, Tooltip } from '@mui/material';
+import { Box, Button, IconButton, Tooltip } from '@mui/material';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -28,15 +29,15 @@ import { EmojiEvents, Close } from '@mui/icons-material';
 
 type Book = {
   id: number,
-  title: string,
-  author: string,
-  category: Category,
-  categoryId: string,
-  note: string,
-  publisher: string,
-  collection: string,
-  read: boolean,
-  year: number
+  title?: string,
+  author?: string,
+  category?: Category,
+  categoryId?: string,
+  note?: string,
+  publisher?: string,
+  collection?: string,
+  read?: boolean,
+  year?: number
 }
 
 type Category = {
@@ -72,6 +73,8 @@ type CategoryApiData = {
   };
 };
 
+enum EditStatus { 'update', 'insert' };
+
 const BookList = () => {
   const [validationErrors, setValidationErrors] = useState<Record<string, string | undefined>>({});
   const [selectedCategoryId, setSelectedCategoryId] = useState<string>('0');
@@ -85,7 +88,7 @@ const BookList = () => {
     pageIndex: 0,
     pageSize: 10,
   });
-  
+
   function useGetBooks() {
     return useQuery<BookApiData>({
       queryKey: [
@@ -147,12 +150,50 @@ const BookList = () => {
         const response = await fetch(getBooksUrl.href);
         const json: BookApiResponse = await response.json();
 
-        return { bookItems: json.items, booksMetaData: json.metaData } as BookApiData;
+
+        return { bookItems: replaceNullsWithEmptyStrings(json.items), booksMetaData: json.metaData } as BookApiData;
       },
       placeholderData: keepPreviousData, //don't go to 0 rows when refetching or paginating to next page
     });
   }
-  
+
+  /**
+    Prevents MaterialReactTable warnings if there are 'null' results
+  **/
+  function replaceNullsWithEmptyStrings(bookItems: Array<Book>): Array<Book> {
+    return bookItems.map(b => {
+      if (b.note === null) {
+        b.note = '';
+      }
+
+      if (b.author === null) {
+        b.author = '';
+      }
+
+      if (b.publisher === null) {
+        b.publisher = '';
+      }
+
+      if (b.collection === null) {
+        b.collection = '';
+      }
+
+      if (b.category === null) {
+        b.category = { id: '0', name: '' };
+      }
+
+      if (b.year === null) {
+        b.year = 0;
+      }
+
+      if (b.read === null) {
+        b.read = false;
+      }
+
+      return b;
+    });
+  }
+
   function useGetCategories() {
     return useQuery<Array<Category>>({
       queryKey: [
@@ -172,8 +213,33 @@ const BookList = () => {
     });
   }
 
+  const { mutateAsync: createBook, isPending: isCreatingBook } =
+    useCreateBook();
+
   const { mutateAsync: updateBook, isPending: isUpdatingBook } =
     useUpdateBook();
+
+  function useCreateBook() {
+    const queryClient = useQueryClient();
+    return useMutation({
+      mutationFn: async (book: Book) => {
+        const reqOpt = {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(book)
+        };
+
+        const putBookUrl = new URL(
+          `book`, getApiUrl(),
+        );
+
+        return fetch(putBookUrl, reqOpt);
+      },
+      onSettled: () => {
+        queryClient.invalidateQueries({ queryKey: ['bookData'] })
+      },
+    });
+  }
 
   function useUpdateBook() {
 
@@ -216,41 +282,19 @@ const BookList = () => {
   }) => {
     values.categoryId = selectedCategoryId;
     values.id = selectedBookId;
-
-    let tempVal =  {title: "", author: ""}; 
-
-    //const newValidationErrors = validateUser2(tempVal);
-    let newValidationErrors: any =  {}; 
-    
-
-    //let bla: Array<Record<string,string>> = new Array<Record<string,string>>();
-    
-    let bla2 = new Map();
-
-    bla2.set('proba1', 1);
-    bla2.set('proba2', 2);
-    /* console.log('map size=>'+bla2.size);
-    console.log('map values=>'+Array.from(bla2.values())); */
-
-
-
-    let proba: string = "";
+    let newValidationErrors: any = {};
     let bla = new Map();
 
     await bookValidationSchema.validate(values, { abortEarly: false }).then(v => {
       console.log();
     }).catch(e => {
       e.errors.forEach((error: string) => {
-        bla.set(error.toLowerCase().split(" ")[0], error);  
-
-        //proba+=error;
-      }); 
+        bla.set(error.toLowerCase().split(" ")[0], error);
+      });
 
       // console.log('proba=>'+ proba);
       newValidationErrors = Object.fromEntries(bla);
     });
-
-
 
     if (Object.values(newValidationErrors).some((error) => error)) {
       setValidationErrors(newValidationErrors);
@@ -262,7 +306,36 @@ const BookList = () => {
     table.setEditingRow(null); //exit editing mode
   };
 
-  
+  const handleCreateBook: MRT_TableOptions<Book>['onCreatingRowSave'] = async ({
+    values,
+    table,
+  }) => {
+
+    values.categoryId = selectedCategoryId === '0' ? null : selectedCategoryId;
+    let newValidationErrors: any = {};
+    let bla = new Map();
+
+    await bookValidationSchema.validate(values, { abortEarly: false }).then(v => {
+      console.log();
+    }).catch(e => {
+      e.errors.forEach((error: string) => {
+        bla.set(error.toLowerCase().split(" ")[0], error);
+      });
+
+      newValidationErrors = Object.fromEntries(bla);
+    });
+
+    if (Object.values(newValidationErrors).some((error) => error)) {
+      setValidationErrors(newValidationErrors);
+      return;
+    }
+
+    setValidationErrors({});
+    await createBook(values);
+    table.setCreatingRow(null); //exit creating mode
+  };
+
+
   const {
     data: categoryItems = [],
     isError: isErrorCategorySelectItems,
@@ -309,14 +382,24 @@ const BookList = () => {
         accessorKey: 'category.name',
         header: 'Category',
         Edit: ({ cell, column, row, table }) => {
+          let editStatus: EditStatus | undefined;
+
+          if (table.getState().editingRow) {
+            editStatus = EditStatus.update;
+          }
+          else if (table.getState().creatingRow) {
+            editStatus = EditStatus.insert;
+          }
 
           useEffect(() => {
-            setSelectedBookId(row.id);
+            if (editStatus === EditStatus.update) {
+              setSelectedBookId(row.id);
+            }
           }, []);
 
-          const originalBookCategory = row.original.category.id;
+          const originalBookCategory = editStatus === EditStatus.update ? row.original.category?.id : '0';
 
-          return <CategorySelection onSelectCategory={onSelectCategory} selectedCategory={originalBookCategory} inputData={categoryItems} />; 
+          return <CategorySelection onSelectCategory={onSelectCategory} selectedCategory={originalBookCategory} inputData={categoryItems} />;
         },
         filterVariant: 'select',
         filterSelectOptions: categoryItems.map(c => { return { label: c.name, value: c.name } })
@@ -390,7 +473,7 @@ const BookList = () => {
         enableColumnOrdering: false,
         enableSorting: false,
         editVariant: 'select',
-        editSelectOptions: [{label: 'already read', value: true}, {label: 'not yet', value: false}],
+        editSelectOptions: [{ label: 'already read', value: true }, { label: 'not yet', value: false }],
         muiEditTextFieldProps: {
           select: true,
           error: !!validationErrors?.read,
@@ -441,15 +524,44 @@ const BookList = () => {
     onSortingChange: setSorting,
 
     onCreatingRowCancel: () => setValidationErrors({}),
+    onCreatingRowSave: handleCreateBook,
     onEditingRowCancel: () => setValidationErrors({}),
     onEditingRowSave: handleSaveBook,
 
-    renderTopToolbarCustomActions: () => (
-      <Tooltip arrow title="Refresh Data">
-        <IconButton onClick={() => refetchBook()}>
-          <RefreshIcon />
-        </IconButton>
-      </Tooltip>
+    renderTopToolbarCustomActions: ({ table }) => (
+      <>
+        <Tooltip arrow title="Refresh Data">
+          <IconButton onClick={() => refetchBook()}>
+            <RefreshIcon />
+          </IconButton>
+        </Tooltip>
+        <Button
+          variant="contained"
+          onClick={() => {
+            const myBook: Book = {
+              id: 0, title: '',
+              author: '',
+              category: {
+                id: '',
+                name: ''
+              },
+              categoryId: '',
+              note: '',
+              publisher: '',
+              collection: '',
+              read: false,
+              year: 1
+            };
+            // I am sending an empty book object because of MaterialReactTable is complaining if 'deep reference'
+            // 'category.name' field is 'undefined'
+            table.setCreatingRow(
+              createRow(table, myBook)
+            );
+          }}
+        >
+          New book
+        </Button>
+      </>
     ),
     renderRowActions: ({ row, table }) => (
       <Box sx={{ display: 'flex', gap: '1rem' }}>
@@ -496,31 +608,7 @@ const bookValidationSchema = object({
   note: string().max(4000, `Note maximum length limit is 4000`),
   publisher: string().max(55, `Publisher maximum length limit is 55`),
   collection: string().max(55, `Collection maximum length limit is 55`),
-  year: number().positive('Year must be a positive number').integer('Year must be an integer')
+  year: number().moreThan(0).lessThan(2050).integer('Year must be an integer')
 });
-
-const validateRequired = (value: string) => !!value.length;
-
-function validateUser(book: Book) {
-  return {
-    title: !validateRequired(book.title)
-      ? 'Title is Required'
-      : '',
-    author: !validateRequired(book.author)
-      ? 'author is Required'
-      : '',
-  };
-}
-
-function validateUser2(book: any) {
-  return {
-    title: !validateRequired(book.title)
-      ? 'Title is Required'
-      : '',
-    author: !validateRequired(book.author)
-      ? 'author is Required'
-      : '',
-  };
-}
 
 export default BookListQueryProvider;
