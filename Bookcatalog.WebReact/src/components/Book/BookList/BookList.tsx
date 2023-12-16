@@ -72,6 +72,7 @@ const BookList = () => {
   const [validationErrors, setValidationErrors] = useState<Record<string, string | undefined>>({});
   const [selectedCategoryId, setSelectedCategoryId] = useState<string>('0');
   const [selectedBookId, setSelectedBookId] = useState<string>('0');
+  const [disableSaveOnInsert, setDisableSaveOnInsert] = useState<boolean>(false);
 
   const [columnFilters, setColumnFilters] = useState<MRT_ColumnFiltersState>([],);
   const [globalFilter, setGlobalFilter] = useState('');
@@ -80,6 +81,20 @@ const BookList = () => {
     pageIndex: 0,
     pageSize: 10,
   });
+
+  const {
+    data: { bookItems = [], booksMetaData } = {},
+    isError: isLoadingBooksError,
+    isRefetching: isRefetchingBooks,
+    isLoading: isLoadingBooks,
+    refetch: refetchBook,
+  } = useGetBooks();
+
+
+  useEffect(() => {
+    setDisableSaveOnInsert(false);
+  }, [bookItems]);
+
 
   function useGetBooks() {
     return useQuery<BookApiData>({
@@ -279,14 +294,6 @@ const BookList = () => {
     });
   }
 
-  const {
-    data: { bookItems = [], booksMetaData } = {},
-    isError: isLoadingBooksError,
-    isRefetching: isRefetchingBooks,
-    isLoading: isLoadingBooks,
-    refetch: refetchBook,
-  } = useGetBooks();
-
   const onSelectCategory = (selectedCategory: string): void => {
     setSelectedCategoryId(selectedCategory);
   }
@@ -326,6 +333,11 @@ const BookList = () => {
     table,
   }) => {
 
+    // prevents the user to hit 'save' several times in a row and to insert duplicate records
+    if (disableSaveOnInsert)
+      return;
+
+    setDisableSaveOnInsert(true);
     values.categoryId = selectedCategoryId === '0' ? null : selectedCategoryId;
     let newValidationErrors: any = {};
     let bla = new Map();
