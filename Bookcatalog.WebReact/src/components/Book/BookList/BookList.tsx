@@ -66,13 +66,6 @@ type CategoriesApiResponse = {
   };
 };
 
-type CategoryApiData = {
-  categoryItems: Array<Category>;
-  categoriesMetaData: {
-    totalCount: number;
-  };
-};
-
 enum EditStatus { 'update', 'insert' };
 
 const BookList = () => {
@@ -80,7 +73,6 @@ const BookList = () => {
   const [selectedCategoryId, setSelectedCategoryId] = useState<string>('0');
   const [selectedBookId, setSelectedBookId] = useState<string>('0');
 
-  //manage our own state for stuff we want to pass to the API
   const [columnFilters, setColumnFilters] = useState<MRT_ColumnFiltersState>([],);
   const [globalFilter, setGlobalFilter] = useState('');
   const [sorting, setSorting] = useState<MRT_SortingState>([]);
@@ -252,11 +244,34 @@ const BookList = () => {
           body: JSON.stringify(book)
         };
 
-        const putBookUrl = new URL(
+        const bookUrl = new URL(
           `book/${book.id}`, getApiUrl(),
         );
 
-        return fetch(putBookUrl, reqOpt);
+        return fetch(bookUrl, reqOpt);
+      },
+      onSettled: () => {
+        queryClient.invalidateQueries({ queryKey: ['bookData'] })
+      },
+    });
+  }
+
+
+  function useDeleteBook() {
+
+    const queryClient = useQueryClient();
+    return useMutation({
+      mutationFn: async (id: number) => {
+        const reqOpt = {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json' }
+        };
+
+        const bookUrl = new URL(
+          `book/${id}`, getApiUrl(),
+        );
+
+        return fetch(bookUrl, reqOpt);
       },
       onSettled: () => {
         queryClient.invalidateQueries({ queryKey: ['bookData'] })
@@ -341,6 +356,10 @@ const BookList = () => {
     isError: isErrorCategorySelectItems,
     isLoading: isLoadingCategorySelectItems,
   } = useGetCategories();
+
+
+  const { mutateAsync: deleteBook, isPending: isDeletingBook } =
+    useDeleteBook();
 
   const columns = useMemo<MRT_ColumnDef<Book>[]>(
     () => [
@@ -489,8 +508,8 @@ const BookList = () => {
 
   //DELETE action
   const openDeleteConfirmModal = (row: MRT_Row<Book>) => {
-    if (window.confirm('Are you sure you want to delete this user?')) {
-      //deleteUser(row.original.id);
+    if (window.confirm(`Are you sure you want to delete the book "${row.original.title}"?`)) {
+      deleteBook(row.original.id);
     }
   };
 
