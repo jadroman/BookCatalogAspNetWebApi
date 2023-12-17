@@ -294,6 +294,29 @@ const BookList = () => {
     });
   }
 
+  function useDeleteBookList() {
+
+    const queryClient = useQueryClient();
+    return useMutation({
+      mutationFn: async (idList: Array<number>) => {
+        const reqOpt = {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(idList)
+        };
+
+        const bookUrl = new URL(
+          `book`, getApiUrl(),
+        );
+
+        return fetch(bookUrl, reqOpt);
+      },
+      onSettled: () => {
+        queryClient.invalidateQueries({ queryKey: ['bookData'] })
+      },
+    });
+  }
+
   const onSelectCategory = (selectedCategory: string): void => {
     setSelectedCategoryId(selectedCategory);
   }
@@ -372,6 +395,9 @@ const BookList = () => {
 
   const { mutateAsync: deleteBook, isPending: isDeletingBook } =
     useDeleteBook();
+
+  const { mutateAsync: deleteBookList, isPending: isDeletingBookList } =
+    useDeleteBookList();
 
   const columns = useMemo<MRT_ColumnDef<Book>[]>(
     () => [
@@ -525,9 +551,19 @@ const BookList = () => {
     }
   };
 
+  const openDeleteListConfirmModal = (rows: Array<MRT_Row<Book>>) => {
+    const titlesToDelete = rows.map(t => t.original.title);
+
+    // TODO: create modal popup
+    if (window.confirm(`Are you sure you want to delete selected books: "${JSON.stringify(titlesToDelete)}"?`)) {
+      deleteBookList(rows.map(r => +r.id));
+    }
+  };
+
   const table = useMaterialReactTable({
     columns,
     data: bookItems,
+    enableRowSelection: true,
     initialState: {
       columnVisibility: {
         note: false, collection: false,
@@ -591,6 +627,14 @@ const BookList = () => {
           }}
         >
           New book
+        </Button>
+        <Button
+          onClick={() => {
+            const selectedRows = table.getSelectedRowModel().rows;
+            openDeleteListConfirmModal(selectedRows);
+          }}
+        >
+          delete selected
         </Button>
       </>
     ),

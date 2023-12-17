@@ -13,6 +13,7 @@ namespace BookCatalog.Common.Interfaces
         Task<int> UpdateBook(BookEditBindingModel book, int id);
         Task<int> InsertBook(BookEditBindingModel book);
         Task<Result<int>> DeleteBook(int id);
+        Task<Result<int>> DeleteBookList(IEnumerable<int> idList);
         Task<PagedBindingEntity<BookBindingModel>> GetBooks(BookParameters bookParameters);
     }
 }

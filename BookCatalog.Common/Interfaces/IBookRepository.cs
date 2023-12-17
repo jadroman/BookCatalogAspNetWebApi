@@ -16,5 +16,7 @@ namespace BookCatalog.Common.Interfaces
         Task<int> UpdateBook();
         Task<int> InsertBook(Book book);
         Task<int> DeleteBook(Book book);
+        Task<int> DeleteBookList(IEnumerable<Book> bookList);
+        IQueryable<Book> GetBookListByIds(IEnumerable<int> idList);
     }
 }

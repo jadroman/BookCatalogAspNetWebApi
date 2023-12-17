@@ -143,5 +143,12 @@ namespace BookCatalog.Domain.Services
 
             return new SuccessResult<int>(await _bookRepo.DeleteBook(book));
         }
+
+        public async Task<Result<int>> DeleteBookList(IEnumerable<int> idList)
+        {
+            var bookList = _bookRepo.GetBookListByIds(idList);
+
+            return new SuccessResult<int>(await _bookRepo.DeleteBookList(bookList));
+        }
     }
 }

@@ -4,6 +4,7 @@ using BookCatalog.Common.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace BookCatalog.API.Controllers
@@ -84,6 +85,14 @@ namespace BookCatalog.API.Controllers
         public async Task<IActionResult> DeleteBook([FromRoute] int id)
         {
             await _bookService.DeleteBook(id);
+
+            return NoContent();
+        }
+
+        [HttpDelete()]
+        public async Task<IActionResult> DeleteBookList([FromBody] IEnumerable<int> idList)
+        {
+            await _bookService.DeleteBookList(idList);
 
             return NoContent();
         }

@@ -82,6 +82,12 @@ namespace BookCatalog.DAL
             return book;
         }
 
+        public IQueryable<Book> GetBookListByIds(IEnumerable<int> idList)
+        {
+            return _context.Books.Where(b => idList.Contains(b.Id));
+
+        }
+
         public async Task<int> UpdateBook()
         {
             return await _context.SaveChangesAsync();
@@ -96,6 +102,17 @@ namespace BookCatalog.DAL
         public async Task<int> DeleteBook(Book book)
         {
             _context.Books.Remove(book);
+            return await _context.SaveChangesAsync();
+        }
+
+        public async Task<int> DeleteBookList(IEnumerable<Book> bookList)
+        {
+
+            foreach (var book in bookList)
+            {
+                _context.Books.Remove(book);
+            }
+            
             return await _context.SaveChangesAsync();
         }
     }
