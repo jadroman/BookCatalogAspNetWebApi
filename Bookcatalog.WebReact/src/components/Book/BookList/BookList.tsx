@@ -90,12 +90,6 @@ const BookList = () => {
     refetch: refetchBook,
   } = useGetBooks();
 
-
-  useEffect(() => {
-    setDisableSaveOnInsert(false);
-  }, [bookItems]);
-
-
   function useGetBooks() {
     return useQuery<BookApiData>({
       queryKey: [
@@ -382,6 +376,7 @@ const BookList = () => {
 
     setValidationErrors({});
     await createBook(values);
+    setDisableSaveOnInsert(false);
     table.setCreatingRow(null); //exit creating mode
   };
 
