@@ -1,9 +1,9 @@
 import { Button, Col, Container, Nav, NavDropdown, Navbar, Row } from 'react-bootstrap';
 import './App.scss';
 import "@fortawesome/fontawesome-free/js/all.js";
-import { Routes, Route, Link } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import Home from 'components/Home/Home';
-import BookList from 'components/Book/BookList/BookList';
+import { BookDataWrapper } from 'components/Book/BookDataWrapper';
 
 function App() {
   return (
@@ -15,7 +15,7 @@ function App() {
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto">
               <Nav.Link href="/home">Home</Nav.Link>
-              <Nav.Link href="/booklist">Books</Nav.Link>
+              <Nav.Link href="/book">Books</Nav.Link>
               {/* <NavDropdown title="Dropdown" id="basic-nav-dropdown">
                 <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
                 <NavDropdown.Item href="#action/3.2">
@@ -35,9 +35,10 @@ function App() {
         <Row>
           <Col>
             <Routes>
-              <Route path="" element={<Home/>} />
-              <Route path="/home" element={<Home/>} />
-              <Route path="/booklist" element={<BookList/>} />
+              <Route path="" element={<Home />} />
+              <Route path="/home" element={<Home />} />
+              {/* <Route path="/booklist" element={<BookList/>} /> */}
+              <Route path="/book" element={<BookDataWrapper />} />
             </Routes>
           </Col>
         </Row>

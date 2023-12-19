@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { object, string, number, date } from 'yup';
+import { object, string, number } from 'yup';
 import {
   MaterialReactTable,
   useMaterialReactTable,
@@ -26,45 +26,9 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CategorySelection from 'components/Category/CategorySelection';
 import { EmojiEvents, Close } from '@mui/icons-material';
-
-type Book = {
-  id: number,
-  title?: string,
-  author?: string,
-  category?: Category,
-  categoryId?: string,
-  note?: string,
-  publisher?: string,
-  collection?: string,
-  read?: boolean,
-  year?: number
-}
-
-type Category = {
-  id: string,
-  name: string
-}
-
-type BookApiData = {
-  bookItems: Array<Book>;
-  booksMetaData: {
-    totalCount: number;
-  };
-};
-
-type BookApiResponse = {
-  items: Array<Book>;
-  metaData: {
-    totalCount: number;
-  };
-};
-
-type CategoriesApiResponse = {
-  items: Array<Category>;
-  metaData: {
-    totalCount: number;
-  };
-};
+import { Book } from 'types/book';
+import { Category } from 'types/category';
+import { ApiData, ApiResponse } from 'types/shared';
 
 enum EditStatus { 'update', 'insert' };
 
@@ -83,7 +47,7 @@ const BookList = () => {
   });
 
   const {
-    data: { bookItems = [], booksMetaData } = {},
+    data: { items = [], metaData } = {},
     isError: isLoadingBooksError,
     isRefetching: isRefetchingBooks,
     isLoading: isLoadingBooks,
@@ -91,7 +55,7 @@ const BookList = () => {
   } = useGetBooks();
 
   function useGetBooks() {
-    return useQuery<BookApiData>({
+    return useQuery<ApiData<Book>>({
       queryKey: [
         'bookData',
         columnFilters, //refetch when columnFilters changes
@@ -149,10 +113,10 @@ const BookList = () => {
         }
 
         const response = await fetch(getBooksUrl.href);
-        const json: BookApiResponse = await response.json();
+        const json: ApiResponse<Book> = await response.json();
 
 
-        return { bookItems: replaceNullsWithEmptyStrings(json.items), booksMetaData: json.metaData } as BookApiData;
+        return { items: replaceNullsWithEmptyStrings(json.items), metaData: json.metaData } as ApiData<Book>;
       },
       placeholderData: keepPreviousData, //don't go to 0 rows when refetching or paginating to next page
     });
@@ -207,7 +171,7 @@ const BookList = () => {
         // URL e.g. api/book?PageNumber=0&pageSize=10&title=long&author=nick&globalFilter=&OrderBy=author+asc
         getCategoriesUrl.searchParams.set('pageSize', '100');
         const response = await fetch(getCategoriesUrl.href);
-        const json: CategoriesApiResponse = await response.json();
+        const json: ApiResponse<Category> = await response.json();
 
         return json.items;
       },
@@ -557,7 +521,7 @@ const BookList = () => {
 
   const table = useMaterialReactTable({
     columns,
-    data: bookItems,
+    data: items,
     enableRowSelection: true,
     initialState: {
       columnVisibility: {
@@ -623,7 +587,7 @@ const BookList = () => {
         >
           New book
         </Button>
-        <Button
+        <Button disabled={!table.getIsSomeRowsSelected()}
           onClick={() => {
             const selectedRows = table.getSelectedRowModel().rows;
             openDeleteListConfirmModal(selectedRows);
@@ -647,7 +611,7 @@ const BookList = () => {
         </Tooltip>
       </Box>
     ),
-    rowCount: booksMetaData?.totalCount,
+    rowCount: metaData?.totalCount,
     state: {
       columnFilters,
       globalFilter,
