@@ -1,40 +1,18 @@
-//export function bla() { }
 import { Box, Button, IconButton, Tooltip } from "@mui/material";
-import { MRT_ColumnDef, MRT_ColumnFiltersState, MRT_PaginationState, MRT_Row, MRT_SortingState, MRT_TableInstance, MRT_TableOptions, MaterialReactTable, useMaterialReactTable } from "material-react-table";
+import { MRT_ColumnDef, MRT_ColumnFiltersState, MRT_PaginationState, MRT_Row, MRT_SortingState, MRT_TableOptions, MaterialReactTable, createRow, useMaterialReactTable } from "material-react-table";
 import { useEffect, useMemo, useState } from "react";
 import { Book as BookEntity } from "types/book";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import RefreshIcon from '@mui/icons-material/Refresh';
-import { number, object, string } from "yup";
-import { ApiData, EditStatus } from "types/shared";
+import { EditStatus } from "types/shared";
 import CategorySelection from "components/Category/CategorySelection";
 import { Close, EmojiEvents } from "@mui/icons-material";
-import { Category } from "types/category";
-import { ColumnFiltersState, Updater } from "@tanstack/react-table";
+import { useCreateBook, useDeleteBook, useDeleteBookList, useGetBooks, useGetCategories, useUpdateBook } from "data/hooks";
+import { bookTableDefaultPageSize } from "config/book";
+import { bookValidationSchema } from "utils/book";
 
-// TODO: put on a common place
-export type BookListTableProps = {
-    onUpdateBook: (values: any) => Promise<void>;
-    onCreateBook: (values: any) => Promise<void>;
-    onDeleteBook: (id: number) => Promise<void>;
-    onDeleteBookList: (idList: Array<number>) => Promise<void>;
-    onRefetchBook: () => Promise<void>;
-    onCreateRow: (table: MRT_TableInstance<BookEntity>, book: BookEntity) => MRT_Row<BookEntity>;
-    onColumnFiltersChange: (filters: Updater<ColumnFiltersState>) => void;
-    onGlobalFilterChange: (filters: any) => void;
-    onPaginationChange: (pagination: Updater<MRT_PaginationState>) => void;
-    onSortingChange: (pagination: Updater<MRT_SortingState>) => void;
-    categoryItems: Array<Category>;
-    //bookItems: Array<Book>;
-    bookApiData: ApiData<BookEntity>;
-    isLoadingBooks: boolean;
-    isLoadingBooksError: boolean;
-    isRefetchingBooks: boolean;
-};
-
-export const Book = (props: BookListTableProps) => {
-
+export const Book = () => {
     const [validationErrors, setValidationErrors] = useState<Record<string, string | undefined>>({});
     const [selectedCategoryId, setSelectedCategoryId] = useState<string>('0');
     const [selectedBookId, setSelectedBookId] = useState<string>('0');
@@ -45,9 +23,35 @@ export const Book = (props: BookListTableProps) => {
     const [sorting, setSorting] = useState<MRT_SortingState>([]);
     const [pagination, setPagination] = useState<MRT_PaginationState>({
         pageIndex: 0,
-        pageSize: 10,
+        pageSize: bookTableDefaultPageSize,
     });
 
+    const {
+        data: { items = [], metaData = { totalCount: 0 } } = {},
+        isError: isLoadingBooksError,
+        isRefetching: isRefetchingBooks,
+        isLoading: isLoadingBooks,
+        refetch: refetchBooks,
+    } = useGetBooks(columnFilters, globalFilter,
+        pagination, sorting);
+
+    const {
+        data: categoryItems = [],
+        isError: isErrorCategorySelectItems,
+        isLoading: isLoadingCategorySelectItems,
+    } = useGetCategories();
+
+    const { mutateAsync: create, isPending: isCreatingBook } =
+        useCreateBook();
+
+    const { mutateAsync: update, isPending: isUpdatingBook } =
+        useUpdateBook();
+
+    const { mutateAsync: deleteBook, isPending: isDeletingBook } =
+        useDeleteBook();
+
+    const { mutateAsync: deleteList, isPending: isDeletingBookList } =
+        useDeleteBookList();
 
     const onSelectCategory = (selectedCategory: string): void => {
         setSelectedCategoryId(selectedCategory);
@@ -69,7 +73,6 @@ export const Book = (props: BookListTableProps) => {
                 bla.set(error.toLowerCase().split(" ")[0], error);
             });
 
-            // console.log('proba=>'+ proba);
             newValidationErrors = Object.fromEntries(bla);
         });
 
@@ -79,7 +82,7 @@ export const Book = (props: BookListTableProps) => {
         }
 
         setValidationErrors({});
-        await props.onUpdateBook(values);
+        await update(values);
         table.setEditingRow(null); //exit editing mode
     };
 
@@ -87,7 +90,6 @@ export const Book = (props: BookListTableProps) => {
         values,
         table,
     }) => {
-
         // prevents the user to hit 'save' several times in a row and to insert duplicate records
         if (disableSaveOnInsert)
             return;
@@ -95,25 +97,25 @@ export const Book = (props: BookListTableProps) => {
         setDisableSaveOnInsert(true);
         values.categoryId = selectedCategoryId === '0' ? null : selectedCategoryId;
         let newValidationErrors: any = {};
-        let bla = new Map();
+        let errors = new Map();
 
         await bookValidationSchema.validate(values, { abortEarly: false }).then(v => {
-            console.log();
         }).catch(e => {
             e.errors.forEach((error: string) => {
-                bla.set(error.toLowerCase().split(" ")[0], error);
+                errors.set(error.toLowerCase().split(" ")[0], error);
             });
 
-            newValidationErrors = Object.fromEntries(bla);
+            newValidationErrors = Object.fromEntries(errors);
         });
 
         if (Object.values(newValidationErrors).some((error) => error)) {
             setValidationErrors(newValidationErrors);
+            setDisableSaveOnInsert(false);
             return;
         }
 
         setValidationErrors({});
-        await props.onCreateBook(values);
+        await create(values);
         setDisableSaveOnInsert(false);
         table.setCreatingRow(null); //exit creating mode
     };
@@ -142,7 +144,7 @@ export const Book = (props: BookListTableProps) => {
                 accessorKey: 'author',
                 header: 'Author',
                 muiEditTextFieldProps: {
-                    type: 'email',
+                    type: 'text',
                     required: true,
                     error: !!validationErrors?.author,
                     helperText: validationErrors?.author,
@@ -176,16 +178,18 @@ export const Book = (props: BookListTableProps) => {
 
                     const originalBookCategory = editStatus === EditStatus.update ? row.original.category?.id : '0';
 
-                    return <CategorySelection onSelectCategory={onSelectCategory} selectedCategory={originalBookCategory} inputData={props.categoryItems} />;
+                    return <CategorySelection onSelectCategory={onSelectCategory} selectedCategory={originalBookCategory} inputData={categoryItems} />;
                 },
                 filterVariant: 'select',
-                filterSelectOptions: props.categoryItems.map(c => { return { label: c.name, value: c.name } })
+                filterSelectOptions: categoryItems.map(c => { return { label: c.name, value: c.name } })
             },
             {
                 accessorKey: 'note',
                 header: 'Note',
                 muiEditTextFieldProps: {
-                    type: 'email',
+                    type: 'text',
+                    multiline: true,
+                    rows: 4,
                     error: !!validationErrors?.note,
                     helperText: validationErrors?.note,
                     //remove any previous validation errors when user focuses on the input
@@ -261,13 +265,13 @@ export const Book = (props: BookListTableProps) => {
                 )
             }
         ],
-        [validationErrors, props.categoryItems],
+        [validationErrors, categoryItems],
     );
 
     //DELETE action
     const openDeleteConfirmModal = async (row: MRT_Row<BookEntity>) => {
         if (window.confirm(`Are you sure you want to delete the book "${row.original.title}"?`)) {
-            await props.onDeleteBook(row.original.id);
+            await deleteBook(row.original.id);
         }
     };
 
@@ -276,13 +280,13 @@ export const Book = (props: BookListTableProps) => {
 
         // TODO: create modal popup
         if (window.confirm(`Are you sure you want to delete selected books: "${JSON.stringify(titlesToDelete)}"?`)) {
-            await props.onDeleteBookList(rows.map(r => +r.id));
+            await deleteList(rows.map(r => +r.id));
         }
     };
 
     const table = useMaterialReactTable({
         columns,
-        data: props.bookApiData.items,
+        data: items,
         enableRowSelection: true,
         initialState: {
             columnVisibility: {
@@ -299,28 +303,16 @@ export const Book = (props: BookListTableProps) => {
         manualFiltering: true,
         manualPagination: true,
         manualSorting: true,
-        muiToolbarAlertBannerProps: props.isLoadingBooksError
+        muiToolbarAlertBannerProps: isLoadingBooksError
             ? {
                 color: 'error',
                 children: 'Error loading data',
             }
             : undefined,
-        onColumnFiltersChange: (f) => {
-            props.onColumnFiltersChange(f);
-            setColumnFilters(f);
-        },
-        onGlobalFilterChange: (f) => {
-            props.onGlobalFilterChange(f);
-            setGlobalFilter(f);
-        },
-        onPaginationChange: (f) => {
-            props.onPaginationChange(f);
-            setPagination(f);
-        },
-        onSortingChange: (f) => {
-            props.onSortingChange(f);
-            setSorting(f);
-        },
+        onColumnFiltersChange: setColumnFilters,
+        onGlobalFilterChange: setGlobalFilter,
+        onPaginationChange: setPagination,
+        onSortingChange: setSorting,
 
         onCreatingRowCancel: () => setValidationErrors({}),
         onCreatingRowSave: handleCreateBook,
@@ -330,7 +322,7 @@ export const Book = (props: BookListTableProps) => {
         renderTopToolbarCustomActions: ({ table }) => (
             <>
                 <Tooltip arrow title="Refresh Data">
-                    <IconButton onClick={async () => props.onRefetchBook()}>
+                    <IconButton onClick={async () => refetchBooks()}>
                         <RefreshIcon />
                     </IconButton>
                 </Tooltip>
@@ -354,7 +346,7 @@ export const Book = (props: BookListTableProps) => {
                         // I am sending an empty book object because of MaterialReactTable is complaining if 'deep reference'
                         // 'category.name' field is 'undefined'
                         table.setCreatingRow(
-                            props.onCreateRow(table, myBook)
+                            createRow(table, myBook)
                         );
                     }}
                 >
@@ -384,14 +376,14 @@ export const Book = (props: BookListTableProps) => {
                 </Tooltip>
             </Box>
         ),
-        rowCount: props.bookApiData.metaData?.totalCount,
+        rowCount: metaData?.totalCount,
         state: {
             columnFilters,
             globalFilter,
-            isLoading: props.isLoadingBooks,
+            isLoading: isLoadingBooks,
             pagination,
-            showAlertBanner: props.isLoadingBooksError,
-            showProgressBars: props.isRefetchingBooks,
+            showAlertBanner: isLoadingBooksError,
+            showProgressBars: isRefetchingBooks,
             sorting,
         },
     });
@@ -399,13 +391,3 @@ export const Book = (props: BookListTableProps) => {
     return <MaterialReactTable table={table} />;
 
 };
-
-// TODO: extract max values
-const bookValidationSchema = object({
-    title: string().required('Title is required.').max(195, `Title maximum length limit is 195`),
-    author: string().max(55, `Author maximum length limit is 55`),
-    note: string().max(4000, `Note maximum length limit is 4000`),
-    publisher: string().max(55, `Publisher maximum length limit is 55`),
-    collection: string().max(55, `Collection maximum length limit is 55`),
-    year: number().moreThan(0).lessThan(2050).integer('Year must be an integer')
-});
