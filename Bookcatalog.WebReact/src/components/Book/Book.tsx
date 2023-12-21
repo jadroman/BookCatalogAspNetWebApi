@@ -8,7 +8,7 @@ import RefreshIcon from '@mui/icons-material/Refresh';
 import { EditStatus } from "types/shared";
 import CategorySelection from "components/Category/CategorySelection";
 import { Close, EmojiEvents } from "@mui/icons-material";
-import { useCreateBook, useDeleteBook, useDeleteBookList, useGetBooks, useGetCategories, useUpdateBook } from "data/hooks";
+import * as hooks from "data/bookHooks";
 import { bookTableDefaultPageSize } from "config/book";
 import { bookValidationSchema } from "utils/book";
 
@@ -32,26 +32,26 @@ export const Book = () => {
         isRefetching: isRefetchingBooks,
         isLoading: isLoadingBooks,
         refetch: refetchBooks,
-    } = useGetBooks(columnFilters, globalFilter,
+    } = hooks.useGetBooks(columnFilters, globalFilter,
         pagination, sorting);
 
     const {
         data: categoryItems = [],
         isError: isErrorCategorySelectItems,
         isLoading: isLoadingCategorySelectItems,
-    } = useGetCategories();
+    } = hooks.useGetCategories();
 
     const { mutateAsync: create, isPending: isCreatingBook } =
-        useCreateBook();
+        hooks.useCreateBook();
 
     const { mutateAsync: update, isPending: isUpdatingBook } =
-        useUpdateBook();
+        hooks.useUpdateBook();
 
     const { mutateAsync: deleteBook, isPending: isDeletingBook } =
-        useDeleteBook();
+        hooks.useDeleteBook();
 
     const { mutateAsync: deleteList, isPending: isDeletingBookList } =
-        useDeleteBookList();
+        hooks.useDeleteBookList();
 
     const onSelectCategory = (selectedCategory: string): void => {
         setSelectedCategoryId(selectedCategory);
