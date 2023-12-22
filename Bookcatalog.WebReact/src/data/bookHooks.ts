@@ -6,10 +6,12 @@ import { Book } from "types/book";
 import { Category } from "types/category";
 import { ApiData, ApiResponse } from "types/shared";
 import { replaceNullsWithEmptyStrings, setSearchParams } from "utils/book";
+import axios from "axios";
 
 export function useGetBooks(columnFilters: MRT_ColumnFiltersState, globalFilter: string,
     pagination: MRT_PaginationState, sorting: MRT_SortingState) {
-    return useQuery<ApiData<Book>>({
+
+    const query = useQuery<ApiData<Book>>({
         queryKey: [
             'bookData',
             columnFilters, //refetch when columnFilters changes
@@ -20,12 +22,34 @@ export function useGetBooks(columnFilters: MRT_ColumnFiltersState, globalFilter:
         ],
         queryFn: async (): Promise<ApiData<Book>> => {
             const getBooksUrl = setSearchParams(columnFilters, pagination, sorting);
-            const response = await fetch(getBooksUrl.href);
-            const json: ApiResponse<Book> = await response.json();
+            //const response = await fetch(getBooksUrl.href);
+
+            const response = await axios.get(getBooksUrl.href);
+
+            const json: ApiResponse<Book> = (response).data;
             return { items: replaceNullsWithEmptyStrings(json.items), metaData: json.metaData };
         },
         placeholderData: keepPreviousData
     });
+
+    let error: any;
+
+    if (query?.error) {
+        error = query?.error;
+
+        let errorResponse: any;
+        errorResponse = error.status;
+
+        if (error.status) {
+
+            if (errorResponse.status === 401) {
+                console.log('redirect')
+            }
+        }
+    }
+
+
+    return query;
 }
 
 export function useGetCategories() {
