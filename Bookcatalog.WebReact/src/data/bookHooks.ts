@@ -32,22 +32,6 @@ export function useGetBooks(columnFilters: MRT_ColumnFiltersState, globalFilter:
         placeholderData: keepPreviousData
     });
 
-    let error: any;
-
-    if (query?.error) {
-        error = query?.error;
-
-        let errorResponse: any;
-        errorResponse = error.status;
-
-        if (error.status) {
-
-            if (errorResponse.status === 401) {
-                console.log('redirect')
-            }
-        }
-    }
-
 
     return query;
 }

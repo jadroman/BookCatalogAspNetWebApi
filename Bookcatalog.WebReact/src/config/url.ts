@@ -4,7 +4,8 @@ const enum ApiUrl {
     Production = ''
 }
 
-export const authUrl = 'accounts/login';
+export const loginUrl = 'accounts/login';
+export const refreshTokenUrl = 'accounts/RefreshToken';
 
 export const getApiUrl = (): ApiUrl | undefined => {
     let url;

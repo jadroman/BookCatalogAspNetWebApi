@@ -1,7 +1,7 @@
 import { Button } from "@mui/material";
 import axios from "axios";
-import { authUrl, getApiUrl } from "config/url";
-import { setAuthToken } from "utils/auth";
+import { loginUrl, getApiUrl } from "config/url";
+import { setAuthTokenHeader } from "utils/auth";
 
 const handleSubmit = async () => {
     //reqres registered sample user
@@ -10,18 +10,21 @@ const handleSubmit = async () => {
         password: '2xSNzSa$'
     }
 
-    const response = await axios.post(getApiUrl() + authUrl, loginPayload);
+    const response = await axios.post(getApiUrl() + loginUrl, loginPayload);
 
     const token = response.data.token;
+    const refreshToken = response.data.refreshToken;
 
     localStorage.setItem("bookCatalogToken", token);
-    setAuthToken(token);
-    //window.location.href = '/';
+    localStorage.setItem("bookCatalogRefreshToken", refreshToken);
+    setAuthTokenHeader(token);
+
 };
 
 
 const logOff = async () => {
     localStorage.removeItem("bookCatalogToken");
+    localStorage.removeItem("bookCatalogRefreshToken");
 }
 
 export const Login = () => {

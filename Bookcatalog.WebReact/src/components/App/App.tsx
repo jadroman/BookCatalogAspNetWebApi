@@ -7,14 +7,14 @@ import { Book } from 'components/Book/Book';
 import { ProtectedRoute } from 'components/ProtectedRoute';
 import { Login } from 'components/Login/Login';
 import { Category } from 'components/Category/Category';
-import { setAuthToken } from 'utils/auth';
+import { setAuthTokenHeader } from 'utils/auth';
 
 function App() {
 
   const token = localStorage.getItem("bookCatalogToken");
 
   if (token) {
-    setAuthToken(token);
+    setAuthTokenHeader(token);
   }
 
   return (
