@@ -24,8 +24,4 @@
     <ProjectReference Include="..\BookCatalog.Common\BookCatalog.Common.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Migrations\" />
-  </ItemGroup>
-
 </Project>

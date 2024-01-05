@@ -8,7 +8,7 @@ namespace BookCatalog.Common.BindingModels.Authentication
 {
     public class RefreshTokenBindingModel
     {
-        public string Token { get; set; }
+        public string ExpiredToken { get; set; }
         public string RefreshToken { get; set; }
     }
 }

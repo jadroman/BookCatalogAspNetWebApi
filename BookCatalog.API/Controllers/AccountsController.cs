@@ -5,16 +5,12 @@ using BookCatalog.Common.Entities;
 using BookCatalog.Common.Helpers;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
+using Microsoft.Extensions.Configuration;
 using System;
-using System.Collections.Generic;
+using System.Configuration;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
-using System.Security.Claims;
-using System.Security.Cryptography;
 
 namespace BookCatalog.API.Controllers
 {
@@ -28,12 +24,12 @@ namespace BookCatalog.API.Controllers
         private readonly IConfiguration _configuration;
         private readonly IConfigurationSection _jwtSettings;
 
-        public AccountsController(UserManager<User> userManager, IMapper mapper, JwtHandler jwtHandler, IConfiguration configuration)
+        public AccountsController(UserManager<User> userManager, IMapper mapper, IConfiguration configuration, JwtHandler jwtHandler)
         {
             _userManager = userManager;
             _mapper = mapper; 
+            _jwtHandler = jwtHandler;
             _configuration = configuration;
-            _jwtHandler = jwtHandler; 
             _jwtSettings = _configuration.GetSection("JwtSettings");
         }
 
@@ -49,29 +45,38 @@ namespace BookCatalog.API.Controllers
             var claims = _jwtHandler.GetClaims(user);
             var tokenOptions = _jwtHandler.GenerateTokenOptions(signingCredentials, claims);
             var token = new JwtSecurityTokenHandler().WriteToken(tokenOptions);
-            
-            return Ok(new AuthResponseBindingModel { IsAuthSuccessful = true, Token = token, RefreshToken = _jwtHandler.GenerateRefreshToken() });
+            var refreshToken = _jwtHandler.GenerateRefreshToken();
+
+            user.RefreshToken = refreshToken;
+            user.RefreshTokenExpiryTime = DateTime.Now.AddDays(Convert.ToDouble(_jwtSettings.GetSection("refreshTokenExpiryInDays").Value));
+            await _userManager.UpdateAsync(user);
+
+            return Ok(new AuthResponseBindingModel { IsAuthSuccessful = true, Token = token, RefreshToken = refreshToken });
         }
 
         [HttpPost("RefreshToken")]
-        public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenBindingModel refreshToken)
+        public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenBindingModel tokens)
         {
-            if (refreshToken is null || string.IsNullOrEmpty(refreshToken.RefreshToken) || string.IsNullOrEmpty(refreshToken.Token))
+            if (tokens is null || string.IsNullOrEmpty(tokens.RefreshToken) || string.IsNullOrEmpty(tokens.ExpiredToken))
                 return BadRequest("Invalid client request");
 
-            var principal = _jwtHandler.GetPrincipalFromExpiredToken(refreshToken.Token);
+            var principal = _jwtHandler.GetPrincipalFromExpiredToken(tokens.ExpiredToken);
             var username = principal.Identity.Name;
             var user = await _userManager.FindByNameAsync(username);
 
-            if (user == null)
-                return Unauthorized(new AuthResponseBindingModel { ErrorMessage = "Invalid Authentication" });
+            if (user == null || user.RefreshToken != tokens.RefreshToken || user.RefreshTokenExpiryTime <= DateTime.Now)
+                return Ok(new AuthResponseBindingModel { IsAuthSuccessful = false });
 
             var signingCredentials = _jwtHandler.GetSigningCredentials();
             var claims = _jwtHandler.GetClaims(user);
             var tokenOptions = _jwtHandler.GenerateTokenOptions(signingCredentials, claims);
             var token = new JwtSecurityTokenHandler().WriteToken(tokenOptions);
 
-            return Ok(new AuthResponseBindingModel { IsAuthSuccessful = true, Token = token, RefreshToken = _jwtHandler.GenerateRefreshToken() });
+            var refreshToken = _jwtHandler.GenerateRefreshToken();
+            user.RefreshToken = refreshToken;
+            await _userManager.UpdateAsync(user);
+
+            return Ok(new AuthResponseBindingModel { IsAuthSuccessful = true, Token = token, RefreshToken = refreshToken });
         }
 
             [HttpPost("Registration")]

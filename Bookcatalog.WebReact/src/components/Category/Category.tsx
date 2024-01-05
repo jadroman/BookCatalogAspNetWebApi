@@ -16,7 +16,7 @@ export const Category = () => {
         if (expiredToken && refreshToken) {
 
             const refreshTokenPayload = {
-                token: expiredToken,
+                expiredToken: expiredToken,
                 refreshToken: refreshToken
             };
 

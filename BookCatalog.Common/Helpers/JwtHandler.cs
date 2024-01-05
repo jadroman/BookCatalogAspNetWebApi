@@ -1,6 +1,4 @@
-﻿using BookCatalog.Common.BindingModels.Authentication;
-using BookCatalog.Common.Entities;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -9,7 +7,6 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace BookCatalog.Common.Helpers
 {
@@ -17,12 +14,10 @@ namespace BookCatalog.Common.Helpers
     {
         private readonly IConfiguration _configuration;
         private readonly IConfigurationSection _jwtSettings;
-        private readonly UserManager<User> _userManager;
 
-        public JwtHandler(IConfiguration configuration, UserManager<User> userManager)
+        public JwtHandler(IConfiguration configuration)
         {
             _configuration = configuration;
-            _userManager = userManager;
             _jwtSettings = _configuration.GetSection("JwtSettings");
         }
 
@@ -49,8 +44,9 @@ namespace BookCatalog.Common.Helpers
                 issuer: _jwtSettings.GetSection("validIssuer").Value,
                 audience: _jwtSettings.GetSection("validAudience").Value,
                 claims: claims,
-                expires: DateTime.Now.AddMinutes(Convert.ToDouble(_jwtSettings.GetSection("expiryInMinutes").Value)),
+                expires: DateTime.Now.AddMinutes(Convert.ToDouble(_jwtSettings.GetSection("tokenExpiryInMinutes").Value)),
                 signingCredentials: signingCredentials);
+
             return tokenOptions;
         }
 
@@ -60,9 +56,11 @@ namespace BookCatalog.Common.Helpers
             using (var rng = RandomNumberGenerator.Create())
             {
                 rng.GetBytes(randomNumber);
+
                 return Convert.ToBase64String(randomNumber);
             }
         }
+
         public ClaimsPrincipal GetPrincipalFromExpiredToken(string token)
         {
             var tokenValidationParameters = new TokenValidationParameters
