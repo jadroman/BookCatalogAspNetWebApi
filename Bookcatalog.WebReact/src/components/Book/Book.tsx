@@ -61,7 +61,7 @@ export const Book = () => {
         values,
         table
     }) => {
-        values.categoryId = selectedCategoryId;
+        values.categoryId = selectedCategoryId === '0' ? null : selectedCategoryId;
         values.id = selectedBookId;
         let newValidationErrors: any = {};
         let bla = new Map();
@@ -145,7 +145,7 @@ export const Book = () => {
                 header: 'Author',
                 muiEditTextFieldProps: {
                     type: 'text',
-                    required: true,
+                    required: false,
                     error: !!validationErrors?.author,
                     helperText: validationErrors?.author,
                     //remove any previous validation errors when user focuses on the input
@@ -352,7 +352,7 @@ export const Book = () => {
                 >
                     New book
                 </Button>
-                <Button disabled={!table.getIsSomeRowsSelected()}
+                <Button disabled={table.getSelectedRowModel().rows.length < 2}
                     onClick={() => {
                         const selectedRows = table.getSelectedRowModel().rows;
                         openDeleteListConfirmModal(selectedRows);

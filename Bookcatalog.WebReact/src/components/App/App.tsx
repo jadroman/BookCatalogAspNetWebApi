@@ -11,12 +11,6 @@ import { setAuthTokenHeader } from 'utils/auth';
 
 function App() {
 
-  const token = localStorage.getItem("bookCatalogToken");
-
-  if (token) {
-    setAuthTokenHeader(token);
-  }
-
   return (
     <>
       <Navbar expand="lg" className="bg-body-tertiary">

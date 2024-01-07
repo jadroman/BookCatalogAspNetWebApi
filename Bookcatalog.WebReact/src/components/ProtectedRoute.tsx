@@ -5,6 +5,7 @@ type ProtectedRouteProps = {
 }
 
 export const ProtectedRoute = (props: ProtectedRouteProps) => {
+    //TODO: set some expiration 
     const isAuthenticated = localStorage.getItem("bookCatalogToken");
 
     if (!isAuthenticated) {

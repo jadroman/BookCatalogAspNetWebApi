@@ -42,14 +42,16 @@ export function useGetCategories() {
             'categoryData'
         ],
         queryFn: async (): Promise<Array<Category>> => {
+
             const getCategoriesUrl = new URL(
                 'category', getApiUrl(),
             );
 
             getCategoriesUrl.searchParams.set('pageSize', categoryItemsDefaultPageSize);
-            const response = await fetch(getCategoriesUrl.href);
-            const json: ApiResponse<Category> = await response.json();
 
+            const response = await axios.get(getCategoriesUrl.href);
+
+            const json: ApiResponse<Category> = (response).data;
             return json.items;
         },
     });
@@ -59,17 +61,7 @@ export function useCreateBook() {
     const queryClient = useQueryClient();
     return useMutation({
         mutationFn: async (book: Book) => {
-            const reqOpt = {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(book)
-            };
-
-            const putBookUrl = new URL(
-                `book`, getApiUrl(),
-            );
-
-            return await fetch(putBookUrl, reqOpt);
+            await axios.post(`${getApiUrl()}book`, book);
         },
         onSettled: () => {
             queryClient.invalidateQueries({ queryKey: ['bookData'] })
@@ -81,17 +73,7 @@ export function useUpdateBook() {
     const queryClient = useQueryClient();
     return useMutation({
         mutationFn: async (book: Book) => {
-            const reqOpt = {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(book)
-            };
-
-            const bookUrl = new URL(
-                `book/${book.id}`, getApiUrl(),
-            );
-
-            return await fetch(bookUrl, reqOpt);
+            await axios.put(`${getApiUrl()}book/${book.id}`, book);
         },
         onSettled: () => {
             queryClient.invalidateQueries({ queryKey: ['bookData'] })
@@ -103,16 +85,7 @@ export function useDeleteBook() {
     const queryClient = useQueryClient();
     return useMutation({
         mutationFn: async (id: number) => {
-            const reqOpt = {
-                method: 'DELETE',
-                headers: { 'Content-Type': 'application/json' }
-            };
-
-            const bookUrl = new URL(
-                `book/${id}`, getApiUrl(),
-            );
-
-            return await fetch(bookUrl, reqOpt);
+            await axios.delete(`${getApiUrl()}book/${id}`);
         },
         onSettled: () => {
             queryClient.invalidateQueries({ queryKey: ['bookData'] })
@@ -124,17 +97,7 @@ export function useDeleteBookList() {
     const queryClient = useQueryClient();
     return useMutation({
         mutationFn: async (idList: Array<number>) => {
-            const reqOpt = {
-                method: 'DELETE',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(idList)
-            };
-
-            const bookUrl = new URL(
-                `book`, getApiUrl(),
-            );
-
-            return await fetch(bookUrl, reqOpt);
+            await axios.delete(`${getApiUrl()}book`, { data: idList });
         },
         onSettled: () => {
             queryClient.invalidateQueries({ queryKey: ['bookData'] })
