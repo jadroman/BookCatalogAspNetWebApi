@@ -9,15 +9,27 @@ export const setAuthTokenHeader = (token: string) => {
         delete axios.defaults.headers.common["Authorization"];
 }
 
+axios.interceptors.request.use((config) => {
+    const token = localStorage.getItem("bookCatalogToken");
+
+    if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+    }
+    else {
+        config.headers.Authorization = null;
+    }
+
+    return config;
+}, (error) => {
+    return Promise.reject(error);
+});
+
 axios.interceptors.response.use(response => {
     return response;
 }, async error => {
 
-    const originalRequest = error.config;
-
-    if (error.response.status === 401 && !originalRequest?._retry) {
-        originalRequest._retry = true;
-        console.log('axios.interceptor');
+    if (error.response.status === 401) {
+        console.log('axios.interceptor=>response.status === 401');
         const tokenRefreshSuccessful = await tryToRefreshToken();
 
         if (!tokenRefreshSuccessful) {
@@ -27,32 +39,6 @@ axios.interceptors.response.use(response => {
             localStorage.removeItem("bookCatalogRefreshToken");
             window.location.href = '/login';
         }
-
-
-
-
-        /* const expiredToken = localStorage.getItem("bookCatalogToken");
-        const refreshToken = localStorage.getItem("bookCatalogRefreshToken");
-
-        if (expiredToken && refreshToken) {
-
-            const refreshTokenPayload = {
-                token: expiredToken,
-                refreshToken: refreshToken
-            };
-
-            const response = await axios.post(getApiUrl() + refreshTokenUrl, refreshTokenPayload);
-
-            const newToken = response.data.token;
-            const newRefreshToken = response.data.refreshToken;
-
-            localStorage.setItem("bookCatalogToken", newToken);
-            localStorage.setItem("bookCatalogRefreshToken", newRefreshToken);
-            setAuthTokenHeader(newToken);
-        } */
-
-
-
     }
     return error;
 });
