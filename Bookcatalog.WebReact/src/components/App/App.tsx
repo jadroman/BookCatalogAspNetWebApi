@@ -7,7 +7,6 @@ import { Book } from 'components/Book/Book';
 import { ProtectedRoute } from 'components/ProtectedRoute';
 import { Login } from 'components/Login/Login';
 import { Category } from 'components/Category/Category';
-import { setAuthTokenHeader } from 'utils/auth';
 
 function App() {
 
@@ -30,10 +29,10 @@ function App() {
         <Row>
           <Col>
             <Routes>
-              <Route path="" element={<Home />} />
-              <Route path="/home" element={<Home />} />
               <Route path="/login" element={<Login />} />
               <Route element={<ProtectedRoute />}>
+                <Route path="" element={<Book />} />
+                <Route path="/home" element={<Home />} />
                 <Route path="/book" element={<Book />} />
                 <Route path="/category" element={<Category />} />
               </Route>

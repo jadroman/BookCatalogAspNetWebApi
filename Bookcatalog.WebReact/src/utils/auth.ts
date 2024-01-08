@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { getApiUrl, refreshTokenUrl } from 'config/url';
+import { useLocation } from 'react-router-dom';
 
 export const setAuthTokenHeader = (token: string) => {
     if (token) {
@@ -37,6 +38,7 @@ axios.interceptors.response.use(response => {
             //TODO: move to function
             localStorage.removeItem("bookCatalogToken");
             localStorage.removeItem("bookCatalogRefreshToken");
+
             window.location.href = '/login';
         }
     }

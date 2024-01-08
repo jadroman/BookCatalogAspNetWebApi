@@ -5,6 +5,8 @@ import { useNavigate } from "react-router-dom";
 import { setAuthTokenHeader } from "utils/auth";
 
 export const Category = () => {
+    const navigate = useNavigate();
+
     const login = () => {
         navigate("/login");
     }
@@ -32,7 +34,6 @@ export const Category = () => {
 
     }
 
-    const navigate = useNavigate();
     return <>
         <h2>Category page</h2>
         <div>
