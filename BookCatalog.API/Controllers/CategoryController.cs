@@ -1,9 +1,11 @@
 ﻿using BookCatalog.Common.BindingModels.Category;
 using BookCatalog.Common.Helpers;
 using BookCatalog.Common.Interfaces;
+using BookCatalog.Domain.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace BookCatalog.API.Controllers
@@ -85,8 +87,16 @@ namespace BookCatalog.API.Controllers
         {
             var deleteResult = await _categoryService.DeleteCategory(id);
 
-            if (!deleteResult.IsSuccessful && deleteResult.Type == ResultType.Invalid) 
+            if (!deleteResult.IsSuccessful && deleteResult.Type == ResultType.Invalid)
                 return BadRequest(deleteResult.Error);
+
+            return NoContent();
+        }
+
+        [HttpDelete()]
+        public async Task<IActionResult> DeleteCategoryList([FromBody] IEnumerable<int> idList)
+        {
+            await _categoryService.DeleteCategoryList(idList);
 
             return NoContent();
         }

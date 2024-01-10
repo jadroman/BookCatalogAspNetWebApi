@@ -1,4 +1,4 @@
-import { Box, Button, IconButton, Tooltip } from "@mui/material";
+import { AlertProps, Box, Button, IconButton, Snackbar, Tooltip } from "@mui/material";
 import { MRT_ColumnDef, MRT_ColumnFiltersState, MRT_PaginationState, MRT_Row, MRT_SortingState, MRT_TableOptions, MaterialReactTable, createRow, useMaterialReactTable } from "material-react-table";
 import { useEffect, useMemo, useState } from "react";
 import { Book as BookEntity } from "types/book";
@@ -11,12 +11,15 @@ import { Close, EmojiEvents } from "@mui/icons-material";
 import * as hooks from "data/bookHooks";
 import { bookTableDefaultPageSize } from "config/book";
 import { bookValidationSchema } from "utils/book";
+import { tryToRefreshToken } from "utils/auth";
 
 export const Book = () => {
     const [validationErrors, setValidationErrors] = useState<Record<string, string | undefined>>({});
     const [selectedCategoryId, setSelectedCategoryId] = useState<string>('0');
     const [selectedBookId, setSelectedBookId] = useState<string>('0');
     const [disableSaveOnInsert, setDisableSaveOnInsert] = useState<boolean>(false);
+    const [showNotificationPopup, setShowNotificationPopup] = useState(false);
+    const [notificationPopupMessage, setNotificationPopupMessage] = useState<string>('');
 
     const [columnFilters, setColumnFilters] = useState<MRT_ColumnFiltersState>([],);
     const [globalFilter, setGlobalFilter] = useState('');
@@ -41,7 +44,7 @@ export const Book = () => {
         isLoading: isLoadingCategorySelectItems,
     } = hooks.useGetCategories();
 
-    const { mutateAsync: create, isPending: isCreatingBook } =
+    const { mutateAsync: create, isPending: isCreatingBook, isError: isCreateBookError, error: createBookError } =
         hooks.useCreateBook();
 
     const { mutateAsync: update, isPending: isUpdatingBook } =
@@ -63,25 +66,26 @@ export const Book = () => {
     }) => {
         values.categoryId = selectedCategoryId === '0' ? null : selectedCategoryId;
         values.id = selectedBookId;
-        let newValidationErrors: any = {};
-        let bla = new Map();
+        let validationErrorsObj: any = {};
+        let errorsMap = new Map();
 
         await bookValidationSchema.validate(values, { abortEarly: false }).then(v => {
             console.log();
         }).catch(e => {
             e.errors.forEach((error: string) => {
-                bla.set(error.toLowerCase().split(" ")[0], error);
+                errorsMap.set(error.toLowerCase().split(" ")[0], error);
             });
 
-            newValidationErrors = Object.fromEntries(bla);
+            validationErrorsObj = Object.fromEntries(errorsMap);
         });
 
-        if (Object.values(newValidationErrors).some((error) => error)) {
-            setValidationErrors(newValidationErrors);
+        if (Object.values(validationErrorsObj).some((error) => error)) {
+            setValidationErrors(validationErrorsObj);
             return;
         }
 
         setValidationErrors({});
+
         await update(values);
         table.setEditingRow(null); //exit editing mode
     };
@@ -96,20 +100,20 @@ export const Book = () => {
 
         setDisableSaveOnInsert(true);
         values.categoryId = selectedCategoryId === '0' ? null : selectedCategoryId;
-        let newValidationErrors: any = {};
-        let errors = new Map();
+        let validationErrorsObj: any = {};
+        let errorsMap = new Map();
 
         await bookValidationSchema.validate(values, { abortEarly: false }).then(v => {
         }).catch(e => {
             e.errors.forEach((error: string) => {
-                errors.set(error.toLowerCase().split(" ")[0], error);
+                errorsMap.set(error.toLowerCase().split(" ")[0], error);
             });
 
-            newValidationErrors = Object.fromEntries(errors);
+            validationErrorsObj = Object.fromEntries(errorsMap);
         });
 
-        if (Object.values(newValidationErrors).some((error) => error)) {
-            setValidationErrors(newValidationErrors);
+        if (Object.values(validationErrorsObj).some((error) => error)) {
+            setValidationErrors(validationErrorsObj);
             setDisableSaveOnInsert(false);
             return;
         }
@@ -176,7 +180,7 @@ export const Book = () => {
                         }
                     }, []);
 
-                    const originalBookCategory = editStatus === EditStatus.update ? row.original.category?.id : '0';
+                    const originalBookCategory = editStatus === EditStatus.update ? row.original.category?.id.toString() : '0';
 
                     return <CategorySelection onSelectCategory={onSelectCategory} selectedCategory={originalBookCategory} inputData={categoryItems} />;
                 },
@@ -268,7 +272,6 @@ export const Book = () => {
         [validationErrors, categoryItems],
     );
 
-    //DELETE action
     const openDeleteConfirmModal = async (row: MRT_Row<BookEntity>) => {
         if (window.confirm(`Are you sure you want to delete the book "${row.original.title}"?`)) {
             await deleteBook(row.original.id);
@@ -284,10 +287,29 @@ export const Book = () => {
         }
     };
 
+    const getAlertProps = () => {
+        let errorLabel = 'Unknown error accured.'
+
+        if (isLoadingBooksError)
+            errorLabel = 'Error loading data'
+
+        if (isCreateBookError)
+            errorLabel = 'Create book error. Pls try again.'
+
+        if (isLoadingBooksError || isCreateBookError)
+            return {
+                color: 'error',
+                children: errorLabel,
+            } as AlertProps;
+        else
+            return undefined;
+    }
+
     const table = useMaterialReactTable({
         columns,
         data: items,
         enableRowSelection: true,
+        enableGlobalFilter: false,
         initialState: {
             columnVisibility: {
                 note: false, collection: false,
@@ -303,12 +325,7 @@ export const Book = () => {
         manualFiltering: true,
         manualPagination: true,
         manualSorting: true,
-        muiToolbarAlertBannerProps: isLoadingBooksError
-            ? {
-                color: 'error',
-                children: 'Error loading data',
-            }
-            : undefined,
+        muiToolbarAlertBannerProps: getAlertProps(),
         onColumnFiltersChange: setColumnFilters,
         onGlobalFilterChange: setGlobalFilter,
         onPaginationChange: setPagination,
@@ -328,12 +345,14 @@ export const Book = () => {
                 </Tooltip>
                 <Button
                     variant="contained"
-                    onClick={() => {
+                    onClick={async () => {
+                        await tryToRefreshToken();
+
                         const myBook: BookEntity = {
                             id: 0, title: '',
                             author: '',
                             category: {
-                                id: '',
+                                id: 0,
                                 name: ''
                             },
                             categoryId: '',
@@ -353,7 +372,8 @@ export const Book = () => {
                     New book
                 </Button>
                 <Button disabled={table.getSelectedRowModel().rows.length < 2}
-                    onClick={() => {
+                    onClick={async () => {
+                        await tryToRefreshToken();
                         const selectedRows = table.getSelectedRowModel().rows;
                         openDeleteListConfirmModal(selectedRows);
                     }}
@@ -365,12 +385,18 @@ export const Book = () => {
         renderRowActions: ({ row, table }) => (
             <Box sx={{ display: 'flex', gap: '1rem' }}>
                 <Tooltip title="Edit">
-                    <IconButton onClick={() => table.setEditingRow(row)}>
+                    <IconButton onClick={async () => {
+                        await tryToRefreshToken();
+                        table.setEditingRow(row);
+                    }}>
                         <EditIcon />
                     </IconButton>
                 </Tooltip>
                 <Tooltip title="Delete">
-                    <IconButton color="error" onClick={() => openDeleteConfirmModal(row)}>
+                    <IconButton color="error" onClick={() => {
+                        tryToRefreshToken();
+                        openDeleteConfirmModal(row)
+                    }}>
                         <DeleteIcon />
                     </IconButton>
                 </Tooltip>
@@ -382,12 +408,25 @@ export const Book = () => {
             globalFilter,
             isLoading: isLoadingBooks,
             pagination,
-            showAlertBanner: isLoadingBooksError,
+            showAlertBanner: isLoadingBooksError || isCreateBookError,
             showProgressBars: isRefetchingBooks,
             sorting,
         },
     });
 
-    return <MaterialReactTable table={table} />;
+    function openNotificationPopup() {
+        let openPopup = false;
+
+        return openPopup;
+    }
+
+    return <>
+        <MaterialReactTable table={table} />
+        <Snackbar
+            open={openNotificationPopup()}
+            autoHideDuration={10000}
+            message={notificationPopupMessage}
+        />
+    </>;
 
 };

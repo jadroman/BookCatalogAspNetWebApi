@@ -25,7 +25,7 @@ export function replaceNullsWithEmptyStrings(bookItems: Array<Book>): Array<Book
         }
 
         if (b.category === null) {
-            b.category = { id: '0', name: '' };
+            b.category = { id: 0, name: '' };
         }
 
         if (b.year === null) {

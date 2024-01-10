@@ -18,6 +18,7 @@ namespace BookCatalog.Common.Interfaces
         Task<int> UpdateCategory(CategoryEditBindingModel category, int id);
         Task<int> InsertCategory(CategoryEditBindingModel category);
         Task<Result<int>> DeleteCategory(int id);
+        Task<Result<int>> DeleteCategoryList(IEnumerable<int> idList);
         Task<PagedBindingEntity<CategoryBindingModel>> GetCategories(CategoryParameters categoryParameters);
     }
 }

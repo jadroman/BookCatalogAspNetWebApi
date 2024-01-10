@@ -1,12 +1,8 @@
 import MenuItem from "@mui/material/MenuItem";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import React, { useEffect } from "react";
+import { Category } from "types/category";
 
-// TODO: put on a common place
-type Category = {
-    id: string,
-    name: string
-}
 
 // TODO: put on a common place
 export type CategorySelectionProps = {
@@ -27,7 +23,7 @@ export default function CategorySelection(props: CategorySelectionProps): JSX.El
         setSelectedCategory(event.target.value as string);
     };
 
-    const menuItems = props.inputData.map(i => <MenuItem id={i.id} key={i.id} value={i.id}>{i.name}</MenuItem>)
+    const menuItems = props.inputData.map(i => <MenuItem id={i.id.toString()} key={i.id} value={i.id}>{i.name}</MenuItem>)
 
     return (
         <Select

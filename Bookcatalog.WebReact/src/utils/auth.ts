@@ -1,6 +1,5 @@
 import axios from 'axios';
 import { getApiUrl, refreshTokenUrl } from 'config/url';
-import { useLocation } from 'react-router-dom';
 
 export const setAuthTokenHeader = (token: string) => {
     if (token) {
