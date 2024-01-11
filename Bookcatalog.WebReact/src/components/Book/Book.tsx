@@ -11,14 +11,13 @@ import { Close, EmojiEvents } from "@mui/icons-material";
 import * as hooks from "data/bookHooks";
 import { bookTableDefaultPageSize } from "config/book";
 import { bookValidationSchema } from "utils/book";
-import { tryToRefreshToken } from "utils/auth";
+import { refreshToken } from "utils/auth";
 
 export const Book = () => {
     const [validationErrors, setValidationErrors] = useState<Record<string, string | undefined>>({});
     const [selectedCategoryId, setSelectedCategoryId] = useState<string>('0');
     const [selectedBookId, setSelectedBookId] = useState<string>('0');
     const [disableSaveOnInsert, setDisableSaveOnInsert] = useState<boolean>(false);
-    const [showNotificationPopup, setShowNotificationPopup] = useState(false);
     const [notificationPopupMessage, setNotificationPopupMessage] = useState<string>('');
 
     const [columnFilters, setColumnFilters] = useState<MRT_ColumnFiltersState>([],);
@@ -173,12 +172,6 @@ export const Book = () => {
                     else if (table.getState().creatingRow) {
                         editStatus = EditStatus.insert;
                     }
-
-                    useEffect(() => {
-                        if (editStatus === EditStatus.update) {
-                            setSelectedBookId(row.id);
-                        }
-                    }, []);
 
                     const originalBookCategory = editStatus === EditStatus.update ? row.original.category?.id.toString() : '0';
 
@@ -346,7 +339,7 @@ export const Book = () => {
                 <Button
                     variant="contained"
                     onClick={async () => {
-                        await tryToRefreshToken();
+                        await refreshToken();
 
                         const myBook: BookEntity = {
                             id: 0, title: '',
@@ -373,7 +366,7 @@ export const Book = () => {
                 </Button>
                 <Button disabled={table.getSelectedRowModel().rows.length < 2}
                     onClick={async () => {
-                        await tryToRefreshToken();
+                        await refreshToken();
                         const selectedRows = table.getSelectedRowModel().rows;
                         openDeleteListConfirmModal(selectedRows);
                     }}
@@ -386,15 +379,16 @@ export const Book = () => {
             <Box sx={{ display: 'flex', gap: '1rem' }}>
                 <Tooltip title="Edit">
                     <IconButton onClick={async () => {
-                        await tryToRefreshToken();
+                        await refreshToken();
+                        setSelectedBookId(row.id);
                         table.setEditingRow(row);
                     }}>
                         <EditIcon />
                     </IconButton>
                 </Tooltip>
                 <Tooltip title="Delete">
-                    <IconButton color="error" onClick={() => {
-                        tryToRefreshToken();
+                    <IconButton color="error" onClick={async () => {
+                        await refreshToken();
                         openDeleteConfirmModal(row)
                     }}>
                         <DeleteIcon />

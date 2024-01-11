@@ -9,6 +9,7 @@ import { Box, Button, IconButton, Tooltip } from "@mui/material";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import RefreshIcon from '@mui/icons-material/Refresh';
+import { refreshToken } from "utils/auth";
 
 export const Category = () => {
     const [validationErrors, setValidationErrors] = useState<Record<string, string | undefined>>({});
@@ -183,16 +184,17 @@ export const Category = () => {
                 </Tooltip>
                 <Button
                     variant="contained"
-                    onClick={() => {
-                        table.setCreatingRow(
-                            createRow(table)
-                        );
+                    onClick={async () => {
+                        await refreshToken();
+                        table.setCreatingRow(createRow(table));
                     }}
                 >
                     New category
                 </Button>
-                <Button disabled={table.getSelectedRowModel().rows.length < 2}
-                    onClick={() => {
+                <Button
+                    variant="contained" disabled={table.getSelectedRowModel().rows.length < 2}
+                    onClick={async () => {
+                        await refreshToken();
                         const selectedRows = table.getSelectedRowModel().rows;
                         openDeleteListConfirmModal(selectedRows);
                     }}
@@ -204,8 +206,8 @@ export const Category = () => {
         renderRowActions: ({ row, table }) => (
             <Box sx={{ display: 'flex', gap: '1rem' }}>
                 <Tooltip title="Edit">
-                    <IconButton onClick={() => {
-                        //console.log(JSON.stringify(row.id))
+                    <IconButton onClick={async () => {
+                        await refreshToken();
                         setSelectedCategoryId(row.id);
                         table.setEditingRow(row);
                     }}>
@@ -213,7 +215,10 @@ export const Category = () => {
                     </IconButton>
                 </Tooltip>
                 <Tooltip title="Delete">
-                    <IconButton color="error" onClick={() => openDeleteConfirmModal(row)}>
+                    <IconButton color="error" onClick={async () => {
+                        await refreshToken();
+                        openDeleteConfirmModal(row);
+                    }}>
                         <DeleteIcon />
                     </IconButton>
                 </Tooltip>

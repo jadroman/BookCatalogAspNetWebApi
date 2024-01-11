@@ -30,7 +30,7 @@ axios.interceptors.response.use(response => {
 
     if (error.response.status === 401) {
         console.log('axios.interceptor=>response.status === 401');
-        const tokenRefreshSuccessful = await tryToRefreshToken();
+        const tokenRefreshSuccessful = await refreshToken();
 
         if (!tokenRefreshSuccessful) {
 
@@ -44,7 +44,7 @@ axios.interceptors.response.use(response => {
     return error;
 });
 
-export const tryToRefreshToken = async () => {
+export const refreshToken = async () => {
 
     var isAuthSuccessful = false;
     const expiredToken = localStorage.getItem("bookCatalogToken");
