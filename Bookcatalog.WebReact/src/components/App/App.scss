@@ -1,6 +1,9 @@
+$font-family-base: Kalam;
+$font-family-code: Kalam;
+$font-family-sans-serif: Kalam;
+$font-family-monospace: Kalam;
+
 @import '~bootstrap/scss/bootstrap';
-@import '~@fortawesome/fontawesome-free/scss/fontawesome';
-@import '~@fortawesome/fontawesome-free/scss/solid';
 
 .App {
   text-align: center;
@@ -36,6 +39,7 @@
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
