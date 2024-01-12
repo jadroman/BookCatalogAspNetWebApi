@@ -44,3 +44,16 @@ $font-family-monospace: Kalam;
     transform: rotate(360deg);
   }
 }
+
+.selectedNavigation {
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+.nav-link {
+  color: white;
+}
+
+.nav-link:hover {
+  color: white;
+}

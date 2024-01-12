@@ -8,8 +8,19 @@ import { ProtectedRoute } from 'components/ProtectedRoute';
 import { Login } from 'components/Login/Login';
 import { Category } from 'components/Category/Category';
 import bookShelf from 'images/bookshelf.png' //<a href="https://www.flaticon.com/free-icons/library" title="library icons">Library icons created by Freepik - Flaticon</a>
+import { useLocation } from "react-router-dom";
 
 function App() {
+
+  const location = useLocation();
+
+  function checkSelectedCssClass(href: string): string {
+    if (location.pathname === href) {
+      return 'selectedNavigation';
+    }
+
+    return '';
+  }
 
   return (
     <>
@@ -27,10 +38,10 @@ function App() {
           <div className="d-flex justify-content-center">
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav">
-              <Nav className="me-auto fs-3">
-                <Nav.Link href="/home">Home</Nav.Link>
-                <Nav.Link href="/book">Books</Nav.Link>
-                <Nav.Link href="/category">Categories</Nav.Link>
+              <Nav className="me-auto fs-3" style={{ color: 'whiteSmoke !important' }}>
+                <Nav.Link className={checkSelectedCssClass('/home')} href="/home">Home</Nav.Link>
+                <Nav.Link className={checkSelectedCssClass('/book')} href="/book">Books</Nav.Link>
+                <Nav.Link className={checkSelectedCssClass('/category')} href="/category">Categories</Nav.Link>
               </Nav>
             </Navbar.Collapse>
           </div>
