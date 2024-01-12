@@ -1,7 +1,6 @@
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getApiUrl } from "config/url";
 import { MRT_ColumnFiltersState, MRT_PaginationState, MRT_SortingState } from "material-react-table";
-import { Book } from "types/book";
 import { Category } from "types/category";
 import { ApiData, ApiResponse } from "types/shared";
 import { replaceNullsWithEmptyStrings, setSearchParams } from "utils/category";

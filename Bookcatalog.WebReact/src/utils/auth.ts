@@ -1,6 +1,11 @@
 import axios from 'axios';
 import { getApiUrl, refreshTokenUrl } from 'config/url';
 
+/* type RefreshTokenState = {
+    isRefreshed: boolean,
+    isComplete: boolean
+} */
+
 export const setAuthTokenHeader = (token: string) => {
     if (token) {
         axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
@@ -25,22 +30,32 @@ axios.interceptors.request.use((config) => {
 });
 
 axios.interceptors.response.use(response => {
+    localStorage.removeItem("refreshingTokenRequested");
+
     return response;
 }, async error => {
 
+
     if (error.response.status === 401) {
-        console.log('axios.interceptor=>response.status === 401');
-        const tokenRefreshSuccessful = await refreshToken();
 
-        if (!tokenRefreshSuccessful) {
+        if (!localStorage.getItem("refreshingTokenRequested")) {
 
-            //TODO: move to function
-            localStorage.removeItem("bookCatalogToken");
-            localStorage.removeItem("bookCatalogRefreshToken");
+            localStorage.setItem("refreshingTokenRequested", 'true');
 
-            window.location.href = '/login';
+            console.log('axios.interceptor=>response.status === 401');
+            const tokenRefreshSuccessful = await refreshToken();
+
+            if (!tokenRefreshSuccessful) {
+
+                //TODO: move to function
+                localStorage.removeItem("bookCatalogToken");
+                localStorage.removeItem("bookCatalogRefreshToken");
+
+                window.location.href = '/login';
+            }
         }
     }
+
     return error;
 });
 
@@ -63,10 +78,8 @@ export const refreshToken = async () => {
 
         if (isAuthSuccessful) {
             const newToken = response.data.token;
-            const newRefreshToken = response.data.refreshToken;
 
             localStorage.setItem("bookCatalogToken", newToken);
-            localStorage.setItem("bookCatalogRefreshToken", newRefreshToken);
             setAuthTokenHeader(newToken);
         }
     }

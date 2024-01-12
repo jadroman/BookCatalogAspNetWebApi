@@ -72,11 +72,8 @@ namespace BookCatalog.API.Controllers
             var tokenOptions = _jwtHandler.GenerateTokenOptions(signingCredentials, claims);
             var token = new JwtSecurityTokenHandler().WriteToken(tokenOptions);
 
-            var refreshToken = _jwtHandler.GenerateRefreshToken();
-            user.RefreshToken = refreshToken;
-            await _userManager.UpdateAsync(user);
 
-            return Ok(new AuthResponseBindingModel { IsAuthSuccessful = true, Token = token, RefreshToken = refreshToken });
+            return Ok(new AuthResponseBindingModel { IsAuthSuccessful = true, Token = token });
         }
 
             [HttpPost("Registration")]
