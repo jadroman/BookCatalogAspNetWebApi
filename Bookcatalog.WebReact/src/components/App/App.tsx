@@ -5,10 +5,10 @@ import { Routes, Route } from 'react-router-dom';
 import Home from 'components/Home/Home';
 import { Book } from 'components/Book/Book';
 import { ProtectedRoute } from 'components/ProtectedRoute';
-import { Login } from 'components/Login/Login';
 import { Category } from 'components/Category/Category';
-import bookShelf from 'images/bookshelf.png' //<a href="https://www.flaticon.com/free-icons/library" title="library icons">Library icons created by Freepik - Flaticon</a>
+import bookShelf from 'images/bookshelf.png'; //<a href="https://www.flaticon.com/free-icons/library" title="library icons">Library icons created by Freepik - Flaticon</a>
 import { useLocation } from "react-router-dom";
+import { Login } from 'components/Login/Login';
 
 function App() {
 
