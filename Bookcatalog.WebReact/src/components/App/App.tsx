@@ -9,6 +9,10 @@ import { Category } from 'components/Category/Category';
 import bookShelf from 'images/bookshelf.png'; //<a href="https://www.flaticon.com/free-icons/library" title="library icons">Library icons created by Freepik - Flaticon</a>
 import { useLocation } from "react-router-dom";
 import { Login } from 'components/Login/Login';
+import { useState } from 'react';
+import { UserInfo } from 'types/authInfo';
+import { Chip } from '@mui/material';
+import { isUserAuthenicated } from 'utils/auth';
 
 function App() {
 
@@ -20,6 +24,32 @@ function App() {
     }
 
     return '';
+  }
+
+  const renderLogedInUser = () => {
+    const userName = localStorage.getItem("bookCatalogUserName");
+
+    if (userName) {
+      return <Chip label={userName} variant="outlined" />
+    }
+  }
+
+  const renderNavigationIfUserAuthenticated = () => {
+    if (isUserAuthenicated()) {
+      return <>
+        <Navbar.Toggle aria-controls="basic-navbar-nav" />
+        <Navbar.Collapse id="basic-navbar-nav">
+          <Nav className="me-auto fs-3" style={{ color: 'whiteSmoke !important' }}>
+            <Nav.Link className={checkSelectedCssClass('/home')} href="/home">Home</Nav.Link>
+            <Nav.Link className={checkSelectedCssClass('/book')} href="/book">Books</Nav.Link>
+            <Nav.Link className={checkSelectedCssClass('/category')} href="/category">Categories</Nav.Link>
+          </Nav>
+        </Navbar.Collapse>
+      </>
+    }
+    else {
+      return <div className="me-auto fs-3" style={{ color: 'whiteSmoke !important' }}>Welcome to Book Catalog</div>
+    }
   }
 
   return (
@@ -36,16 +66,10 @@ function App() {
         </Navbar.Brand>
         <Container className="d-flex justify-content-center">
           <div className="d-flex justify-content-center">
-            <Navbar.Toggle aria-controls="basic-navbar-nav" />
-            <Navbar.Collapse id="basic-navbar-nav">
-              <Nav className="me-auto fs-3" style={{ color: 'whiteSmoke !important' }}>
-                <Nav.Link className={checkSelectedCssClass('/home')} href="/home">Home</Nav.Link>
-                <Nav.Link className={checkSelectedCssClass('/book')} href="/book">Books</Nav.Link>
-                <Nav.Link className={checkSelectedCssClass('/category')} href="/category">Categories</Nav.Link>
-              </Nav>
-            </Navbar.Collapse>
+            {renderNavigationIfUserAuthenticated()}
           </div>
         </Container>
+        {renderLogedInUser()}
       </Navbar>
       <Container fluid>
         <Row>

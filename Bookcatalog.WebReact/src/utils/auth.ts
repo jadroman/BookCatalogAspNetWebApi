@@ -50,6 +50,7 @@ axios.interceptors.response.use(response => {
                 //TODO: move to function
                 localStorage.removeItem("bookCatalogToken");
                 localStorage.removeItem("bookCatalogRefreshToken");
+                localStorage.removeItem("bookCatalogUserName");
 
                 window.location.href = '/login';
             }
@@ -85,4 +86,14 @@ export const refreshToken = async () => {
     }
 
     return isAuthSuccessful;
+}
+
+export const isUserAuthenicated = () => {
+    return localStorage.getItem("bookCatalogToken");
+    /* if(localStorage.getItem("bookCatalogToken")){
+        return true;
+    }
+    else{
+        return false;
+    } */
 }

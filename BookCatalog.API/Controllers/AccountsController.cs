@@ -27,7 +27,7 @@ namespace BookCatalog.API.Controllers
         public AccountsController(UserManager<User> userManager, IMapper mapper, IConfiguration configuration, JwtHandler jwtHandler)
         {
             _userManager = userManager;
-            _mapper = mapper; 
+            _mapper = mapper;
             _jwtHandler = jwtHandler;
             _configuration = configuration;
             _jwtSettings = _configuration.GetSection("JwtSettings");
@@ -51,7 +51,14 @@ namespace BookCatalog.API.Controllers
             user.RefreshTokenExpiryTime = DateTime.Now.AddDays(Convert.ToDouble(_jwtSettings.GetSection("refreshTokenExpiryInDays").Value));
             await _userManager.UpdateAsync(user);
 
-            return Ok(new AuthResponseBindingModel { IsAuthSuccessful = true, Token = token, RefreshToken = refreshToken });
+            return Ok(new AuthResponseBindingModel
+            {
+                UserInfo = new UserBindingModel
+                { UserName = user.UserName, FirstName = user.FirstName, LastName = user.LastName, PhoneNum = user.PhoneNumber },
+                IsAuthSuccessful = true,
+                Token = token,
+                RefreshToken = refreshToken
+            });
         }
 
         [HttpPost("RefreshToken")]
@@ -76,7 +83,7 @@ namespace BookCatalog.API.Controllers
             return Ok(new AuthResponseBindingModel { IsAuthSuccessful = true, Token = token });
         }
 
-            [HttpPost("Registration")]
+        [HttpPost("Registration")]
         public async Task<IActionResult> RegisterUser([FromBody] UserForRegistrationBindingModel userForRegistration)
         {
             if (userForRegistration == null || !ModelState.IsValid)

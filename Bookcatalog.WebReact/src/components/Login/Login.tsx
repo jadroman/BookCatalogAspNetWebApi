@@ -5,6 +5,8 @@ import queryString from "query-string";
 import { useLocation, useNavigate } from "react-router-dom";
 import { setAuthTokenHeader } from "utils/auth";
 import styles from './Login.module.scss';
+import * as hooks from "data/accountHooks";
+import { UserInfo } from "types/authInfo";
 
 export const Login = () => {
     const location = useLocation();
@@ -13,32 +15,61 @@ export const Login = () => {
 
     const handleSubmit = async () => {
         //reqres registered sample user
-        const loginPayload = {
+        /* const loginPayload = {
             email: 'octopus@yahoo.com',
             password: '2xSNzSa$'
         }
 
-        const response = await axios.post(getApiUrl() + loginUrl, loginPayload);
+        const response = await axios.post(getApiUrl() + loginUrl, loginPayload); */
 
-        const token = response.data.token;
-        const refreshToken = response.data.refreshToken;
 
-        localStorage.setItem("bookCatalogToken", token);
-        localStorage.setItem("bookCatalogRefreshToken", refreshToken);
-        setAuthTokenHeader(token);
+        /* const {
+            data: user = {},
+            isError: isUserLoginError
+        } = hooks.useLoginUser();
 
-        const { redirectTo } = queryString.parse(location.search);
+        const token = user.token;
+        const refreshToken = user.refreshToken;
 
-        const redirectLocation: string = redirectTo && typeof redirectTo === 'string' ? redirectTo : "/book";
+        if (token && refreshToken) {
+            localStorage.setItem("bookCatalogToken", token);
+            localStorage.setItem("bookCatalogRefreshToken", refreshToken);
+            setAuthTokenHeader(token);
 
-        navigate(redirectLocation);
+            const { redirectTo } = queryString.parse(location.search);
+            const redirectLocation: string = redirectTo && typeof redirectTo === 'string' ? redirectTo : "/book";
+            navigate(redirectLocation);
+        } */
+
+        //console.log(JSON.stringify(user));
+
+        const authInfo = await loginUser();
+
+        const token = authInfo.token;
+        const refreshToken = authInfo.refreshToken;
+        const userInfo = authInfo.userInfo;
+
+        if (token && refreshToken && userInfo && userInfo.userName) {
+            localStorage.setItem("bookCatalogToken", token);
+            localStorage.setItem("bookCatalogRefreshToken", refreshToken);
+            localStorage.setItem("bookCatalogUserName", userInfo.userName);
+            setAuthTokenHeader(token);
+
+            const { redirectTo } = queryString.parse(location.search);
+            const redirectLocation: string = redirectTo && typeof redirectTo === 'string' ? redirectTo : "/book";
+            navigate(redirectLocation);
+        }
     };
 
 
     const logOff = async () => {
         localStorage.removeItem("bookCatalogToken");
         localStorage.removeItem("bookCatalogRefreshToken");
+        localStorage.removeItem("bookCatalogUserName");
     }
+
+    const { mutateAsync: loginUser, isError: isLoginUserError } =
+        hooks.useLoginUser();
 
     return (
         <>
