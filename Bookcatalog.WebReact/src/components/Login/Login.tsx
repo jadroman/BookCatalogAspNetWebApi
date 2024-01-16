@@ -1,47 +1,20 @@
 import { Button } from "@mui/material";
-import axios from "axios";
-import { loginUrl, getApiUrl } from "config/url";
 import queryString from "query-string";
 import { useLocation, useNavigate } from "react-router-dom";
 import { setAuthTokenHeader } from "utils/auth";
 import styles from './Login.module.scss';
 import * as hooks from "data/accountHooks";
-import { UserInfo } from "types/authInfo";
 
-export const Login = () => {
+type LoginProps = {
+    onUserIsAuthenticated: (isAuthenticated: boolean) => void;
+}
+
+export const Login = (props: LoginProps) => {
     const location = useLocation();
     const navigate = useNavigate();
 
 
     const handleSubmit = async () => {
-        //reqres registered sample user
-        /* const loginPayload = {
-            email: 'octopus@yahoo.com',
-            password: '2xSNzSa$'
-        }
-
-        const response = await axios.post(getApiUrl() + loginUrl, loginPayload); */
-
-
-        /* const {
-            data: user = {},
-            isError: isUserLoginError
-        } = hooks.useLoginUser();
-
-        const token = user.token;
-        const refreshToken = user.refreshToken;
-
-        if (token && refreshToken) {
-            localStorage.setItem("bookCatalogToken", token);
-            localStorage.setItem("bookCatalogRefreshToken", refreshToken);
-            setAuthTokenHeader(token);
-
-            const { redirectTo } = queryString.parse(location.search);
-            const redirectLocation: string = redirectTo && typeof redirectTo === 'string' ? redirectTo : "/book";
-            navigate(redirectLocation);
-        } */
-
-        //console.log(JSON.stringify(user));
 
         const authInfo = await loginUser();
 
@@ -57,6 +30,7 @@ export const Login = () => {
 
             const { redirectTo } = queryString.parse(location.search);
             const redirectLocation: string = redirectTo && typeof redirectTo === 'string' ? redirectTo : "/book";
+            props.onUserIsAuthenticated(true);
             navigate(redirectLocation);
         }
     };
@@ -99,19 +73,6 @@ export const Login = () => {
                     logOff
                 </Button>
             </div>
-
-            {/* <h2>Login page</h2>
-            <Button
-                variant="contained"
-                onClick={async () => handleSubmit()}>
-                login
-            </Button>
-            <div />
-            <Button
-                variant="contained"
-                onClick={() => logOff()}>
-                logOff
-            </Button> */}
         </>
     )
 };

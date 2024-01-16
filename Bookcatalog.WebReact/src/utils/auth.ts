@@ -53,7 +53,9 @@ axios.interceptors.response.use(response => {
                 localStorage.removeItem("bookCatalogUserName");
                 localStorage.removeItem("refreshingTokenRequested");
 
-                window.location.href = '#/login';
+                //window.location.href = '#/login';
+                // eslint-disable-next-line no-restricted-globals
+                location.hash = '/login'
             }
         }
     }
@@ -89,8 +91,8 @@ export const refreshToken = async () => {
     return isAuthSuccessful;
 }
 
-export const isUserAuthenicated = () => {
-    return localStorage.getItem("bookCatalogToken");
+export const isUserAuthenicated = (): boolean => {
+    return localStorage.getItem("bookCatalogToken") !== '' && localStorage.getItem("bookCatalogToken") !== null;
     /* if(localStorage.getItem("bookCatalogToken")){
         return true;
     }

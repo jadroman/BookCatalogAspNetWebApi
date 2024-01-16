@@ -1,4 +1,4 @@
-import { Col, Container, Nav, Navbar, Row } from 'react-bootstrap';
+import { Col, Container, Nav, NavDropdown, Navbar, Row } from 'react-bootstrap';
 import './App.scss';
 import "@fortawesome/fontawesome-free/js/all.js";
 import { Route, Navigate, HashRouter, Routes, Outlet, NavLink } from 'react-router-dom';
@@ -10,31 +10,45 @@ import bookShelf from 'images/bookshelf.png'; //<a href="https://www.flaticon.co
 import { Login } from 'components/Login/Login';
 import { Chip } from '@mui/material';
 import { isUserAuthenicated } from 'utils/auth';
-import { Fragment } from 'react';
+import { Fragment, useState } from 'react';
 
 function App() {
 
+  const [userIsAuthenticated, setUserIsAuthenticated] = useState<boolean>(isUserAuthenicated());
 
+  const onUserIsAuthenticated = (isUserAuthenicated: boolean) => {
+    setUserIsAuthenticated(isUserAuthenicated);
+  }
 
   const renderLogedInUser = () => {
     const userName = localStorage.getItem("bookCatalogUserName");
 
     if (userName) {
-      return <Chip label={userName} variant="outlined" />
+      //return <Chip label={userName} variant="outlined" />
+      return <>
+
+        <Navbar.Collapse id="basic-navbar-nav me-3">
+          <Nav className="me-auto">
+            <NavDropdown title={userName} id="basic-nav-dropdown">
+              <NavDropdown.Item onClick={() => console.log('action')} href="#action/3.1">Action</NavDropdown.Item>
+              <NavDropdown.Item href="#action/3.2">
+                Another action
+              </NavDropdown.Item>
+              <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
+              <NavDropdown.Divider />
+              <NavDropdown.Item href="#action/3.4">
+                Separated link
+              </NavDropdown.Item>
+            </NavDropdown>
+          </Nav>
+        </Navbar.Collapse>
+      </>
     }
   }
 
   const renderNavigationIfUserAuthenticated = () => {
-    if (isUserAuthenicated()) {
+    if (userIsAuthenticated) {
       return <>
-        {/* <Navbar.Toggle aria-controls="basic-navbar-nav" />
-        <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="me-auto fs-3" style={{ color: 'whiteSmoke !important' }}>
-            <Nav.Link active={isNavLinkActive('#/home')} href="#/home">Home</Nav.Link>
-            <Nav.Link active={isNavLinkActive('#/book')} href="#/book">Books</Nav.Link>
-            <Nav.Link active={isNavLinkActive('#/category')} href="#/category">Categories</Nav.Link>
-          </Nav>
-        </Navbar.Collapse> */}
         <NavLink to="/home">
           home
         </NavLink>
@@ -87,7 +101,7 @@ function App() {
                     <Route path='/book' element={<Book />} />
                     <Route path='/category' element={<Category />} />
                   </Route>
-                  <Route path='/login' element={<Login />} />
+                  <Route path='/login' element={<Login onUserIsAuthenticated={onUserIsAuthenticated} />} />
                   {/* <Route path='*' element={<Home />} /> */}
                   {/* <Route path="/category" element={<Category />} /> */}
                 </Routes>
