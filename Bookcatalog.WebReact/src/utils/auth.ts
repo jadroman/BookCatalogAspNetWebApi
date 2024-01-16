@@ -51,8 +51,9 @@ axios.interceptors.response.use(response => {
                 localStorage.removeItem("bookCatalogToken");
                 localStorage.removeItem("bookCatalogRefreshToken");
                 localStorage.removeItem("bookCatalogUserName");
+                localStorage.removeItem("refreshingTokenRequested");
 
-                window.location.href = '/login';
+                window.location.href = '#/login';
             }
         }
     }

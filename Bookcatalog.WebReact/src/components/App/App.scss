@@ -45,15 +45,22 @@ $font-family-monospace: Kalam;
   }
 }
 
-.selectedNavigation {
-  font-weight: bold;
-  text-decoration: underline;
-}
-
 .nav-link {
   color: white;
 }
 
 .nav-link:hover {
   color: white;
+}
+
+.navigationWrapper {
+  a.active {
+    text-decoration: underline;
+  }
+
+  a {
+    color: white;
+    text-decoration: none;
+  }
+
 }
