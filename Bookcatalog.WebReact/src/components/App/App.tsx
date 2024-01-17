@@ -30,20 +30,21 @@ function App() {
         <Navbar.Collapse id="basic-navbar-nav me-3">
           <Nav className="me-auto">
             <NavDropdown title={userName} id="basic-nav-dropdown">
-              <NavDropdown.Item onClick={() => console.log('action')} href="#action/3.1">Action</NavDropdown.Item>
-              <NavDropdown.Item href="#action/3.2">
-                Another action
-              </NavDropdown.Item>
-              <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
-              <NavDropdown.Divider />
-              <NavDropdown.Item href="#action/3.4">
-                Separated link
-              </NavDropdown.Item>
+              <NavDropdown.Item onClick={() => logout()}>Logout</NavDropdown.Item>
             </NavDropdown>
           </Nav>
         </Navbar.Collapse>
       </>
     }
+  }
+
+  const logout = () => {
+    localStorage.removeItem("bookCatalogToken");
+    localStorage.removeItem("bookCatalogRefreshToken");
+    localStorage.removeItem("bookCatalogUserName");
+    setUserIsAuthenticated(false);
+
+    window.location.hash = '/login'
   }
 
   const renderNavigationIfUserAuthenticated = () => {

@@ -28,10 +28,11 @@ export const Login = (props: LoginProps) => {
             localStorage.setItem("bookCatalogUserName", userInfo.userName);
             setAuthTokenHeader(token);
 
-            const { redirectTo } = queryString.parse(location.search);
-            const redirectLocation: string = redirectTo && typeof redirectTo === 'string' ? redirectTo : "/book";
+            /* const { redirectTo } = queryString.parse(location.search);
+            const redirectLocation: string = redirectTo && typeof redirectTo === 'string' ? redirectTo : "/book"; */
             props.onUserIsAuthenticated(true);
-            navigate(redirectLocation);
+            window.location.hash = '/book';
+            //navigate('/book');
         }
     };
 
@@ -70,7 +71,7 @@ export const Login = (props: LoginProps) => {
                 <Button
                     variant="contained"
                     onClick={() => logOff()}>
-                    logOff
+                    logout
                 </Button>
             </div>
         </>

@@ -53,9 +53,7 @@ axios.interceptors.response.use(response => {
                 localStorage.removeItem("bookCatalogUserName");
                 localStorage.removeItem("refreshingTokenRequested");
 
-                //window.location.href = '#/login';
-                // eslint-disable-next-line no-restricted-globals
-                location.hash = '/login'
+                window.location.hash = '/login'
             }
         }
     }
