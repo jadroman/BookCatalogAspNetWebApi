@@ -6,9 +6,7 @@ import Home from 'components/Home/Home';
 import { Book } from 'components/Book/Book';
 import { Category } from 'components/Category/Category';
 import bookShelf from 'images/bookshelf.png'; //<a href="https://www.flaticon.com/free-icons/library" title="library icons">Library icons created by Freepik - Flaticon</a>
-/* import { useLocation } from "react-router-dom"; */
 import { Login } from 'components/Login/Login';
-import { Chip } from '@mui/material';
 import { isUserAuthenicated } from 'utils/auth';
 import { Fragment, useState } from 'react';
 

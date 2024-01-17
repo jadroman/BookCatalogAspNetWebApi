@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { getApiUrl, loginUrl } from "config/url";
-import { authInfo } from "types/authInfo";
+import { Login, authInfo } from "types/authInfo";
 
 
 /* export function useLoginUser() {
@@ -26,11 +26,11 @@ import { authInfo } from "types/authInfo";
 
 export function useLoginUser() {
     return useMutation({
-        mutationFn: async (): Promise<authInfo> => {
+        mutationFn: async (loginData: Login): Promise<authInfo> => {
             const loginPayload = {
-                email: 'octopus@yahoo.com',
-                password: '2xSNzSa$'
-            }
+                email: loginData.username,
+                password: loginData.password
+            };
 
             const response = await axios.post(getApiUrl() + loginUrl, loginPayload);
 

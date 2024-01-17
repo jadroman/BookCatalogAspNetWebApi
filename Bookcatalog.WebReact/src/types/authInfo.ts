@@ -1,8 +1,9 @@
 
 export type authInfo = {
-    userInfo: UserInfo
+    userInfo?: UserInfo,
     token?: string,
     refreshToken?: string,
+    isError?: boolean
 }
 
 export type UserInfo = {
@@ -10,4 +11,9 @@ export type UserInfo = {
     firstName?: string,
     lastName?: string,
     phoneNum?: string
+}
+
+export type Login = {
+    username: string,
+    password: string
 }

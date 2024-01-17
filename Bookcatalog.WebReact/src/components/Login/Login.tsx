@@ -4,76 +4,73 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { setAuthTokenHeader } from "utils/auth";
 import styles from './Login.module.scss';
 import * as hooks from "data/accountHooks";
+import { useFormik } from "formik";
+import { Login as LoginType } from "types/authInfo";
 
 type LoginProps = {
     onUserIsAuthenticated: (isAuthenticated: boolean) => void;
 }
 
 export const Login = (props: LoginProps) => {
-    const location = useLocation();
-    const navigate = useNavigate();
 
+    const formik = useFormik({
+        initialValues: {
+            email: '',
+            password: ''
+        },
+        onSubmit: async values => {
+            await handleSubmit(values.email, values.password);
+        },
+    });
 
-    const handleSubmit = async () => {
+    const handleSubmit = async (email: string, password: string) => {
 
-        const authInfo = await loginUser();
+        const loginData: LoginType = { username: email, password: password };
+        const authInfo = await loginUser(loginData);
 
-        const token = authInfo.token;
-        const refreshToken = authInfo.refreshToken;
-        const userInfo = authInfo.userInfo;
+        //console.log(isLoginUserError);
 
-        if (token && refreshToken && userInfo && userInfo.userName) {
-            localStorage.setItem("bookCatalogToken", token);
-            localStorage.setItem("bookCatalogRefreshToken", refreshToken);
-            localStorage.setItem("bookCatalogUserName", userInfo.userName);
-            setAuthTokenHeader(token);
+        if (authInfo) {
 
-            /* const { redirectTo } = queryString.parse(location.search);
-            const redirectLocation: string = redirectTo && typeof redirectTo === 'string' ? redirectTo : "/book"; */
-            props.onUserIsAuthenticated(true);
-            window.location.hash = '/book';
-            //navigate('/book');
+            const token = authInfo.token;
+            const refreshToken = authInfo.refreshToken;
+            const userInfo = authInfo.userInfo;
+
+            if (token && refreshToken && userInfo && userInfo.userName) {
+                localStorage.setItem("bookCatalogToken", token);
+                localStorage.setItem("bookCatalogRefreshToken", refreshToken);
+                localStorage.setItem("bookCatalogUserName", userInfo.userName);
+                setAuthTokenHeader(token);
+                props.onUserIsAuthenticated(true);
+                window.location.hash = '/book';
+            }
+        }
+        else {
+
+            console.log('login error');
         }
     };
 
-
-    const logOff = async () => {
-        localStorage.removeItem("bookCatalogToken");
-        localStorage.removeItem("bookCatalogRefreshToken");
-        localStorage.removeItem("bookCatalogUserName");
-    }
-
-    const { mutateAsync: loginUser, isError: isLoginUserError } =
+    const { mutateAsync: loginUser } =
         hooks.useLoginUser();
 
     return (
-        <>
-
+        <form onSubmit={formik.handleSubmit}>
             <div className={styles.loginWrapper}>
                 <h1 className="h3 mb-3 fw-normal">Please sign in</h1>
 
                 <div className="form-floating">
-                    <input type="email" className="form-control" id="floatingInput" placeholder="name@example.com" />
-                    <label htmlFor="floatingInput">Email address</label>
+                    <input type="email" className="form-control" id="email" placeholder="Email"
+                        onChange={formik.handleChange} value={formik.values.email} />
+                    <label htmlFor="email">Email address</label>
                 </div>
                 <div className="form-floating">
-                    <input type="password" className="form-control" id="floatingPassword" placeholder="Password" />
-                    <label htmlFor="floatingPassword">Password</label>
+                    <input type="password" className="form-control" id="password" placeholder="Password"
+                        onChange={formik.handleChange} value={formik.values.password} />
+                    <label htmlFor="password">Password</label>
                 </div>
-
-                <div className="checkbox mb-3">
-                    <label>
-                        <input type="checkbox" value="remember-me" /> Remember me
-                    </label>
-                </div>
-                <button className="w-100 btn btn-lg btn-primary" onClick={async () => handleSubmit()}>Sign in</button>
-                <p className="mt-5 mb-3 text-muted">&copy; 2017–2021</p>
-                <Button
-                    variant="contained"
-                    onClick={() => logOff()}>
-                    logout
-                </Button>
+                <button className="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
             </div>
-        </>
+        </form>
     )
 };
