@@ -12,6 +12,7 @@ import * as hooks from "data/bookHooks";
 import { bookTableDefaultPageSize } from "config/book";
 import { bookValidationSchema } from "utils/book";
 import { refreshToken } from "utils/auth";
+import styles from "./Book.module.scss"
 
 export const Book = () => {
     const [validationErrors, setValidationErrors] = useState<Record<string, string | undefined>>({});
@@ -330,7 +331,7 @@ export const Book = () => {
         onEditingRowSave: handleSaveBook,
 
         renderTopToolbarCustomActions: ({ table }) => (
-            <>
+            <div className={styles.gridToolbarWrapper}>
                 <Tooltip arrow title="Refresh Data">
                     <IconButton onClick={async () => refetchBooks()}>
                         <RefreshIcon />
@@ -373,7 +374,7 @@ export const Book = () => {
                 >
                     delete selected
                 </Button>
-            </>
+            </div>
         ),
         renderRowActions: ({ row, table }) => (
             <Box sx={{ display: 'flex', gap: '1rem' }}>
