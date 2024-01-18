@@ -1,11 +1,9 @@
-import { Button } from "@mui/material";
-import queryString from "query-string";
-import { useLocation, useNavigate } from "react-router-dom";
 import { setAuthTokenHeader } from "utils/auth";
 import styles from './Login.module.scss';
 import * as hooks from "data/accountHooks";
 import { useFormik } from "formik";
 import { Login as LoginType } from "types/authInfo";
+import { loginValidationSchema } from "utils/login";
 
 type LoginProps = {
     onUserIsAuthenticated: (isAuthenticated: boolean) => void;
@@ -15,17 +13,18 @@ export const Login = (props: LoginProps) => {
 
     const formik = useFormik({
         initialValues: {
-            email: '',
+            username: '',
             password: ''
         },
         onSubmit: async values => {
-            await handleSubmit(values.email, values.password);
+            await handleSubmit(values.username, values.password);
         },
+        validationSchema: loginValidationSchema
     });
 
-    const handleSubmit = async (email: string, password: string) => {
+    const handleSubmit = async (username: string, password: string) => {
 
-        const loginData: LoginType = { username: email, password: password };
+        const loginData: LoginType = { username: username, password: password };
         const authInfo = await loginUser(loginData);
 
         //console.log(isLoginUserError);
@@ -58,16 +57,21 @@ export const Login = (props: LoginProps) => {
         <form onSubmit={formik.handleSubmit}>
             <div className={styles.loginWrapper}>
                 <h1 className="h3 mb-3 fw-normal">Please sign in</h1>
-
                 <div className="form-floating">
-                    <input type="email" className="form-control" id="email" placeholder="Email"
-                        onChange={formik.handleChange} value={formik.values.email} />
-                    <label htmlFor="email">Email address</label>
+                    <input type="text" className="form-control" id="username" placeholder="username"
+                        onChange={formik.handleChange} value={formik.values.username} />
+                    <label htmlFor="username">Username</label>
+                    {formik.touched.username && formik.errors.username ? (
+                        <div className={styles.inputError}>{formik.errors.username}</div>
+                    ) : null}
                 </div>
                 <div className="form-floating">
                     <input type="password" className="form-control" id="password" placeholder="Password"
                         onChange={formik.handleChange} value={formik.values.password} />
                     <label htmlFor="password">Password</label>
+                    {formik.touched.password && formik.errors.password ? (
+                        <div className={styles.inputError}>{formik.errors.password}</div>
+                    ) : null}
                 </div>
                 <button className="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
             </div>

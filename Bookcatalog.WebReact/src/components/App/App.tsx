@@ -95,7 +95,7 @@ function App() {
                   <Route path="/home" element={<Home />} /> */}
                   {/* <Route path="/book" element={<Book />} /> */}
                   <Route path='/' element={<ProtectedRoute />}>
-                    <Route path='/' element={<Home />} />
+                    <Route path='/' element={<Book />} />
                     <Route path='/home' element={<Home />} />
                     <Route path='/book' element={<Book />} />
                     <Route path='/category' element={<Category />} />
