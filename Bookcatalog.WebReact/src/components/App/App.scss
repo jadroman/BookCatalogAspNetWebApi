@@ -54,12 +54,14 @@ $font-family-monospace: Kalam;
 }
 
 .navigationWrapper {
+  color: whitesmoke;
+
   a.active {
     text-decoration: underline;
   }
 
   a {
-    color: white;
+    color: whitesmoke;
     text-decoration: none;
   }
 

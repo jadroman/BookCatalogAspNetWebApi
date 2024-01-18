@@ -61,7 +61,7 @@ function App() {
       </>
     }
     else {
-      return <div className="me-auto fs-3" style={{ color: 'whiteSmoke !important' }}>Welcome to Book Catalog</div>
+      return <div className="me-auto fs-3">Welcome to Book Catalog</div>
     }
   }
 
@@ -71,13 +71,15 @@ function App() {
         <Fragment>
           <Navbar expand="sm" className="navbar navbar-light" style={{ backgroundColor: '#6cadee' }}>
             <Navbar.Brand href="#/home">
-              <img
-                src={bookShelf}
-                width="60"
-                height="60"
-                className="ms-3 d-inline-block align-top"
-                alt="logo"
-              />
+              {userIsAuthenticated &&
+                <img
+                  src={bookShelf}
+                  width="60"
+                  height="60"
+                  className="ms-3 d-inline-block align-top"
+                  alt="logo"
+                />
+              }
             </Navbar.Brand>
             <Container className="d-flex justify-content-center">
               <div className="fs-3 d-flex justify-content-center navigationWrapper">
