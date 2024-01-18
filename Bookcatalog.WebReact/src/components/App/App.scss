@@ -55,6 +55,8 @@ $font-family-monospace: Kalam;
 
 .navigationWrapper {
   color: whitesmoke;
+  display: flex !important;
+  gap: 25px;
 
   a.active {
     text-decoration: underline;

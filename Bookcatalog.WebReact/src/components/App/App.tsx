@@ -19,19 +19,20 @@ function App() {
   }
 
   const renderLogedInUser = () => {
-    const userName = localStorage.getItem("bookCatalogUserName");
-
-    if (userName) {
-      //return <Chip label={userName} variant="outlined" />
+    if (userIsAuthenticated) {
+      const userName = localStorage.getItem("bookCatalogUserName");
       return <>
-
-        <Navbar.Collapse id="basic-navbar-nav me-3">
-          <Nav className="me-auto">
-            <NavDropdown title={userName} id="basic-nav-dropdown">
-              <NavDropdown.Item onClick={() => logout()}>Logout</NavDropdown.Item>
-            </NavDropdown>
-          </Nav>
-        </Navbar.Collapse>
+        {/* <div className="collapse navbar-collapse" id="navbarsExample01">
+          <li className="nav-item dropdown">
+            <a className="nav-link dropdown-toggle" href="#" id="dropdown01" data-bs-toggle="dropdown" aria-expanded="false">{userName}</a>
+            <ul className="dropdown-menu" aria-labelledby="dropdown01">
+              <li><a className="dropdown-item" onClick={() => logout()}>Logout</a></li>
+            </ul>
+          </li>
+        </div> */}
+        <NavDropdown className='me-3' title={userName} id="logout">
+          <NavDropdown.Item onClick={() => logout()}>Logout</NavDropdown.Item>
+        </NavDropdown>
       </>
     }
   }
@@ -49,7 +50,7 @@ function App() {
     if (userIsAuthenticated) {
       return <>
         <NavLink to="/home">
-          home
+          Home
         </NavLink>
         <NavLink to="/book">
           Books
@@ -61,7 +62,7 @@ function App() {
       </>
     }
     else {
-      return <div className="me-auto fs-3">Welcome to Book Catalog</div>
+      return <div className="fs-1">Welcome to Book Catalog</div>
     }
   }
 
@@ -69,23 +70,21 @@ function App() {
     <>
       <HashRouter>
         <Fragment>
-          <Navbar expand="sm" className="navbar navbar-light" style={{ backgroundColor: '#6cadee' }}>
+          <Navbar expand="sm" className={`d-flex justify-content-${userIsAuthenticated ? 'between' : 'center'} navbar navbar-light`} style={{ backgroundColor: '#6cadee' }}>
             <Navbar.Brand href="#/home">
               {userIsAuthenticated &&
                 <img
                   src={bookShelf}
                   width="60"
                   height="60"
-                  className="ms-3 d-inline-block align-top"
+                  className="ms-3"
                   alt="logo"
                 />
               }
             </Navbar.Brand>
-            <Container className="d-flex justify-content-center">
-              <div className="fs-3 d-flex justify-content-center navigationWrapper">
-                {renderNavigationIfUserAuthenticated()}
-              </div>
-            </Container>
+            <div className="fs-2 navigationWrapper">
+              {renderNavigationIfUserAuthenticated()}
+            </div>
             {renderLogedInUser()}
           </Navbar>
           <Container fluid>
