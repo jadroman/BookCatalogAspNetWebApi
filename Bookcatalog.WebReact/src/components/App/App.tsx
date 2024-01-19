@@ -100,6 +100,7 @@ function App() {
                     <Route path='/home' element={<Home />} />
                     <Route path='/book' element={<Book />} />
                     <Route path='/category' element={<Category />} />
+                    <Route path='*' element={<Home />} />
                   </Route>
                   <Route path='/login' element={<Login onUserIsAuthenticated={onUserIsAuthenticated} />} />
                   {/* <Route path='*' element={<Home />} /> */}
