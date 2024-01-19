@@ -1,5 +1,5 @@
 import { AlertProps, Box, Button, IconButton, Snackbar, Tooltip } from "@mui/material";
-import { MRT_ColumnDef, MRT_ColumnFiltersState, MRT_PaginationState, MRT_Row, MRT_SortingState, MRT_TableOptions, MaterialReactTable, createRow, useMaterialReactTable } from "material-react-table";
+import { MRT_ColumnDef, MRT_ColumnFiltersState, MRT_PaginationState, MRT_Row, MRT_SortingState, MRT_TableOptions, MaterialReactTable, createMRTColumnHelper, createRow, useMaterialReactTable } from "material-react-table";
 import { useMemo, useState } from "react";
 import { Book as BookEntity } from "types/book";
 import EditIcon from '@mui/icons-material/Edit';
@@ -14,6 +14,10 @@ import { bookValidationSchema } from "utils/book";
 import { refreshToken } from "utils/auth";
 import styles from "./Book.module.scss"
 import { Button as BootstrapButton } from "react-bootstrap";
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
+import jsPDF from "jspdf";
+import autoTable from 'jspdf-autotable';
+
 
 export const Book = () => {
     const [validationErrors, setValidationErrors] = useState<Record<string, string | undefined>>({});
@@ -282,6 +286,31 @@ export const Book = () => {
         }
     };
 
+    const getRowArrays = (row: MRT_Row<BookEntity>) => {
+        return [row.original.title ? cutStringIfTooLong(row.original.title, 44) : '', row.original.author ? cutStringIfTooLong(row.original.author, 23) : ''];
+    }
+
+    const cutStringIfTooLong = (stringToCut: string, maxLength: number) => {
+        if (stringToCut.length > maxLength) {
+            stringToCut = stringToCut.substring(0, maxLength);
+        }
+
+        return stringToCut;
+    }
+
+    const exportSelected = (rows: MRT_Row<BookEntity>[]) => {
+        const doc = new jsPDF();
+        const tableData = rows.map((row) => getRowArrays(row));
+        const tableHeaders = [['Title'], ['Author']];
+
+        autoTable(doc, {
+            head: [tableHeaders],
+            body: tableData,
+        });
+
+        doc.save('BookCatalog.pdf');
+    };
+
     const getAlertProps = () => {
         let errorLabel = 'Unknown error accured.'
 
@@ -366,16 +395,22 @@ export const Book = () => {
                 >
                     New book
                 </Button>
-                {(table.getSelectedRowModel().rows.length > 1) &&
+                {(table.getSelectedRowModel().rows.length > 0) &&
                     <BootstrapButton className={`${styles.button} btn btn-danger`}
                         onClick={async () => {
                             await refreshToken();
                             const selectedRows = table.getSelectedRowModel().rows;
                             openDeleteListConfirmModal(selectedRows);
-                        }}
-                    >
-                        Delete selected
+                        }}>Delete selected
                     </BootstrapButton>
+                }
+                {(table.getSelectedRowModel().rows.length > 0) &&
+                    <Button className={`${styles.button}`}
+                        onClick={async () => {
+                            const selectedRows = table.getSelectedRowModel().rows;
+                            exportSelected(selectedRows);
+                        }} startIcon={<FileDownloadIcon />}>Export Selected
+                    </Button>
                 }
             </div>
         ),
