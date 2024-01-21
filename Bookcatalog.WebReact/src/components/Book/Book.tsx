@@ -17,6 +17,7 @@ import { Button as BootstrapButton } from "react-bootstrap";
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import jsPDF from "jspdf";
 import autoTable from 'jspdf-autotable';
+import { string } from "yup";
 
 
 export const Book = () => {
@@ -287,7 +288,15 @@ export const Book = () => {
     };
 
     const getRowArrays = (row: MRT_Row<BookEntity>) => {
-        return [row.original.title ? cutStringIfTooLong(row.original.title, 44) : '', row.original.author ? cutStringIfTooLong(row.original.author, 23) : ''];
+        return [row.original.title ? cutStringIfTooLong(replaceChCaracter(row.original.title), 44) : '', row.original.author ? cutStringIfTooLong(replaceChCaracter(row.original.author), 23) : ''];
+    }
+
+    const getAllRowArrays = (row: BookEntity) => {
+        return [row.title ? cutStringIfTooLong(replaceChCaracter(row.title), 44) : '', row.author ? cutStringIfTooLong(replaceChCaracter(row.author), 23) : ''];
+    }
+
+    const replaceChCaracter = (stringToCheck: string) => {
+        return stringToCheck.replaceAll('č', 'c').replaceAll('Č', 'C');
     }
 
     const cutStringIfTooLong = (stringToCut: string, maxLength: number) => {
@@ -300,6 +309,7 @@ export const Book = () => {
 
     const exportSelected = (rows: MRT_Row<BookEntity>[]) => {
         const doc = new jsPDF();
+
         const tableData = rows.map((row) => getRowArrays(row));
         const tableHeaders = [['Title'], ['Author']];
 
@@ -307,7 +317,21 @@ export const Book = () => {
             head: [tableHeaders],
             body: tableData,
         });
+        doc.save('BookCatalog.pdf');
+    };
 
+    const exportAll = async () => {
+        const allBooks = await hooks.useGetAllBooks();
+
+        const doc = new jsPDF();
+
+        const tableData = allBooks.map((row) => getAllRowArrays(row));
+        const tableHeaders = [['Title'], ['Author']];
+
+        autoTable(doc, {
+            head: [tableHeaders],
+            body: tableData,
+        });
         doc.save('BookCatalog.pdf');
     };
 
@@ -412,6 +436,11 @@ export const Book = () => {
                         }} startIcon={<FileDownloadIcon />}>Export Selected
                     </Button>
                 }
+                <Button className={`${styles.button}`}
+                    onClick={async () => {
+                        exportAll();
+                    }} startIcon={<FileDownloadIcon />}>Export All
+                </Button>
             </div>
         ),
         renderRowActions: ({ row, table }) => (

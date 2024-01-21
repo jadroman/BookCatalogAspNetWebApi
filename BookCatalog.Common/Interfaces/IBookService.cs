@@ -15,5 +15,6 @@ namespace BookCatalog.Common.Interfaces
         Task<Result<int>> DeleteBook(int id);
         Task<Result<int>> DeleteBookList(IEnumerable<int> idList);
         Task<PagedBindingEntity<BookBindingModel>> GetBooks(BookParameters bookParameters);
+        Task<IEnumerable<BookBindingModel>> GetAllBooks();
     }
 }

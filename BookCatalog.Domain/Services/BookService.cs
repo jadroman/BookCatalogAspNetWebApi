@@ -11,6 +11,7 @@ using System.Text;
 using AutoMapper;
 using BookCatalog.Common.BindingModels;
 using BookCatalog.Common.BindingModels.Book;
+using Microsoft.EntityFrameworkCore;
 
 namespace BookCatalog.Domain.Services
 {
@@ -50,6 +51,14 @@ namespace BookCatalog.Domain.Services
             };
 
             return bookResult;
+        }
+
+        public async Task<IEnumerable<BookBindingModel>> GetAllBooks()
+        {
+            var books = _bookRepo.GetBooks();
+            var bookList = await books.ToListAsync();
+
+            return _mapper.Map<List<BookBindingModel>>(bookList);
         }
 
         private void Filter<T>(ref IQueryable<T> books, BookParameters bookParameters)

@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace BookCatalog.API.Controllers
 {
     [Route("api/[controller]")]
-    [Authorize]
+    //[Authorize]
     [ApiController]
     public class BookController : ControllerBase
     {
@@ -26,6 +26,14 @@ namespace BookCatalog.API.Controllers
         {
             var books = await _bookService.GetBooks(bookParameters);
             Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(books.MetaData));
+
+            return Ok(books);
+        }
+
+        [HttpGet("All")]
+        public async Task<IActionResult> GetAllBooks()
+        {
+            var books = await _bookService.GetAllBooks();
 
             return Ok(books);
         }

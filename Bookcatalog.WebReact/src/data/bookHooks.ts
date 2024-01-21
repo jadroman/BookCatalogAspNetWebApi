@@ -36,6 +36,21 @@ export function useGetBooks(columnFilters: MRT_ColumnFiltersState, globalFilter:
     return query;
 }
 
+
+export async function useGetAllBooks() {
+
+    const getBooksUrl = new URL(
+        'book\\all', getApiUrl(),
+    );
+
+    const response = await axios.get(getBooksUrl.href);
+
+    const json: Array<Book> = (response).data;
+    return json;
+
+
+}
+
 export function useGetCategories() {
     return useQuery<Array<Category>>({
         queryKey: [
