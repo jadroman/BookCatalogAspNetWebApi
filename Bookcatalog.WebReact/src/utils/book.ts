@@ -36,6 +36,14 @@ export function replaceNullsWithEmptyStrings(bookItems: Array<Book>): Array<Book
             b.read = false;
         }
 
+        if (b.timeOfCreation === null) {
+            b.timeOfCreation = '';
+        }
+
+        if (b.timeOfLastChange === null) {
+            b.timeOfLastChange = '';
+        }
+
         return b;
     });
 }

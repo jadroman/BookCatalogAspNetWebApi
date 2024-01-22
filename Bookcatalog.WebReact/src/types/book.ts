@@ -10,5 +10,7 @@ export type Book = {
     publisher?: string,
     collection?: string,
     read?: boolean,
-    year?: number
+    year?: number,
+    timeOfCreation?: string,
+    timeOfLastChange?: string
 }

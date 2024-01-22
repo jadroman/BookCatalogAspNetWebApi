@@ -135,6 +135,7 @@ namespace BookCatalog.Domain.Services
         public async Task<int> UpdateBook(BookEditBindingModel book, int id)
         {
             var bookEntity = await _bookRepo.GetBookById(id, true);
+            bookEntity.TimeOfLastChange = DateTime.Now;
             _mapper.Map(book, bookEntity);
 
             return await _bookRepo.UpdateBook();
@@ -143,6 +144,9 @@ namespace BookCatalog.Domain.Services
         public async Task<int> InsertBook(BookEditBindingModel book)
         {
             var bookEntity = _mapper.Map<Book>(book);
+            bookEntity.TimeOfCreation = DateTime.Now;
+            bookEntity.TimeOfLastChange = DateTime.Now;
+
             return await _bookRepo.InsertBook(bookEntity);
         }
 

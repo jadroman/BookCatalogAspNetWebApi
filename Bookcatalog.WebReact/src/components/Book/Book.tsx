@@ -17,7 +17,6 @@ import { Button as BootstrapButton } from "react-bootstrap";
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import jsPDF from "jspdf";
 import autoTable from 'jspdf-autotable';
-import { string } from "yup";
 
 
 export const Book = () => {
@@ -267,10 +266,38 @@ export const Book = () => {
                 Cell: ({ cell }) => (
                     cell.getValue<boolean>() ? <EmojiEvents color="primary" /> : <Close color="primary" />
                 )
+            },
+            {
+                accessorKey: 'timeOfCreation',
+                header: 'Time Of Creation',
+                enableEditing: false,
+                enableColumnFilter: false,
+                enableColumnActions: false,
+                enableColumnOrdering: true,
+                enableSorting: true,
+                Cell: ({ cell }) => formatDateTime(cell.getValue<string>())
+            },
+            {
+                accessorKey: 'timeOfLastChange',
+                header: 'Time Of Last Change',
+                enableEditing: false,
+                enableColumnFilter: false,
+                enableColumnActions: false,
+                enableColumnOrdering: true,
+                enableSorting: true,
+                Cell: ({ cell }) => formatDateTime(cell.getValue<string>())
             }
         ],
         [validationErrors, categoryItems],
     );
+
+    const formatDateTime = (rowDateTime: string) => {
+        if (rowDateTime) {
+            return new Date(rowDateTime).toLocaleDateString('hr-HR') + new Date(rowDateTime).toLocaleTimeString('hr-HR')
+        }
+
+        return '';
+    }
 
     const openDeleteConfirmModal = async (row: MRT_Row<BookEntity>) => {
         if (window.confirm(`Are you sure you want to delete the book "${row.original.title}"?`)) {
@@ -369,7 +396,7 @@ export const Book = () => {
             columnVisibility: {
                 note: false, collection: false,
                 publisher: false, 'category.name': false,
-                year: false, read: false
+                year: false, read: false, timeOfCreation: false, timeOfLastChange: false
             },
             showColumnFilters: true
         },
@@ -424,7 +451,7 @@ export const Book = () => {
                         );
                     }}
                 >
-                    New book
+                    Add New
                 </Button>
                 {(table.getSelectedRowModel().rows.length > 0) &&
                     <BootstrapButton className={`${styles.button} btn btn-danger`}
