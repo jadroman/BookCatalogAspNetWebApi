@@ -55,7 +55,7 @@ namespace BookCatalog.Domain.Services
 
         public async Task<IEnumerable<BookBindingModel>> GetAllBooks()
         {
-            var books = _bookRepo.GetBooks();
+            var books = _bookRepo.GetBooks().OrderBy(b=> b.Category.Name).ThenBy(b=> b.Title);
             var bookList = await books.ToListAsync();
 
             return _mapper.Map<List<BookBindingModel>>(bookList);

@@ -288,15 +288,22 @@ export const Book = () => {
     };
 
     const getRowArrays = (row: MRT_Row<BookEntity>) => {
-        return [row.original.title ? cutStringIfTooLong(replaceChCaracter(row.original.title), 44) : '', row.original.author ? cutStringIfTooLong(replaceChCaracter(row.original.author), 23) : ''];
+        return [row.original.title ? cutStringIfTooLong(replaceProblematicCaracters(row.original.title), 44) : '', row.original.author ? cutStringIfTooLong(replaceProblematicCaracters(row.original.author), 23) : ''];
     }
 
     const getAllRowArrays = (row: BookEntity) => {
-        return [row.title ? cutStringIfTooLong(replaceChCaracter(row.title), 44) : '', row.author ? cutStringIfTooLong(replaceChCaracter(row.author), 23) : ''];
+        return [row.title ? cutStringIfTooLong(replaceProblematicCaracters(row.title), 44) : '',
+        row.author ? cutStringIfTooLong(replaceProblematicCaracters(row.author), 23) : '',
+        row.category?.name ? cutStringIfTooLong(replaceProblematicCaracters(row.category?.name), 23) : 'No Category'];
     }
 
-    const replaceChCaracter = (stringToCheck: string) => {
-        return stringToCheck.replaceAll('č', 'c').replaceAll('Č', 'C');
+    const replaceProblematicCaracters = (stringToCheck: string) => {
+        return stringToCheck.replaceAll('č', 'c')
+            .replaceAll('Č', 'C')
+            .replaceAll('Ć', 'C')
+            .replaceAll('ć', 'c')
+            .replaceAll('Đ', 'D')
+            .replaceAll('đ', 'd');
     }
 
     const cutStringIfTooLong = (stringToCut: string, maxLength: number) => {
@@ -323,10 +330,10 @@ export const Book = () => {
     const exportAll = async () => {
         const allBooks = await hooks.useGetAllBooks();
 
-        const doc = new jsPDF();
+        const doc = new jsPDF('l');
 
         const tableData = allBooks.map((row) => getAllRowArrays(row));
-        const tableHeaders = [['Title'], ['Author']];
+        const tableHeaders = [['Title'], ['Author'], ['Category']];
 
         autoTable(doc, {
             head: [tableHeaders],
