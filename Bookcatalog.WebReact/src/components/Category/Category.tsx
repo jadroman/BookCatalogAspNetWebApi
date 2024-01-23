@@ -6,10 +6,12 @@ import * as hooks from "data/categoryHooks";
 import { Category as CategoryEntity } from "types/category";
 import { categoryValidationSchema } from "utils/category";
 import { Box, Button, IconButton, Tooltip } from "@mui/material";
+import { Button as BootstrapButton } from "react-bootstrap";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import { refreshToken } from "utils/auth";
+import styles from "./Category.module.scss"
 
 export const Category = () => {
     const [validationErrors, setValidationErrors] = useState<Record<string, string | undefined>>({});
@@ -176,7 +178,7 @@ export const Category = () => {
         onEditingRowSave: handleSaveCategory,
 
         renderTopToolbarCustomActions: ({ table }) => (
-            <>
+            <div className={styles.gridToolbarWrapper}>
                 <Tooltip arrow title="Refresh Data">
                     <IconButton onClick={async () => refetchCategories()}>
                         <RefreshIcon />
@@ -189,19 +191,19 @@ export const Category = () => {
                         table.setCreatingRow(createRow(table));
                     }}
                 >
-                    New category
+                    Add New
                 </Button>
-                <Button
-                    variant="contained" disabled={table.getSelectedRowModel().rows.length < 2}
-                    onClick={async () => {
-                        await refreshToken();
-                        const selectedRows = table.getSelectedRowModel().rows;
-                        openDeleteListConfirmModal(selectedRows);
-                    }}
-                >
-                    delete selected
-                </Button>
-            </>
+                {(table.getSelectedRowModel().rows.length > 0) &&
+                    <BootstrapButton className={`${styles.button} btn btn-danger`}
+                        onClick={async () => {
+                            await refreshToken();
+                            const selectedRows = table.getSelectedRowModel().rows;
+                            openDeleteListConfirmModal(selectedRows);
+                        }}>
+                        Delete selected
+                    </BootstrapButton>
+                }
+            </div>
         ),
         renderRowActions: ({ row, table }) => (
             <Box sx={{ display: 'flex', gap: '1rem' }}>
