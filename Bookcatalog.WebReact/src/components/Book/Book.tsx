@@ -17,6 +17,7 @@ import { Button as BootstrapButton } from "react-bootstrap";
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import jsPDF from "jspdf";
 import autoTable from 'jspdf-autotable';
+import moment from "moment";
 
 
 export const Book = () => {
@@ -275,7 +276,7 @@ export const Book = () => {
                 enableColumnActions: false,
                 enableColumnOrdering: true,
                 enableSorting: true,
-                Cell: ({ cell }) => formatDateTime(cell.getValue<string>())
+                Cell: ({ cell }) => calculateAndformatDateTime(cell.getValue<string>())
             },
             {
                 accessorKey: 'timeOfLastChange',
@@ -285,15 +286,25 @@ export const Book = () => {
                 enableColumnActions: false,
                 enableColumnOrdering: true,
                 enableSorting: true,
-                Cell: ({ cell }) => formatDateTime(cell.getValue<string>())
+                Cell: ({ cell }) => calculateAndformatDateTime(cell.getValue<string>())
             }
         ],
         [validationErrors, categoryItems],
     );
 
-    const formatDateTime = (rowDateTime: string) => {
+    /**  
+     * On the backend we are useng UTC(Coordinated Universal Time).
+     * Here, on the frontend, we are determing how much the current user time zone is offset from UTC
+     * so we could calculate it to show to user correctly
+    */
+    const calculateAndformatDateTime = (rowDateTime: string) => {
         if (rowDateTime) {
-            return new Date(rowDateTime).toLocaleDateString('hr-HR') + new Date(rowDateTime).toLocaleTimeString('hr-HR')
+            let UTCoffset = new Date().getTimezoneOffset();
+            let minutesToAdd = UTCoffset * (-1);
+            let convertedToDate = new Date(rowDateTime);
+            var convertedToRightTimeZone = moment(convertedToDate).add(minutesToAdd, 'm').toDate();
+
+            return `${convertedToRightTimeZone.toLocaleDateString('hr-HR')} ${convertedToRightTimeZone.toLocaleTimeString('hr-HR')}`
         }
 
         return '';
