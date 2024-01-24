@@ -295,7 +295,7 @@ export const Book = () => {
     /**  
      * On the backend we are useng UTC(Coordinated Universal Time).
      * Here, on the frontend, we are determing how much the current user time zone is offset from UTC
-     * so we could calculate it to show to user correctly
+     * so we could calculate it to show it to the user correctly
     */
     const calculateAndformatDateTime = (rowDateTime: string) => {
         if (rowDateTime) {
@@ -474,14 +474,14 @@ export const Book = () => {
                     </BootstrapButton>
                 }
                 {(table.getSelectedRowModel().rows.length > 0) &&
-                    <Button className={`${styles.button}`}
+                    <Button title="Export selected to pdf" className={`${styles.button}`}
                         onClick={async () => {
                             const selectedRows = table.getSelectedRowModel().rows;
                             exportSelected(selectedRows);
                         }} startIcon={<FileDownloadIcon />}>Export Selected
                     </Button>
                 }
-                <Button className={`${styles.button}`}
+                <Button title="Export all existing books to pdf" className={`${styles.button}`}
                     onClick={async () => {
                         exportAll();
                     }} startIcon={<FileDownloadIcon />}>Export All
