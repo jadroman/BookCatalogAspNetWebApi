@@ -238,7 +238,7 @@ export const Book = () => {
                 enableColumnFilter: false,
                 enableColumnActions: false,
                 enableColumnOrdering: false,
-                enableSorting: false,
+                enableSorting: true,
                 muiEditTextFieldProps: {
                     type: 'number',
                     error: !!validationErrors?.year,
@@ -256,7 +256,7 @@ export const Book = () => {
                 enableColumnFilter: false,
                 enableColumnActions: false,
                 enableColumnOrdering: false,
-                enableSorting: false,
+                enableSorting: true,
                 editVariant: 'select',
                 editSelectOptions: [{ label: 'already read', value: true }, { label: 'not yet', value: false }],
                 muiEditTextFieldProps: {
