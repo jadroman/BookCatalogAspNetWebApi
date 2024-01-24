@@ -1,5 +1,5 @@
 import { AlertProps, Box, Button, IconButton, Snackbar, Tooltip } from "@mui/material";
-import { MRT_ColumnDef, MRT_ColumnFiltersState, MRT_PaginationState, MRT_Row, MRT_SortingState, MRT_TableOptions, MaterialReactTable, createMRTColumnHelper, createRow, useMaterialReactTable } from "material-react-table";
+import { MRT_ColumnDef, MRT_ColumnFiltersState, MRT_PaginationState, MRT_Row, MRT_SortingState, MRT_TableOptions, MaterialReactTable, createRow, useMaterialReactTable } from "material-react-table";
 import { useMemo, useState } from "react";
 import { Book as BookEntity } from "types/book";
 import EditIcon from '@mui/icons-material/Edit';
@@ -25,7 +25,6 @@ export const Book = () => {
     const [selectedCategoryId, setSelectedCategoryId] = useState<string>('0');
     const [selectedBookId, setSelectedBookId] = useState<string>('0');
     const [disableSaveOnInsert, setDisableSaveOnInsert] = useState<boolean>(false);
-    const [notificationPopupMessage, setNotificationPopupMessage] = useState<string>('');
 
     const [columnFilters, setColumnFilters] = useState<MRT_ColumnFiltersState>([],);
     const [globalFilter, setGlobalFilter] = useState('');
@@ -190,6 +189,7 @@ export const Book = () => {
             {
                 accessorKey: 'note',
                 header: 'Note',
+
                 muiEditTextFieldProps: {
                     type: 'text',
                     multiline: true,
@@ -202,6 +202,11 @@ export const Book = () => {
                             ...validationErrors,
                             note: undefined,
                         }),
+                },
+                Cell: ({ cell }) => {
+                    if (cell.getValue()) {
+                        return <div>{cutStringIfTooLong(cell.getValue() as string, 40)}</div>;
+                    }
                 }
             },
             {
@@ -346,7 +351,7 @@ export const Book = () => {
 
     const cutStringIfTooLong = (stringToCut: string, maxLength: number) => {
         if (stringToCut.length > maxLength) {
-            stringToCut = stringToCut.substring(0, maxLength);
+            stringToCut = `${stringToCut.substring(0, maxLength)}...`;
         }
 
         return stringToCut;
@@ -521,19 +526,8 @@ export const Book = () => {
         },
     });
 
-    function openNotificationPopup() {
-        let openPopup = false;
-
-        return openPopup;
-    }
-
     return <>
         <MaterialReactTable table={table} />
-        <Snackbar
-            open={openNotificationPopup()}
-            autoHideDuration={10000}
-            message={notificationPopupMessage}
-        />
     </>;
 
 };
