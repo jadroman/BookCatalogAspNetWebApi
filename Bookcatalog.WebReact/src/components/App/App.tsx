@@ -22,14 +22,6 @@ function App() {
     if (userIsAuthenticated) {
       const userName = localStorage.getItem("bookCatalogUserName");
       return <>
-        {/* <div className="collapse navbar-collapse" id="navbarsExample01">
-          <li className="nav-item dropdown">
-            <a className="nav-link dropdown-toggle" href="#" id="dropdown01" data-bs-toggle="dropdown" aria-expanded="false">{userName}</a>
-            <ul className="dropdown-menu" aria-labelledby="dropdown01">
-              <li><a className="dropdown-item" onClick={() => logout()}>Logout</a></li>
-            </ul>
-          </li>
-        </div> */}
         <NavDropdown className='me-3' title={userName} id="logout">
           <NavDropdown.Item onClick={() => logout()}>Logout</NavDropdown.Item>
         </NavDropdown>
@@ -92,7 +84,7 @@ function App() {
               <Col>
                 <Routes>
                   <Route path='/' element={<ProtectedRoute />}>
-                    <Route path='/' element={<Home />} />
+                    <Route path="/" element={<Navigate replace to="/Book" />} />
                     <Route path='/home' element={<Home />} />
                     <Route path='/book' element={<Book />} />
                     <Route path='/category' element={<Category />} />
