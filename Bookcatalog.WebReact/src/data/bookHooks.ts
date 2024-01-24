@@ -38,7 +38,6 @@ export function useGetBooks(columnFilters: MRT_ColumnFiltersState, globalFilter:
 
 
 export async function useGetAllBooks() {
-
     const getBooksUrl = new URL(
         'book\\all', getApiUrl(),
     );
@@ -47,8 +46,6 @@ export async function useGetAllBooks() {
 
     const json: Array<Book> = (response).data;
     return json;
-
-
 }
 
 export function useGetCategories() {

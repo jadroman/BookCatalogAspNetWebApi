@@ -1,4 +1,4 @@
-import { Col, Container, Nav, NavDropdown, Navbar, Row } from 'react-bootstrap';
+import { Col, Container, NavDropdown, Navbar, Row } from 'react-bootstrap';
 import './App.scss';
 import "@fortawesome/fontawesome-free/js/all.js";
 import { Route, Navigate, HashRouter, Routes, Outlet, NavLink } from 'react-router-dom';
@@ -14,8 +14,8 @@ function App() {
 
   const [userIsAuthenticated, setUserIsAuthenticated] = useState<boolean>(isUserAuthenicated());
 
-  const onUserIsAuthenticated = (isUserAuthenicated: boolean) => {
-    setUserIsAuthenticated(isUserAuthenicated);
+  const onUserIsAuthenticated = () => {
+    setUserIsAuthenticated(true);
   }
 
   const renderLogedInUser = () => {
@@ -107,4 +107,3 @@ const ProtectedRoute = () => {
   const isAuthenticated = localStorage.getItem("bookCatalogToken");
   return isAuthenticated ? <Outlet /> : <Navigate to="/login" />;
 }
-
