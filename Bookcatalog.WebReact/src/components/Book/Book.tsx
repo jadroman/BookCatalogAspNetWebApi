@@ -1,5 +1,8 @@
-import { AlertProps, Box, Button, IconButton, Snackbar, Tooltip } from "@mui/material";
-import { MRT_ColumnDef, MRT_ColumnFiltersState, MRT_PaginationState, MRT_Row, MRT_SortingState, MRT_TableOptions, MaterialReactTable, createRow, useMaterialReactTable } from "material-react-table";
+import { AlertProps, Box, Button, IconButton, Tooltip } from "@mui/material";
+import {
+    MRT_ColumnDef, MRT_ColumnFiltersState, MRT_PaginationState, MRT_Row,
+    MRT_SortingState, MRT_TableOptions, MaterialReactTable, createRow, useMaterialReactTable
+} from "material-react-table";
 import { useMemo, useState } from "react";
 import { Book as BookEntity } from "types/book";
 import EditIcon from '@mui/icons-material/Edit';
@@ -33,7 +36,7 @@ export const Book = () => {
         pageIndex: 0,
         pageSize: bookTableDefaultPageSize,
     });
-    // this is comment for Sanja
+
     const {
         data: { items = [], metaData = { totalCount: 0 } } = {},
         isError: isLoadingBooksError,
@@ -44,21 +47,19 @@ export const Book = () => {
         pagination, sorting);
 
     const {
-        data: categoryItems = [],
-        isError: isErrorCategorySelectItems,
-        isLoading: isLoadingCategorySelectItems,
+        data: categoryItems = []
     } = hooks.useGetCategories();
 
-    const { mutateAsync: create, isPending: isCreatingBook, isError: isCreateBookError, error: createBookError } =
+    const { mutateAsync: create, isError: isCreateBookError } =
         hooks.useCreateBook();
 
-    const { mutateAsync: update, isPending: isUpdatingBook } =
+    const { mutateAsync: update, isError: isUpdateBookError } =
         hooks.useUpdateBook();
 
-    const { mutateAsync: deleteBook, isPending: isDeletingBook } =
+    const { mutateAsync: deleteBook, isError: isDeleteBookError } =
         hooks.useDeleteBook();
 
-    const { mutateAsync: deleteList, isPending: isDeletingBookList } =
+    const { mutateAsync: deleteList, isError: isDeleteBookListError } =
         hooks.useDeleteBookList();
 
     const onSelectCategory = (selectedCategory: string): void => {
@@ -386,18 +387,27 @@ export const Book = () => {
     };
 
     const getAlertProps = () => {
-        let errorLabel = 'Unknown error accured.'
+        let errorLabel = '';
 
         if (isLoadingBooksError)
-            errorLabel = 'Error loading data'
+            errorLabel += 'An error accured while loading data. ';
 
         if (isCreateBookError)
-            errorLabel = 'Create book error. Pls try again.'
+            errorLabel += 'An error accured while creating a book. ';
 
-        if (isLoadingBooksError || isCreateBookError)
+        if (isUpdateBookError)
+            errorLabel += 'An error accured while updating a book. ';
+
+        if (isDeleteBookError)
+            errorLabel += 'An error accured while deleting a book. ';
+
+        if (isDeleteBookListError)
+            errorLabel += 'An error accured while deleting a list of books. ';
+
+        if (isLoadingBooksError || isCreateBookError || isUpdateBookError || isDeleteBookError || isDeleteBookListError)
             return {
                 color: 'error',
-                children: errorLabel,
+                children: errorLabel + ' Pls try again.',
             } as AlertProps;
         else
             return undefined;
@@ -520,7 +530,8 @@ export const Book = () => {
             globalFilter,
             isLoading: isLoadingBooks,
             pagination,
-            showAlertBanner: isLoadingBooksError || isCreateBookError,
+            showAlertBanner: isLoadingBooksError || isCreateBookError || isUpdateBookError ||
+                isDeleteBookError || isDeleteBookListError,
             showProgressBars: isRefetchingBooks,
             sorting,
         },

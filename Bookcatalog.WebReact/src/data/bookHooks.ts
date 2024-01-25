@@ -65,7 +65,7 @@ export function useGetCategories() {
 
             const json: ApiResponse<Category> = (response).data;
             return json.items;
-        },
+        }
     });
 }
 

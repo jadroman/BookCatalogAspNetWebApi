@@ -21,7 +21,7 @@ axios.interceptors.response.use(response => {
 
     return response;
 }, async error => {
-    if (error.response.status === 401) {
+    if (error.response?.status === 401) {
         if (!localStorage.getItem("refreshingTokenRequested")) {
 
             localStorage.setItem("refreshingTokenRequested", 'true');
@@ -37,9 +37,11 @@ axios.interceptors.response.use(response => {
                 window.location.hash = '/login'
             }
         }
+        return error;
     }
-
-    return error;
+    else {
+        return Promise.reject(error);
+    }
 });
 
 export const setAuthTokenHeader = (token: string) => {
