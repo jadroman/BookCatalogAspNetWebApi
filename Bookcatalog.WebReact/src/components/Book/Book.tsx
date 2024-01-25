@@ -13,15 +13,16 @@ import CategorySelection from "components/Category/CategorySelection";
 import { Close, EmojiEvents } from "@mui/icons-material";
 import * as hooks from "data/bookHooks";
 import { bookTableDefaultPageSize } from "config/book";
-import { bookValidationSchema } from "utils/book";
+import {
+    bookValidationSchema, calculateAndformatDateTime, cutStringIfTooLong, getAllRowArrayForExport,
+    getCurrentDateForExportTitle, getSelectedRowArrayForExport
+} from "utils/book";
 import { refreshToken } from "utils/auth";
 import styles from "./Book.module.scss"
 import { Button as BootstrapButton } from "react-bootstrap";
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import jsPDF from "jspdf";
 import autoTable from 'jspdf-autotable';
-import moment from "moment";
-
 
 export const Book = () => {
     const [validationErrors, setValidationErrors] = useState<Record<string, string | undefined>>({});
@@ -93,14 +94,14 @@ export const Book = () => {
         setValidationErrors({});
 
         await update(values);
-        table.setEditingRow(null); //exit editing mode
+        table.setEditingRow(null);
     };
 
     const handleCreateBook: MRT_TableOptions<BookEntity>['onCreatingRowSave'] = async ({
         values,
         table,
     }) => {
-        // prevents the user to hit 'save' several times in a row and to insert duplicate records
+        // prevents user to hit 'save' several times in a row and to insert duplicate records
         if (disableSaveOnInsert)
             return;
 
@@ -127,7 +128,7 @@ export const Book = () => {
         setValidationErrors({});
         await create(values);
         setDisableSaveOnInsert(false);
-        table.setCreatingRow(null); //exit creating mode
+        table.setCreatingRow(null);
     };
 
 
@@ -137,17 +138,15 @@ export const Book = () => {
                 accessorKey: 'title',
                 header: 'Title',
                 muiEditTextFieldProps: {
-                    type: 'email',
+                    type: 'text',
                     required: true,
                     error: !!validationErrors?.title,
                     helperText: validationErrors?.title,
-                    //remove any previous validation errors when user focuses on the input
                     onFocus: () =>
                         setValidationErrors({
                             ...validationErrors,
                             title: undefined,
-                        }),
-                    //optionally add validation checking for onBlur or onChange
+                        })
                 }
             },
             {
@@ -158,19 +157,18 @@ export const Book = () => {
                     required: false,
                     error: !!validationErrors?.author,
                     helperText: validationErrors?.author,
-                    //remove any previous validation errors when user focuses on the input
                     onFocus: () =>
                         setValidationErrors({
                             ...validationErrors,
                             author: undefined,
-                        }),
-                    //optionally add validation checking for onBlur or onChange
+                        })
                 }
             },
             {
+                // for the category field we create our custom control
                 accessorKey: 'category.name',
                 header: 'Category',
-                Edit: ({ cell, column, row, table }) => {
+                Edit: ({ row, table }) => {
                     let editStatus: EditStatus | undefined;
 
                     if (table.getState().editingRow) {
@@ -197,7 +195,6 @@ export const Book = () => {
                     rows: 4,
                     error: !!validationErrors?.note,
                     helperText: validationErrors?.note,
-                    //remove any previous validation errors when user focuses on the input
                     onFocus: () =>
                         setValidationErrors({
                             ...validationErrors,
@@ -214,13 +211,13 @@ export const Book = () => {
                 accessorKey: 'publisher',
                 header: 'Publisher',
                 muiEditTextFieldProps: {
-                    type: 'email',
+                    type: 'text',
                     error: !!validationErrors?.publisher,
                     helperText: validationErrors?.publisher,
                     onFocus: () =>
                         setValidationErrors({
                             ...validationErrors,
-                            note: undefined,
+                            publisher: undefined,
                         }),
                 }
             },
@@ -228,13 +225,13 @@ export const Book = () => {
                 accessorKey: 'collection',
                 header: 'Collection',
                 muiEditTextFieldProps: {
-                    type: 'email',
+                    type: 'text',
                     error: !!validationErrors?.collection,
                     helperText: validationErrors?.collection,
                     onFocus: () =>
                         setValidationErrors({
                             ...validationErrors,
-                            note: undefined,
+                            collection: undefined,
                         }),
                 }
             },
@@ -252,7 +249,7 @@ export const Book = () => {
                     onFocus: () =>
                         setValidationErrors({
                             ...validationErrors,
-                            note: undefined,
+                            year: undefined,
                         }),
                 }
             },
@@ -282,7 +279,8 @@ export const Book = () => {
                 enableColumnActions: false,
                 enableColumnOrdering: true,
                 enableSorting: true,
-                Cell: ({ cell }) => calculateAndformatDateTime(cell.getValue<string>())
+                Cell: ({ cell }) => calculateAndformatDateTime(cell.getValue<string>()),
+                Edit: () => { return <></> }
             },
             {
                 accessorKey: 'timeOfLastChange',
@@ -292,29 +290,12 @@ export const Book = () => {
                 enableColumnActions: false,
                 enableColumnOrdering: true,
                 enableSorting: true,
-                Cell: ({ cell }) => calculateAndformatDateTime(cell.getValue<string>())
+                Cell: ({ cell }) => calculateAndformatDateTime(cell.getValue<string>()),
+                Edit: () => { return <></> }
             }
         ],
         [validationErrors, categoryItems],
     );
-
-    /**  
-     * On the backend we are useng UTC(Coordinated Universal Time).
-     * Here, on the frontend, we are determing how much the current user time zone is offset from UTC
-     * so we could calculate it to show it to the user correctly
-    */
-    const calculateAndformatDateTime = (rowDateTime: string) => {
-        if (rowDateTime) {
-            let UTCoffset = new Date().getTimezoneOffset();
-            let minutesToAdd = UTCoffset * (-1);
-            let convertedToDate = new Date(rowDateTime);
-            var convertedToRightTimeZone = moment(convertedToDate).add(minutesToAdd, 'm').toDate();
-
-            return `${convertedToRightTimeZone.toLocaleDateString('hr-HR')} ${convertedToRightTimeZone.toLocaleTimeString('hr-HR')}`
-        }
-
-        return '';
-    }
 
     const openDeleteConfirmModal = async (row: MRT_Row<BookEntity>) => {
         if (window.confirm(`Are you sure you want to delete the book "${row.original.title}"?`)) {
@@ -325,68 +306,39 @@ export const Book = () => {
     const openDeleteListConfirmModal = async (rows: Array<MRT_Row<BookEntity>>) => {
         const titlesToDelete = rows.map(t => t.original.title);
 
-        // TODO: create modal popup
         if (window.confirm(`Are you sure you want to delete selected books: "${JSON.stringify(titlesToDelete)}"?`)) {
             await deleteList(rows.map(r => +r.id));
         }
     };
 
-    const getRowArrays = (row: MRT_Row<BookEntity>) => {
-        return [row.original.title ? cutStringIfTooLong(replaceProblematicCaracters(row.original.title), 44) : '', row.original.author ? cutStringIfTooLong(replaceProblematicCaracters(row.original.author), 23) : ''];
-    }
-
-    const getAllRowArrays = (row: BookEntity) => {
-        return [row.title ? cutStringIfTooLong(replaceProblematicCaracters(row.title), 44) : '',
-        row.author ? cutStringIfTooLong(replaceProblematicCaracters(row.author), 23) : '',
-        row.category?.name ? cutStringIfTooLong(replaceProblematicCaracters(row.category?.name), 23) : 'No Category'];
-    }
-
-    const replaceProblematicCaracters = (stringToCheck: string) => {
-        return stringToCheck.replaceAll('č', 'c')
-            .replaceAll('Č', 'C')
-            .replaceAll('Ć', 'C')
-            .replaceAll('ć', 'c')
-            .replaceAll('Đ', 'D')
-            .replaceAll('đ', 'd');
-    }
-
-    const cutStringIfTooLong = (stringToCut: string, maxLength: number) => {
-        if (stringToCut.length > maxLength) {
-            stringToCut = `${stringToCut.substring(0, maxLength)}...`;
-        }
-
-        return stringToCut;
-    }
-
-    const exportSelected = (rows: MRT_Row<BookEntity>[]) => {
+    const exportSelectedToPDF = (rows: MRT_Row<BookEntity>[]) => {
         const doc = new jsPDF();
-
-        const tableData = rows.map((row) => getRowArrays(row));
+        const tableData = rows.map((row) => getSelectedRowArrayForExport(row));
         const tableHeaders = [['Title'], ['Author']];
 
         autoTable(doc, {
             head: [tableHeaders],
             body: tableData,
         });
-        doc.save('BookCatalog.pdf');
+
+        doc.save(`BookCatalog_${getCurrentDateForExportTitle()}.pdf`);
     };
 
-    const exportAll = async () => {
+    const exportAllToPDF = async () => {
         const allBooks = await hooks.useGetAllBooks();
-
         const doc = new jsPDF('l');
-
-        const tableData = allBooks.map((row) => getAllRowArrays(row));
+        const tableData = allBooks.map((row) => getAllRowArrayForExport(row));
         const tableHeaders = [['Title'], ['Author'], ['Category']];
 
         autoTable(doc, {
             head: [tableHeaders],
             body: tableData,
         });
-        doc.save('BookCatalog.pdf');
+
+        doc.save(`BookCatalog_${getCurrentDateForExportTitle()}.pdf`);
     };
 
-    const getAlertProps = () => {
+    const getTableToolbarAlertProps = () => {
         let errorLabel = '';
 
         if (isLoadingBooksError)
@@ -433,7 +385,7 @@ export const Book = () => {
         manualFiltering: true,
         manualPagination: true,
         manualSorting: true,
-        muiToolbarAlertBannerProps: getAlertProps(),
+        muiToolbarAlertBannerProps: getTableToolbarAlertProps(),
         onColumnFiltersChange: setColumnFilters,
         onGlobalFilterChange: setGlobalFilter,
         onPaginationChange: setPagination,
@@ -492,13 +444,13 @@ export const Book = () => {
                     <Button title="Export selected to pdf" className={`${styles.button}`}
                         onClick={async () => {
                             const selectedRows = table.getSelectedRowModel().rows;
-                            exportSelected(selectedRows);
+                            exportSelectedToPDF(selectedRows);
                         }} startIcon={<FileDownloadIcon />}>Export Selected
                     </Button>
                 }
                 <Button title="Export all existing books to pdf" className={`${styles.button}`}
                     onClick={async () => {
-                        exportAll();
+                        exportAllToPDF();
                     }} startIcon={<FileDownloadIcon />}>Export All
                 </Button>
             </div>

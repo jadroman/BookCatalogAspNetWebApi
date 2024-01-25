@@ -1,7 +1,9 @@
 import { getApiUrl } from "config/url";
-import { MRT_ColumnFiltersState, MRT_PaginationState, MRT_SortingState } from "material-react-table";
+import { MRT_ColumnFiltersState, MRT_PaginationState, MRT_Row, MRT_SortingState } from "material-react-table";
+import moment from "moment";
 import { Book } from "types/book";
 import { number, object, string } from "yup";
+import { Book as BookEntity } from "types/book";
 
 /**
     Prevents MaterialReactTable warnings if there are 'null' results
@@ -118,3 +120,56 @@ export const bookValidationSchema = object({
     collection: string().max(55, `Collection maximum length limit is 55`),
     year: number().moreThan(0).lessThan(2050).integer('Year must be an integer')
 });
+
+
+/**  
+ * On the backend we are useng UTC(Coordinated Universal Time).
+ * Here, on the frontend, we are determing how much the current user time zone is offset from UTC
+ * so we could calculate it to show it to the user correctly
+*/
+export const calculateAndformatDateTime = (rowDateTime: string) => {
+    if (rowDateTime) {
+        let UTCoffset = new Date().getTimezoneOffset();
+        let minutesToAdd = UTCoffset * (-1);
+        let convertedToDate = new Date(rowDateTime);
+        var convertedToRightTimeZone = moment(convertedToDate).add(minutesToAdd, 'm').toDate();
+
+        return `${convertedToRightTimeZone.toLocaleDateString('hr-HR')} ${convertedToRightTimeZone.toLocaleTimeString('hr-HR')}`
+    }
+
+    return '';
+}
+
+
+export const getSelectedRowArrayForExport = (row: MRT_Row<BookEntity>) => {
+    return [row.original.title ? cutStringIfTooLong(replaceProblematicCaracters(row.original.title), 44) :
+        '', row.original.author ? cutStringIfTooLong(replaceProblematicCaracters(row.original.author), 23) : ''];
+}
+
+export const getAllRowArrayForExport = (row: BookEntity) => {
+    return [row.title ? cutStringIfTooLong(replaceProblematicCaracters(row.title), 44) : '',
+    row.author ? cutStringIfTooLong(replaceProblematicCaracters(row.author), 23) : '',
+    row.category?.name ? cutStringIfTooLong(replaceProblematicCaracters(row.category?.name), 23) : 'No Category'];
+}
+
+const replaceProblematicCaracters = (stringToCheck: string) => {
+    return stringToCheck.replaceAll('č', 'c')
+        .replaceAll('Č', 'C')
+        .replaceAll('Ć', 'C')
+        .replaceAll('ć', 'c')
+        .replaceAll('Đ', 'D')
+        .replaceAll('đ', 'd');
+}
+
+export const cutStringIfTooLong = (stringToCut: string, maxLength: number) => {
+    if (stringToCut.length > maxLength) {
+        stringToCut = `${stringToCut.substring(0, maxLength)}...`;
+    }
+
+    return stringToCut;
+}
+
+export const getCurrentDateForExportTitle = () => {
+    const currentDate = new Date();
+    return `${currentDate.toLocaleDateString('hr-HR')}`;
+}
