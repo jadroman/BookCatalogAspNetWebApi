@@ -1,11 +1,14 @@
 
 import { categoryTableDefaultPageSize } from "config/category";
-import { MRT_ColumnDef, MRT_ColumnFiltersState, MRT_PaginationState, MRT_Row, MRT_SortingState, MRT_TableOptions, MaterialReactTable, createRow, useMaterialReactTable } from "material-react-table";
+import {
+    MRT_ColumnDef, MRT_ColumnFiltersState, MRT_PaginationState, MRT_Row, MRT_SortingState, MRT_TableOptions,
+    MaterialReactTable, createRow, useMaterialReactTable
+} from "material-react-table";
 import { useMemo, useState } from "react";
 import * as hooks from "data/categoryHooks";
 import { Category as CategoryEntity } from "types/category";
 import { categoryValidationSchema } from "utils/category";
-import { Box, Button, IconButton, Tooltip } from "@mui/material";
+import { AlertProps, Box, Button, IconButton, Tooltip } from "@mui/material";
 import { Button as BootstrapButton } from "react-bootstrap";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -35,16 +38,16 @@ export const Category = () => {
     } = hooks.useGetCategories(columnFilters, globalFilter,
         pagination, sorting);
 
-    const { mutateAsync: create, isPending: isCreatingCategory } =
+    const { mutateAsync: create, isError: isCreateCategoryError } =
         hooks.useCreateCategory();
 
-    const { mutateAsync: update, isPending: isUpdatingCategory } =
+    const { mutateAsync: update, isError: isUpdateCategoryError } =
         hooks.useUpdateCategory();
 
-    const { mutateAsync: deleteCategory, isPending: isDeletingCategory } =
+    const { mutateAsync: deleteCategory, isError: isDeleteCategoryError } =
         hooks.useDeleteCategory();
 
-    const { mutateAsync: deleteList, isPending: isDeletingCategoryList } =
+    const { mutateAsync: deleteList, isError: isDeleteCategoryListError } =
         hooks.useDeleteCategoryList();
 
     const handleSaveCategory: MRT_TableOptions<CategoryEntity>['onEditingRowSave'] = async ({
@@ -72,7 +75,7 @@ export const Category = () => {
 
         setValidationErrors({});
         await update(values);
-        table.setEditingRow(null); //exit editing mode
+        table.setEditingRow(null);
     };
 
     const handleCreateCategory: MRT_TableOptions<CategoryEntity>['onCreatingRowSave'] = async ({
@@ -105,7 +108,7 @@ export const Category = () => {
         setValidationErrors({});
         await create(values);
         setDisableSaveOnInsert(false);
-        table.setCreatingRow(null); //exit creating mode
+        table.setCreatingRow(null);
     };
 
     const columns = useMemo<MRT_ColumnDef<CategoryEntity>[]>(
@@ -114,25 +117,23 @@ export const Category = () => {
                 accessorKey: 'name',
                 header: 'Name',
                 muiEditTextFieldProps: {
-                    type: 'email',
+                    type: 'text',
                     required: true,
                     error: !!validationErrors?.name,
                     helperText: validationErrors?.name,
-                    //remove any previous validation errors when user focuses on the input
                     onFocus: () =>
                         setValidationErrors({
                             ...validationErrors,
-                            title: undefined,
-                        }),
-                    //optionally add validation checking for onBlur or onChange
+                            name: undefined,
+                        })
                 }
             }
         ],
-        [validationErrors],
+        [validationErrors]
     );
 
     const openDeleteConfirmModal = async (row: MRT_Row<CategoryEntity>) => {
-        if (window.confirm(`Are you sure you want to delete the book "${row.original.name}"?`)) {
+        if (window.confirm(`Are you sure you want to delete the category "${row.original.name}"?`)) {
             await deleteCategory(row.original.id);
         }
     };
@@ -140,11 +141,37 @@ export const Category = () => {
     const openDeleteListConfirmModal = async (rows: Array<MRT_Row<CategoryEntity>>) => {
         const namesToDelete = rows.map(t => t.original.name);
 
-        // TODO: create modal popup
         if (window.confirm(`Are you sure you want to delete selected categories: "${JSON.stringify(namesToDelete)}"?`)) {
             await deleteList(rows.map(r => +r.id));
         }
     };
+
+    const getTableToolbarAlertProps = () => {
+        let errorLabel = '';
+
+        if (isLoadingCategoriesError)
+            errorLabel += 'An error accured while loading data. ';
+
+        if (isCreateCategoryError)
+            errorLabel += 'An error accured while creating a category. ';
+
+        if (isUpdateCategoryError)
+            errorLabel += 'An error accured while updating a category. ';
+
+        if (isDeleteCategoryError)
+            errorLabel += 'An error accured while deleting a category. ';
+
+        if (isDeleteCategoryListError)
+            errorLabel += 'An error accured while deleting a list of categories. ';
+
+        if (isLoadingCategoriesError || isCreateCategoryError || isUpdateCategoryError || isDeleteCategoryError || isDeleteCategoryListError)
+            return {
+                color: 'error',
+                children: errorLabel + ' Pls try again.',
+            } as AlertProps;
+        else
+            return undefined;
+    }
 
     const table = useMaterialReactTable({
         columns,
@@ -161,17 +188,11 @@ export const Category = () => {
         manualFiltering: true,
         manualPagination: true,
         manualSorting: true,
-        muiToolbarAlertBannerProps: isLoadingCategoriesError
-            ? {
-                color: 'error',
-                children: 'Error loading data',
-            }
-            : undefined,
+        muiToolbarAlertBannerProps: getTableToolbarAlertProps(),
         onColumnFiltersChange: setColumnFilters,
         onGlobalFilterChange: setGlobalFilter,
         onPaginationChange: setPagination,
         onSortingChange: setSorting,
-
         onCreatingRowCancel: () => setValidationErrors({}),
         onCreatingRowSave: handleCreateCategory,
         onEditingRowCancel: () => setValidationErrors({}),
