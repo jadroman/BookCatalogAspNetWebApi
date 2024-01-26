@@ -118,6 +118,7 @@ export const Category = () => {
                 header: 'Name',
                 muiEditTextFieldProps: {
                     type: 'text',
+                    inputProps: { autoComplete: 'off' },
                     required: true,
                     error: !!validationErrors?.name,
                     helperText: validationErrors?.name,
@@ -126,6 +127,9 @@ export const Category = () => {
                             ...validationErrors,
                             name: undefined,
                         })
+                },
+                muiFilterTextFieldProps: {
+                    inputProps: { autoComplete: 'off' }
                 }
             }
         ],

@@ -72,7 +72,6 @@ export const Book = () => {
         table
     }) => {
         values.categoryId = selectedCategoryId === '0' ? null : selectedCategoryId;
-        setSelectedCategoryId('0');
         values.id = selectedBookId;
         let validationErrorsObj: any = {};
         let errorsMap = new Map();
@@ -108,7 +107,6 @@ export const Book = () => {
 
         setDisableSaveOnInsert(true);
         values.categoryId = selectedCategoryId === '0' ? null : selectedCategoryId;
-        setSelectedCategoryId('0');
         let validationErrorsObj: any = {};
         let errorsMap = new Map();
 
@@ -142,6 +140,7 @@ export const Book = () => {
                 muiEditTextFieldProps: {
                     type: 'text',
                     required: true,
+                    inputProps: { autoComplete: 'off' },
                     error: !!validationErrors?.title,
                     helperText: validationErrors?.title,
                     onFocus: () =>
@@ -149,6 +148,9 @@ export const Book = () => {
                             ...validationErrors,
                             title: undefined,
                         })
+                },
+                muiFilterTextFieldProps: {
+                    inputProps: { autoComplete: 'off' }
                 }
             },
             {
@@ -157,6 +159,7 @@ export const Book = () => {
                 muiEditTextFieldProps: {
                     type: 'text',
                     required: false,
+                    inputProps: { autoComplete: 'off' },
                     error: !!validationErrors?.author,
                     helperText: validationErrors?.author,
                     onFocus: () =>
@@ -164,6 +167,9 @@ export const Book = () => {
                             ...validationErrors,
                             author: undefined,
                         })
+                },
+                muiFilterTextFieldProps: {
+                    inputProps: { autoComplete: 'off' }
                 }
             },
             {
@@ -193,6 +199,7 @@ export const Book = () => {
 
                 muiEditTextFieldProps: {
                     type: 'text',
+                    inputProps: { autoComplete: 'off' },
                     multiline: true,
                     rows: 4,
                     error: !!validationErrors?.note,
@@ -207,6 +214,9 @@ export const Book = () => {
                     if (cell.getValue()) {
                         return <div>{cutStringIfTooLong(cell.getValue() as string, 40)}</div>;
                     }
+                },
+                muiFilterTextFieldProps: {
+                    inputProps: { autoComplete: 'off' }
                 }
             },
             {
@@ -246,6 +256,7 @@ export const Book = () => {
                 enableSorting: true,
                 muiEditTextFieldProps: {
                     type: 'number',
+                    inputProps: { autoComplete: 'off' },
                     error: !!validationErrors?.year,
                     helperText: validationErrors?.year,
                     onFocus: () =>
