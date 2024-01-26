@@ -1,6 +1,6 @@
 import MenuItem from "@mui/material/MenuItem";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
-import React, { useEffect } from "react";
+import React from "react";
 import { Category } from "types/category";
 
 
@@ -15,12 +15,10 @@ export default function CategorySelection(props: CategorySelectionProps): JSX.El
 
     const [selectedCategory, setSelectedCategory] = React.useState<string>(props.selectedCategory || '0');
 
-    useEffect(() => {
-        props.onSelectCategory(selectedCategory);
-    }, [selectedCategory])
-
     const selectHandleChange = (event: SelectChangeEvent) => {
-        setSelectedCategory(event.target.value as string);
+        const selectedValue = event.target.value as string
+        setSelectedCategory(selectedValue);
+        props.onSelectCategory(selectedValue);
     };
 
     const menuItems = props.inputData.map(i => <MenuItem id={i.id.toString()} key={i.id} value={i.id}>{i.name}</MenuItem>)
