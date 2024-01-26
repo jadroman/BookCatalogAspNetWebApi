@@ -44,14 +44,6 @@ axios.interceptors.response.use(response => {
     }
 });
 
-export const setAuthTokenHeader = (token: string) => {
-    if (token) {
-        axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-    }
-    else
-        delete axios.defaults.headers.common["Authorization"];
-}
-
 export const refreshToken = async () => {
 
     var isAuthSuccessful = false;
@@ -73,7 +65,6 @@ export const refreshToken = async () => {
             const newToken = response.data.token;
 
             localStorage.setItem("bookCatalogToken", newToken);
-            setAuthTokenHeader(newToken);
         }
     }
 

@@ -1,4 +1,3 @@
-import { setAuthTokenHeader } from "utils/auth";
 import styles from './Login.module.scss';
 import * as hooks from "data/accountHooks";
 import { useFormik } from "formik";
@@ -36,7 +35,6 @@ export const Login = (props: LoginProps) => {
                 localStorage.setItem("bookCatalogToken", token);
                 localStorage.setItem("bookCatalogRefreshToken", refreshToken);
                 localStorage.setItem("bookCatalogUserName", userInfo.userName);
-                setAuthTokenHeader(token);
                 props.onUserIsAuthenticated();
                 window.location.hash = '/book';
             }
