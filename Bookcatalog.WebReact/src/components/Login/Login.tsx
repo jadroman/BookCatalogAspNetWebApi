@@ -5,10 +5,7 @@ import { useFormik } from "formik";
 import { Login as LoginType } from "types/authInfo";
 import { loginValidationSchema } from "utils/login";
 import bookShelf from 'images/bookshelf.png';
-
-type LoginProps = {
-    onUserIsAuthenticated: () => void;
-}
+import { LoginProps } from "types/props";
 
 export const Login = (props: LoginProps) => {
 

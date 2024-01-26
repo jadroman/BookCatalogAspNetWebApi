@@ -1,18 +1,10 @@
 import MenuItem from "@mui/material/MenuItem";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import React from "react";
-import { Category } from "types/category";
+import { CategorySelectionProps } from "types/props";
 
-
-// TODO: put on a common place
-export type CategorySelectionProps = {
-    inputData: Array<Category>;
-    selectedCategory?: string;
-    onSelectCategory: (selectedCategory: string) => void;
-};
 
 export default function CategorySelection(props: CategorySelectionProps): JSX.Element {
-
     const [selectedCategory, setSelectedCategory] = React.useState<string>(props.selectedCategory || '0');
 
     const selectHandleChange = (event: SelectChangeEvent) => {
