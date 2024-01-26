@@ -6,8 +6,10 @@ import { Login as LoginType } from "types/authInfo";
 import { loginValidationSchema } from "utils/login";
 import bookShelf from 'images/bookshelf.png';
 import { LoginProps } from "types/props";
+import { useState } from "react";
 
 export const Login = (props: LoginProps) => {
+    const [wrongUsernameOrPassword, setWrongUsernameOrPassword] = useState<boolean>(false);
 
     const formik = useFormik({
         initialValues: {
@@ -25,10 +27,7 @@ export const Login = (props: LoginProps) => {
         const loginData: LoginType = { username: username, password: password };
         const authInfo = await loginUser(loginData);
 
-        //console.log(isLoginUserError);
-
         if (authInfo) {
-
             const token = authInfo.token;
             const refreshToken = authInfo.refreshToken;
             const userInfo = authInfo.userInfo;
@@ -43,8 +42,7 @@ export const Login = (props: LoginProps) => {
             }
         }
         else {
-
-            console.log('login error');
+            setWrongUsernameOrPassword(true);
         }
     };
 
@@ -79,6 +77,8 @@ export const Login = (props: LoginProps) => {
                             <div className={styles.inputError}>{formik.errors.password}</div>
                         ) : null}
                     </div>
+                    {wrongUsernameOrPassword &&
+                        <div className={styles.inputError}>Wrong username or password.</div>}
                     <button className=" mt-3 w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
                 </div>
             </form>
