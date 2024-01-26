@@ -72,6 +72,7 @@ export const Book = () => {
         table
     }) => {
         values.categoryId = selectedCategoryId === '0' ? null : selectedCategoryId;
+        setSelectedCategoryId('0');
         values.id = selectedBookId;
         let validationErrorsObj: any = {};
         let errorsMap = new Map();
@@ -107,6 +108,7 @@ export const Book = () => {
 
         setDisableSaveOnInsert(true);
         values.categoryId = selectedCategoryId === '0' ? null : selectedCategoryId;
+        setSelectedCategoryId('0');
         let validationErrorsObj: any = {};
         let errorsMap = new Map();
 
