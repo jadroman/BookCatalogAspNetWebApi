@@ -1,7 +1,6 @@
 const enum ApiUrl {
     Local = 'https://localhost:5001/api/',
-    Staging = '',
-    Production = ''
+    Production = 'https://bookcatalogwebapistaging.jadro.space/api/'
 }
 
 export const loginUrl = 'accounts/login';
