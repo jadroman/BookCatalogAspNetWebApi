@@ -1,4 +1,3 @@
-
 export type authInfo = {
     userInfo?: UserInfo,
     token?: string,

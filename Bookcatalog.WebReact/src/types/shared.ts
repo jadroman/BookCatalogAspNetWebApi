@@ -13,4 +13,4 @@ export type ApiResponse<Type> = {
     };
 };
 
-export enum EditStatus { 'update', 'insert' };
+export enum TableEditStatus { 'update', 'insert' };

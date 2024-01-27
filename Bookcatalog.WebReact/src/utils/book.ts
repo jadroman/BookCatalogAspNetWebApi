@@ -51,11 +51,7 @@ export function replaceNullsWithEmptyStrings(bookItems: Array<Book>): Array<Book
 }
 
 /**
- *  e.g. 'api/book?PageNumber=0&pageSize=10&title=long&author=nick&OrderBy=author+asc'
- * @param columnFilters 
- * @param pagination 
- * @param sorting 
- * @returns 
+ *  Generates url, e.g. 'api/book?PageNumber=0&pageSize=10&title=long&author=nick&OrderBy=author+asc'
  */
 export function setSearchParams(columnFilters: MRT_ColumnFiltersState, pagination: MRT_PaginationState,
     sorting: MRT_SortingState): URL {
@@ -63,8 +59,6 @@ export function setSearchParams(columnFilters: MRT_ColumnFiltersState, paginatio
     const getBooksUrl = new URL(
         'book', getApiUrl(),
     );
-
-    // URL e.g. api/book?PageNumber=0&pageSize=10&title=long&author=nick&globalFilter=&OrderBy=author+asc
 
     getBooksUrl.searchParams.set('pageNumber', `${pagination.pageIndex}`);
     getBooksUrl.searchParams.set('pageSize', `${pagination.pageSize}`);
@@ -110,17 +104,14 @@ export function setSearchParams(columnFilters: MRT_ColumnFiltersState, paginatio
     return getBooksUrl;
 }
 
-
-// TODO: extract values
 export const bookValidationSchema = object({
     title: string().required('Title is required.').max(195, `Title maximum length limit is 195`),
     author: string().max(55, `Author maximum length limit is 55`),
     note: string().max(4000, `Note maximum length limit is 4000`),
     publisher: string().max(55, `Publisher maximum length limit is 55`),
     collection: string().max(55, `Collection maximum length limit is 55`),
-    year: number().moreThan(0).lessThan(2050).integer('Year must be an integer')
+    year: number().moreThan(0).lessThan(2050).integer('Year must be an integer between 0 and 2050')
 });
-
 
 /**  
  * On the backend we are useng UTC(Coordinated Universal Time).
@@ -140,18 +131,26 @@ export const calculateAndformatDateTime = (rowDateTime: string) => {
     return '';
 }
 
-
+/**  
+ * Transforms table row entity into an array which fits the data format for export.
+*/
 export const getSelectedRowArrayForExport = (row: MRT_Row<BookEntity>) => {
     return [row.original.title ? cutStringIfTooLong(replaceProblematicCaracters(row.original.title), 44) :
         '', row.original.author ? cutStringIfTooLong(replaceProblematicCaracters(row.original.author), 23) : ''];
 }
 
+/**  
+ * Transforms table row entity into an array which fits the data format for export.
+*/
 export const getAllRowArrayForExport = (row: BookEntity) => {
     return [row.title ? cutStringIfTooLong(replaceProblematicCaracters(row.title), 44) : '',
     row.author ? cutStringIfTooLong(replaceProblematicCaracters(row.author), 23) : '',
     row.category?.name ? cutStringIfTooLong(replaceProblematicCaracters(row.category?.name), 23) : 'No Category'];
 }
 
+/**  
+ * When exporting to pdf, some Croatian letters are not displayed properly.
+*/
 const replaceProblematicCaracters = (stringToCheck: string) => {
     return stringToCheck.replaceAll('č', 'c')
         .replaceAll('Č', 'C')
@@ -169,7 +168,7 @@ export const cutStringIfTooLong = (stringToCut: string, maxLength: number) => {
     return stringToCut;
 }
 
-export const getCurrentDateForExportTitle = () => {
+export const getCurrentDateForExportedFileTitle = () => {
     const currentDate = new Date();
     return `${currentDate.toLocaleDateString('hr-HR')}`;
 }

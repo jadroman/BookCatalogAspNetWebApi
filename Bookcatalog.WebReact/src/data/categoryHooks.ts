@@ -12,18 +12,17 @@ export function useGetCategories(columnFilters: MRT_ColumnFiltersState, globalFi
     const query = useQuery<ApiData<Category>>({
         queryKey: [
             'categoryData',
-            columnFilters, //refetch when columnFilters changes
-            globalFilter, //refetch when globalFilter changes
-            pagination.pageIndex, //refetch when pagination.pageIndex changes
-            pagination.pageSize, //refetch when pagination.pageSize changes
-            sorting, //refetch when sorting changes
+            columnFilters,
+            globalFilter,
+            pagination.pageIndex,
+            pagination.pageSize,
+            sorting,
         ],
         queryFn: async (): Promise<ApiData<Category>> => {
             const getCategoriesUrl = setSearchParams(columnFilters, pagination, sorting);
-
             const response = await axios.get(getCategoriesUrl.href);
-
             const json: ApiResponse<Category> = (response).data;
+
             return { items: replaceNullsWithEmptyStrings(json.items), metaData: json.metaData };
         },
         placeholderData: keepPreviousData
@@ -73,6 +72,7 @@ export function useDeleteCategory() {
 
 export function useDeleteCategoryList() {
     const queryClient = useQueryClient();
+
     return useMutation({
         mutationFn: async (idList: Array<number>) => {
             await axios.delete(`${getApiUrl()}category`, { data: idList });

@@ -26,7 +26,7 @@ export const Login = (props: LoginProps) => {
         const loginData: LoginType = { username: username, password: password };
         const authInfo = await loginUser(loginData);
 
-        if (authInfo) {
+        if (authInfo && !authInfo.isError) {
             const token = authInfo.token;
             const refreshToken = authInfo.refreshToken;
             const userInfo = authInfo.userInfo;

@@ -8,14 +8,14 @@ import { Book as BookEntity } from "types/book";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import RefreshIcon from '@mui/icons-material/Refresh';
-import { EditStatus } from "types/shared";
+import { TableEditStatus } from "types/shared";
 import CategorySelection from "components/Category/CategorySelection";
 import { Close, EmojiEvents } from "@mui/icons-material";
 import * as hooks from "data/bookHooks";
 import { bookTableDefaultPageSize } from "config/book";
 import {
     bookValidationSchema, calculateAndformatDateTime, cutStringIfTooLong, getAllRowArrayForExport,
-    getCurrentDateForExportTitle, getSelectedRowArrayForExport
+    getCurrentDateForExportedFileTitle, getSelectedRowArrayForExport
 } from "utils/book";
 import { refreshToken } from "utils/auth";
 import styles from "./Book.module.scss"
@@ -177,16 +177,16 @@ export const Book = () => {
                 accessorKey: 'category.name',
                 header: 'Category',
                 Edit: ({ row, table }) => {
-                    let editStatus: EditStatus | undefined;
+                    let editStatus: TableEditStatus | undefined;
 
                     if (table.getState().editingRow) {
-                        editStatus = EditStatus.update;
+                        editStatus = TableEditStatus.update;
                     }
                     else if (table.getState().creatingRow) {
-                        editStatus = EditStatus.insert;
+                        editStatus = TableEditStatus.insert;
                     }
 
-                    const originalBookCategory = editStatus === EditStatus.update ? row.original.category?.id.toString() : '0';
+                    const originalBookCategory = editStatus === TableEditStatus.update ? row.original.category?.id.toString() : '0';
 
                     return <CategorySelection onSelectCategory={onSelectCategory} selectedCategory={originalBookCategory} inputData={categoryItems} />;
                 },
@@ -334,11 +334,11 @@ export const Book = () => {
             body: tableData,
         });
 
-        doc.save(`BookCatalog_${getCurrentDateForExportTitle()}.pdf`);
+        doc.save(`BookCatalog_${getCurrentDateForExportedFileTitle()}.pdf`);
     };
 
     const exportAllToPDF = async () => {
-        const allBooks = await hooks.useGetAllBooks();
+        const allBooks = await hooks.getAllBooks();
         const doc = new jsPDF('l');
         const tableData = allBooks.map((row) => getAllRowArrayForExport(row));
         const tableHeaders = [['Title'], ['Author'], ['Category']];
@@ -348,7 +348,7 @@ export const Book = () => {
             body: tableData,
         });
 
-        doc.save(`BookCatalog_${getCurrentDateForExportTitle()}.pdf`);
+        doc.save(`BookCatalog_${getCurrentDateForExportedFileTitle()}.pdf`);
     };
 
     const getTableToolbarAlertProps = () => {

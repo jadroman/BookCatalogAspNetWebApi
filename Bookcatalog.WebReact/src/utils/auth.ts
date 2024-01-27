@@ -23,9 +23,7 @@ axios.interceptors.response.use(response => {
 }, async error => {
     if (error.response?.status === 401) {
         if (!localStorage.getItem("refreshingTokenRequested")) {
-
             localStorage.setItem("refreshingTokenRequested", 'true');
-
             const tokenRefreshSuccessful = await refreshToken();
 
             if (!tokenRefreshSuccessful) {
@@ -33,7 +31,6 @@ axios.interceptors.response.use(response => {
                 localStorage.removeItem("bookCatalogRefreshToken");
                 localStorage.removeItem("bookCatalogUserName");
                 localStorage.removeItem("refreshingTokenRequested");
-
                 window.location.hash = '/login'
             }
         }
@@ -72,5 +69,5 @@ export const refreshToken = async () => {
 }
 
 export const isUserAuthenicated = (): boolean => {
-    return localStorage.getItem("bookCatalogToken") !== '' && localStorage.getItem("bookCatalogToken") !== null;
+    return localStorage.getItem("bookCatalogToken") !== null && localStorage.getItem("bookCatalogToken") !== '';
 }

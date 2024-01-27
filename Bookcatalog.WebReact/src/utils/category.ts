@@ -1,8 +1,7 @@
 import { getApiUrl } from "config/url";
 import { MRT_ColumnFiltersState, MRT_PaginationState, MRT_SortingState } from "material-react-table";
-import { Book } from "types/book";
 import { Category } from "types/category";
-import { number, object, string } from "yup";
+import { object, string } from "yup";
 
 /**
     Prevents MaterialReactTable warnings if there are 'null' results
@@ -18,11 +17,7 @@ export function replaceNullsWithEmptyStrings(categoryItems: Array<Category>): Ar
 }
 
 /**
- *  e.g. 'api/book?PageNumber=0&pageSize=10&title=long&author=nick&OrderBy=author+asc'
- * @param columnFilters 
- * @param pagination 
- * @param sorting 
- * @returns 
+ *  Generates url, e.g. 'api/category?PageNumber=0&pageSize=10&title=long&author=nick&OrderBy=author+asc'
  */
 export function setSearchParams(columnFilters: MRT_ColumnFiltersState, pagination: MRT_PaginationState,
     sorting: MRT_SortingState): URL {
@@ -30,8 +25,6 @@ export function setSearchParams(columnFilters: MRT_ColumnFiltersState, paginatio
     const getCategoriesUrl = new URL(
         'category', getApiUrl(),
     );
-
-    // URL e.g. api/book?PageNumber=0&pageSize=10&title=long&author=nick&globalFilter=&OrderBy=author+asc
 
     getCategoriesUrl.searchParams.set('pageNumber', `${pagination.pageIndex}`);
     getCategoriesUrl.searchParams.set('pageSize', `${pagination.pageSize}`);
@@ -52,8 +45,6 @@ export function setSearchParams(columnFilters: MRT_ColumnFiltersState, paginatio
     return getCategoriesUrl;
 }
 
-
-// TODO: extract values
 export const categoryValidationSchema = object({
     name: string().required('Name is required.').max(47, 'Name maximum length limit is 47')
 });

@@ -14,37 +14,33 @@ export function useGetBooks(columnFilters: MRT_ColumnFiltersState, globalFilter:
     const query = useQuery<ApiData<Book>>({
         queryKey: [
             'bookData',
-            columnFilters, //refetch when columnFilters changes
-            globalFilter, //refetch when globalFilter changes
-            pagination.pageIndex, //refetch when pagination.pageIndex changes
-            pagination.pageSize, //refetch when pagination.pageSize changes
-            sorting, //refetch when sorting changes
+            columnFilters,
+            globalFilter,
+            pagination.pageIndex,
+            pagination.pageSize,
+            sorting,
         ],
         queryFn: async (): Promise<ApiData<Book>> => {
             const getBooksUrl = setSearchParams(columnFilters, pagination, sorting);
-            //const response = await fetch(getBooksUrl.href);
-
             const response = await axios.get(getBooksUrl.href);
-
             const json: ApiResponse<Book> = (response).data;
+
             return { items: replaceNullsWithEmptyStrings(json.items), metaData: json.metaData };
         },
         placeholderData: keepPreviousData
     });
 
-
     return query;
 }
 
-
-export async function useGetAllBooks() {
+export async function getAllBooks() {
     const getBooksUrl = new URL(
-        'book\\all', getApiUrl(),
+        'book/all', getApiUrl(),
     );
 
     const response = await axios.get(getBooksUrl.href);
-
     const json: Array<Book> = (response).data;
+
     return json;
 }
 
@@ -60,10 +56,9 @@ export function useGetCategories() {
             );
 
             getCategoriesUrl.searchParams.set('pageSize', categoryItemsDefaultPageSize);
-
             const response = await axios.get(getCategoriesUrl.href);
-
             const json: ApiResponse<Category> = (response).data;
+
             return json.items;
         }
     });
@@ -71,6 +66,7 @@ export function useGetCategories() {
 
 export function useCreateBook() {
     const queryClient = useQueryClient();
+
     return useMutation({
         mutationFn: async (book: Book) => {
             await axios.post(`${getApiUrl()}book`, book);
@@ -83,6 +79,7 @@ export function useCreateBook() {
 
 export function useUpdateBook() {
     const queryClient = useQueryClient();
+
     return useMutation({
         mutationFn: async (book: Book) => {
             await axios.put(`${getApiUrl()}book/${book.id}`, book);
@@ -95,6 +92,7 @@ export function useUpdateBook() {
 
 export function useDeleteBook() {
     const queryClient = useQueryClient();
+
     return useMutation({
         mutationFn: async (id: number) => {
             await axios.delete(`${getApiUrl()}book/${id}`);
@@ -107,6 +105,7 @@ export function useDeleteBook() {
 
 export function useDeleteBookList() {
     const queryClient = useQueryClient();
+
     return useMutation({
         mutationFn: async (idList: Array<number>) => {
             await axios.delete(`${getApiUrl()}book`, { data: idList });
