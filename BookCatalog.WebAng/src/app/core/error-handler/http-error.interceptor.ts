@@ -10,7 +10,7 @@ export class HttpErrorInterceptor implements HttpInterceptor {
   constructor(
     private infoDialogService: DialogInfoService,
     private loadingDialogService: DialogLoadingService
-  ) {}
+  ) { }
 
   intercept(
     request: HttpRequest<any>,
@@ -19,14 +19,13 @@ export class HttpErrorInterceptor implements HttpInterceptor {
     this.loadingDialogService.openDialog();
     return next.handle(request).pipe(
       catchError((error: HttpErrorResponse) => {
-        let errMsg:string = 'Unexpected error occurred, sorry for the inconvenience.';
-        
-        if(error.status >= 400 && error.status < 500){
-          errMsg = error.error;
+        let errMsg: string = 'Unexpected error occurred, sorry for the inconvenience.';
+
+        if (error.status === 401) {
+          errMsg = error.error.errorMessage;
         }
 
         this.infoDialogService.openDialog(errMsg);
-        // we could log the error to db via the api
         return throwError(error);
       }),
       finalize(() => {
