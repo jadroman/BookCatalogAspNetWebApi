@@ -4,14 +4,16 @@ using BookCatalog.DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BookCatalog.DAL.Migrations
 {
     [DbContext(typeof(BookCatalogContext))]
-    partial class BookCatalogContextModelSnapshot : ModelSnapshot
+    [Migration("20240130093137_RefreshTokenExpiryTimeAllowNull")]
+    partial class RefreshTokenExpiryTimeAllowNull
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
