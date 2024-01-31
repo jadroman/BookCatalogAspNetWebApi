@@ -1,4 +1,5 @@
-﻿using BookCatalog.Common.BindingModels.Category;
+﻿using BookCatalog.Common.BindingModels;
+using BookCatalog.Common.BindingModels.Category;
 using BookCatalog.Common.Helpers;
 using BookCatalog.Common.Interfaces;
 using BookCatalog.Domain.Services;
@@ -64,7 +65,7 @@ namespace BookCatalog.API.Controllers
             return CreatedAtRoute("CategoryById", new { id = category.Id }, category);
         }
 
-        [HttpPut("{id:int}")]
+        [HttpPost("{id:int}")]
         public async Task<IActionResult> UpdateCategory([FromRoute] int id, [FromBody] CategoryEditBindingModel category)
         {
             if (category == null)
@@ -82,10 +83,10 @@ namespace BookCatalog.API.Controllers
             return NoContent();
         }
 
-        [HttpDelete("{id:int}")]
-        public async Task<IActionResult> DeleteCategory([FromRoute] int id)
+        [HttpPost("Delete")]
+        public async Task<IActionResult> DeleteCategory([FromBody] DeleteBindingModel category)
         {
-            var deleteResult = await _categoryService.DeleteCategory(id);
+            var deleteResult = await _categoryService.DeleteCategory(category.Id);
 
             if (!deleteResult.IsSuccessful && deleteResult.Type == ResultType.Invalid)
                 return BadRequest(deleteResult.Error);
@@ -93,10 +94,10 @@ namespace BookCatalog.API.Controllers
             return NoContent();
         }
 
-        [HttpDelete()]
-        public async Task<IActionResult> DeleteCategoryList([FromBody] IEnumerable<int> idList)
+        [HttpPost("DeleteList")]
+        public async Task<IActionResult> DeleteCategoryList([FromBody] DeleteListBindingModel categories)
         {
-            await _categoryService.DeleteCategoryList(idList);
+            await _categoryService.DeleteCategoryList(categories.IdList);
 
             return NoContent();
         }

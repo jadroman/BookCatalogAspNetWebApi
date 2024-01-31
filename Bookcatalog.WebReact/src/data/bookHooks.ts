@@ -82,7 +82,7 @@ export function useUpdateBook() {
 
     return useMutation({
         mutationFn: async (book: Book) => {
-            await axios.put(`${getApiUrl()}book/${book.id}`, book);
+            await axios.post(`${getApiUrl()}book/${book.id}`, book);
         },
         onSettled: () => {
             queryClient.invalidateQueries({ queryKey: ['bookData'] })
@@ -95,7 +95,7 @@ export function useDeleteBook() {
 
     return useMutation({
         mutationFn: async (id: number) => {
-            await axios.delete(`${getApiUrl()}book/${id}`);
+            await axios.post(`${getApiUrl()}book/Delete`, { id });
         },
         onSettled: () => {
             queryClient.invalidateQueries({ queryKey: ['bookData'] })
@@ -108,7 +108,7 @@ export function useDeleteBookList() {
 
     return useMutation({
         mutationFn: async (idList: Array<number>) => {
-            await axios.delete(`${getApiUrl()}book`, { data: idList });
+            await axios.post(`${getApiUrl()}book/DeleteList`, { idList });
         },
         onSettled: () => {
             queryClient.invalidateQueries({ queryKey: ['bookData'] })

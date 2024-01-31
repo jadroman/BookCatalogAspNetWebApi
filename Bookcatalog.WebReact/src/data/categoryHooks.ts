@@ -49,7 +49,7 @@ export function useUpdateCategory() {
 
     return useMutation({
         mutationFn: async (category: Category) => {
-            await axios.put(`${getApiUrl()}category/${category.id}`, category);
+            await axios.post(`${getApiUrl()}category/${category.id}`, category);
         },
         onSettled: () => {
             queryClient.invalidateQueries({ queryKey: ['categoryData'] })
@@ -62,7 +62,7 @@ export function useDeleteCategory() {
 
     return useMutation({
         mutationFn: async (id: number) => {
-            await axios.delete(`${getApiUrl()}category/${id}`);
+            await axios.post(`${getApiUrl()}category/Delete`, { id });
         },
         onSettled: () => {
             queryClient.invalidateQueries({ queryKey: ['categoryData'] })
@@ -75,7 +75,7 @@ export function useDeleteCategoryList() {
 
     return useMutation({
         mutationFn: async (idList: Array<number>) => {
-            await axios.delete(`${getApiUrl()}category`, { data: idList });
+            await axios.post(`${getApiUrl()}category/DeleteList`, { idList });
         },
         onSettled: () => {
             queryClient.invalidateQueries({ queryKey: ['categoryData'] })

@@ -1,4 +1,5 @@
-﻿using BookCatalog.Common.BindingModels.Book;
+﻿using BookCatalog.Common.BindingModels;
+using BookCatalog.Common.BindingModels.Book;
 using BookCatalog.Common.Helpers;
 using BookCatalog.Common.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -71,7 +72,7 @@ namespace BookCatalog.API.Controllers
             return CreatedAtRoute("BookById", new { id = book.Id }, book);
         }
 
-        [HttpPut("{id:int}")]
+        [HttpPost("{id:int}")]
         public async Task<IActionResult> UpdateBook([FromRoute] int id, [FromBody] BookEditBindingModel book)
         {
             if (book == null)
@@ -89,18 +90,18 @@ namespace BookCatalog.API.Controllers
             return NoContent();
         }
 
-        [HttpDelete("{id:int}")]
-        public async Task<IActionResult> DeleteBook([FromRoute] int id)
+        [HttpPost("Delete")]
+        public async Task<IActionResult> DeleteBook([FromBody] DeleteBindingModel book)
         {
-            await _bookService.DeleteBook(id);
+            await _bookService.DeleteBook(book.Id);
 
             return NoContent();
         }
 
-        [HttpDelete()]
-        public async Task<IActionResult> DeleteBookList([FromBody] IEnumerable<int> idList)
+        [HttpPost("DeleteList")]
+        public async Task<IActionResult> DeleteBookList([FromBody] DeleteListBindingModel books)
         {
-            await _bookService.DeleteBookList(idList);
+            await _bookService.DeleteBookList(books.IdList);
 
             return NoContent();
         }
