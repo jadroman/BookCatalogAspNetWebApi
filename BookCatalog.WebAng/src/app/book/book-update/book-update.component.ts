@@ -18,53 +18,53 @@ export class BookUpdateComponent implements OnInit {
 
   constructor(private repository: RepositoryService, private router: Router,
     private activeRoute: ActivatedRoute) { }
-    
-    ngOnInit() {
-      this.getBookById();
-    }
-    
-    private getBookById = () => {
-      let bookId: string = this.activeRoute.snapshot.params['id'];
-        
-      let bookByIdUrl: string = `api/book/${bookId}`;
-    
-      this.repository.getData(bookByIdUrl)
-        .subscribe(res => {
-          this.book = res.body as Book;
-          this.getCategories();
-        })
-    }
 
-    
-    private getCategories = () => {
-      let categoryByUrl: string = `api/category`;
-    
-      this.repository.getData(categoryByUrl)
-        .subscribe(res => {
-          this.categories = res.body.items as Category[];
-        })
-    }
-        
-    public redirectToBookList = () => {
-      this.router.navigate(['/book/list']);
-    }
-    
-    public executeBookUpdate = (bookFormValue: BookForCommit) => {
-      this.book!.title = bookFormValue.title;
-      this.book!.author = bookFormValue.author;
-      this.book!.note = bookFormValue.note;
-      this.book!.publisher = bookFormValue.publisher;
-      this.book!.read = bookFormValue.read;
-      this.book!.year = bookFormValue.year;
-      this.book!.collection = bookFormValue.collection;
-      this.book!.categoryId = bookFormValue.categoryId;
-    
-      let apiUrl = `api/book/${this.book?.id}`;
-      this.repository.update(apiUrl, this.book)
-        .subscribe(() => {
-          this.redirectToBookList();
-        }
+  ngOnInit() {
+    this.getBookById();
+  }
+
+  private getBookById = () => {
+    let bookId: string = this.activeRoute.snapshot.params['id'];
+
+    let bookByIdUrl: string = `api/book/${bookId}`;
+
+    this.repository.getData(bookByIdUrl)
+      .subscribe(res => {
+        this.book = res.body as Book;
+        this.getCategories();
+      })
+  }
+
+
+  private getCategories = () => {
+    let categoryByUrl: string = `api/category`;
+
+    this.repository.getData(categoryByUrl)
+      .subscribe(res => {
+        this.categories = res.body.items as Category[];
+      })
+  }
+
+  public redirectToBookList = () => {
+    this.router.navigate(['/book/list']);
+  }
+
+  public executeBookUpdate = (bookFormValue: BookForCommit) => {
+    this.book!.title = bookFormValue.title;
+    this.book!.author = bookFormValue.author;
+    this.book!.note = bookFormValue.note;
+    this.book!.publisher = bookFormValue.publisher;
+    this.book!.read = bookFormValue.read;
+    this.book!.year = bookFormValue.year;
+    this.book!.collection = bookFormValue.collection;
+    this.book!.categoryId = bookFormValue.categoryId;
+
+    let apiUrl = `api/book/${this.book?.id}`;
+    this.repository.update(apiUrl, this.book)
+      .subscribe(() => {
+        this.redirectToBookList();
+      }
       )
-    }
+  }
 
 }

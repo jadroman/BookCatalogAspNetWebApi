@@ -11,32 +11,32 @@ import { RepositoryService } from 'src/app/shared/services/repository.service';
 export class BookDeleteComponent implements OnInit {
 
   public book!: Book;
-  
-constructor(private repository: RepositoryService, private router: Router,
-  private activeRoute: ActivatedRoute) { }
+
+  constructor(private repository: RepositoryService, private router: Router,
+    private activeRoute: ActivatedRoute) { }
 
   ngOnInit() {
     this.getCategoryById();
   }
-  
+
   private getCategoryById = () => {
     const bookId: string = this.activeRoute.snapshot.params['id'];
     const bookByIdUrl: string = `api/book/${bookId}`;
-  
+
     this.repository.getData(bookByIdUrl)
       .subscribe(res => {
         this.book = res.body as Book;
       })
   }
-  
+
   public redirectToBookList = () => {
     this.router.navigate(['/book/list']);
   }
-  
+
   public deleteBook = () => {
-    const deleteUrl: string = `api/book/${this.book.id}`;
-    
-    this.repository.delete(deleteUrl)
+    const deleteUrl: string = `api/book/Delete`;
+
+    this.repository.delete(deleteUrl, { id: this.book.id })
       .subscribe(res => {
         this.redirectToBookList();
       })

@@ -11,32 +11,32 @@ import { RepositoryService } from 'src/app/shared/services/repository.service';
 export class CategoryDeleteComponent implements OnInit {
 
   public category!: Category;
-  
-constructor(private repository: RepositoryService, private router: Router,
-  private activeRoute: ActivatedRoute) { }
+
+  constructor(private repository: RepositoryService, private router: Router,
+    private activeRoute: ActivatedRoute) { }
 
   ngOnInit() {
     this.getCategoryById();
   }
-  
+
   private getCategoryById = () => {
     const categoryId: string = this.activeRoute.snapshot.params['id'];
     const categoryByIdUrl: string = `api/category/${categoryId}`;
-  
+
     this.repository.getData(categoryByIdUrl)
       .subscribe(res => {
         this.category = res.body as Category;
       })
   }
-  
+
   public redirectToCategoryList = () => {
     this.router.navigate(['/category/list']);
   }
-  
+
   public deleteCategory = () => {
-    const deleteUrl: string = `api/category/${this.category.id}`;
-    
-    this.repository.delete(deleteUrl)
+    const deleteUrl: string = `api/category/Delete`;
+
+    this.repository.delete(deleteUrl, { id: this.category.id })
       .subscribe(res => {
         this.redirectToCategoryList();
       })
