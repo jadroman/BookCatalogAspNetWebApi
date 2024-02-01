@@ -63,16 +63,15 @@ namespace BookCatalog.WebBlz.Services
             var bodyContent = new StringContent(content, Encoding.UTF8, "application/json");
             var url = Path.Combine("category", category.Id.ToString());
 
-            var putResult = await _client.PutAsync(url, bodyContent);
-            await putResult.Content.ReadAsStringAsync();
+            var postResult = await _client.PostAsync(url, bodyContent);
+            await postResult.Content.ReadAsStringAsync();
         }
 
         public async Task DeleteCategory(int id)
         {
-            var url = Path.Combine("category", id.ToString());
+            var bodyContent = new StringContent("{ id: " + id.ToString() + " }", Encoding.UTF8, "application/json");
 
-            var deleteResult = await _client.DeleteAsync(url);
-            await deleteResult.Content.ReadAsStringAsync();
+            await _client.PostAsync("category/Delete", bodyContent);
         }
     }
 }

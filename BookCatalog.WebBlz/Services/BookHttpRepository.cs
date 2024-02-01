@@ -63,14 +63,14 @@ namespace BookCatalog.WebBlz.Services
             var bodyContent = new StringContent(content, Encoding.UTF8, "application/json");
             var url = Path.Combine("book", book.Id.ToString());
 
-            await _client.PutAsync(url, bodyContent);
+            await _client.PostAsync(url, bodyContent);
         }
 
         public async Task DeleteBook(int id)
         {
-            var url = Path.Combine("book", id.ToString());
+            var bodyContent = new StringContent("{ id: " + id.ToString() + " }", Encoding.UTF8, "application/json");
 
-            await _client.DeleteAsync(url);
+            await _client.PostAsync("book/Delete", bodyContent);
         }
 
         public async Task<PagedBindingEntity<CategoryBindingModel>> GetCategories()
