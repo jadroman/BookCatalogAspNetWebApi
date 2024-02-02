@@ -1,7 +1,6 @@
 ﻿using BookCatalog.Common.BindingModels.Category;
 using BookCatalog.Common.Helpers;
 using BookCatalog.Common.Interfaces;
-using BookCatalog.Domain.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;

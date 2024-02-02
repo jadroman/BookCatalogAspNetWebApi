@@ -3,11 +3,11 @@ using BookCatalog.Common.BindingModels.Authentication;
 using BookCatalog.Common.BindingModels.Registration;
 using BookCatalog.Common.Entities;
 using BookCatalog.Common.Helpers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System;
-using System.Configuration;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Threading.Tasks;
@@ -79,10 +79,10 @@ namespace BookCatalog.API.Controllers
             var tokenOptions = _jwtHandler.GenerateTokenOptions(signingCredentials, claims);
             var token = new JwtSecurityTokenHandler().WriteToken(tokenOptions);
 
-
             return Ok(new AuthResponseBindingModel { IsAuthSuccessful = true, Token = token });
         }
 
+        [Authorize]
         [HttpPost("Registration")]
         public async Task<IActionResult> RegisterUser([FromBody] UserForRegistrationBindingModel userForRegistration)
         {
@@ -101,35 +101,5 @@ namespace BookCatalog.API.Controllers
 
             return StatusCode(201);
         }
-
-        //private SigningCredentials GetSigningCredentials()
-        //{
-        //    var key = Encoding.UTF8.GetBytes(_jwtSettings["securityKey"]);
-        //    var secret = new SymmetricSecurityKey(key);
-
-        //    return new SigningCredentials(secret, SecurityAlgorithms.HmacSha256);
-        //}
-
-        //private List<Claim> GetClaims(IdentityUser user)
-        //{
-        //    var claims = new List<Claim>
-        //    {
-        //        new Claim(ClaimTypes.Name, user.Email)
-        //    };
-
-        //    return claims;
-        //}
-
-        //private JwtSecurityToken GenerateTokenOptions(SigningCredentials signingCredentials, List<Claim> claims)
-        //{
-        //    var tokenOptions = new JwtSecurityToken(
-        //        issuer: _jwtSettings["validIssuer"],
-        //        audience: _jwtSettings["validAudience"],
-        //        claims: claims,
-        //        expires: DateTime.Now.AddMinutes(Convert.ToDouble(_jwtSettings["expiryInMinutes"])),
-        //        signingCredentials: signingCredentials);
-
-        //    return tokenOptions;
-        //}
     }
 }
