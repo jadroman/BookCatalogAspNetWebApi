@@ -1,7 +1,13 @@
 ﻿using BookCatalog.Common.Entities;
+using BookCatalog.Common.Helpers;
 using BookCatalog.Common.Interfaces;
+using LinqKit;
+using Microsoft.Data.SqlClient;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace BookCatalog.DAL
@@ -17,24 +23,46 @@ namespace BookCatalog.DAL
 
         public IQueryable<Book> GetBooks()
         {
-            return _context.Books.AsNoTracking(); 
+            return _context.Books.Include(b => b.Category).AsNoTracking(); 
         }
 
-        public IQueryable<Book> GetBooksByTitle(string bookTitle)
+        public IQueryable<Book> GetFilteredBooks(BookParameters bookParameters)
         {
-            return _context.Books.Where(o => o.Title.ToLower().Contains(bookTitle)).AsNoTracking();
-        }
+            var predicate = PredicateBuilder.New<Book>();
 
-        public IQueryable<Book> GetBooksByAuthor(string bookAuthor)
-        {
-            return _context.Books.Where(o => o.Author.ToLower().Contains(bookAuthor)).AsNoTracking();
-        }
+            if (!string.IsNullOrWhiteSpace(bookParameters.Title))
+            {
+                predicate = predicate.And(p => p.Title.Contains(bookParameters.Title));
+            }
 
-        public IQueryable<Book> GetBooksByNote(string bookNote)
-        {
-            return _context.Books.Where(o => o.Note.ToLower().Contains(bookNote)).AsNoTracking();
-        }
+            if (!string.IsNullOrWhiteSpace(bookParameters.Author))
+            {
+                predicate = predicate.And(p => p.Author.Contains(bookParameters.Author));
+            }
 
+            if (!string.IsNullOrWhiteSpace(bookParameters.Note))
+            {
+                predicate = predicate.And(p => p.Note.Contains(bookParameters.Note));
+            }
+
+            if (!string.IsNullOrWhiteSpace(bookParameters.Category))
+            {
+                predicate = predicate.And(p => p.Category.Name.Contains(bookParameters.Category));
+            }
+
+            if (!string.IsNullOrWhiteSpace(bookParameters.Collection))
+            {
+                predicate = predicate.And(p => p.Collection.Contains(bookParameters.Collection));
+            }
+
+            if (!string.IsNullOrWhiteSpace(bookParameters.Publisher))
+            {
+                predicate = predicate.And(p => p.Publisher.Contains(bookParameters.Publisher));
+            }
+
+            return _context.Books.Include(b => b.Category).Where(predicate).AsNoTracking();
+        }
+            
         public async Task<Book> GetBookById(int id, bool trackEntity = false)
         {
             Book book;
@@ -54,6 +82,12 @@ namespace BookCatalog.DAL
             return book;
         }
 
+        public IQueryable<Book> GetBookListByIds(IEnumerable<int> idList)
+        {
+            return _context.Books.Where(b => idList.Contains(b.Id));
+
+        }
+
         public async Task<int> UpdateBook()
         {
             return await _context.SaveChangesAsync();
@@ -68,6 +102,17 @@ namespace BookCatalog.DAL
         public async Task<int> DeleteBook(Book book)
         {
             _context.Books.Remove(book);
+            return await _context.SaveChangesAsync();
+        }
+
+        public async Task<int> DeleteBookList(IEnumerable<Book> bookList)
+        {
+
+            foreach (var book in bookList)
+            {
+                _context.Books.Remove(book);
+            }
+            
             return await _context.SaveChangesAsync();
         }
     }

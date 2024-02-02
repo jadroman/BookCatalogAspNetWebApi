@@ -11,6 +11,7 @@ using System.Text;
 using AutoMapper;
 using BookCatalog.Common.BindingModels;
 using BookCatalog.Common.BindingModels.Book;
+using Microsoft.EntityFrameworkCore;
 
 namespace BookCatalog.Domain.Services
 {
@@ -34,8 +35,8 @@ namespace BookCatalog.Domain.Services
         {
             var books = _bookRepo.GetBooks();
 
-            // 1. Search for specific
-            Search(ref books, bookParameters);
+            // 1. Filter books by params
+            Filter(ref books, bookParameters);
 
             // 2. Sort by params
             Sort(ref books, bookParameters.OrderBy);
@@ -52,20 +53,28 @@ namespace BookCatalog.Domain.Services
             return bookResult;
         }
 
+        public async Task<IEnumerable<BookBindingModel>> GetAllBooks()
+        {
+            var books = _bookRepo.GetBooks().OrderBy(b=> b.Category.Name).ThenBy(b=> b.Title);
+            var bookList = await books.ToListAsync();
 
-        private void Search<T>(ref IQueryable<T> books, BookParameters bookParameters)
+            return _mapper.Map<List<BookBindingModel>>(bookList);
+        }
+
+        private void Filter<T>(ref IQueryable<T> books, BookParameters bookParameters)
         {
             if (!books.Any())
                 return;
 
-            if (!string.IsNullOrWhiteSpace(bookParameters.Title))
-                books = (IQueryable<T>)_bookRepo.GetBooksByTitle(bookParameters.Title.Trim().ToLower());
-
-            if (!string.IsNullOrWhiteSpace(bookParameters.Author))
-                books = (IQueryable<T>)_bookRepo.GetBooksByAuthor(bookParameters.Author.Trim().ToLower());
-
-            if (!string.IsNullOrWhiteSpace(bookParameters.Note))
-                books = (IQueryable<T>)_bookRepo.GetBooksByNote(bookParameters.Note.Trim().ToLower());
+            if (!string.IsNullOrWhiteSpace(bookParameters.Title) ||
+                !string.IsNullOrWhiteSpace(bookParameters.Author) ||
+                   !string.IsNullOrWhiteSpace(bookParameters.Note) ||
+                      !string.IsNullOrWhiteSpace(bookParameters.Category) ||
+                         !string.IsNullOrWhiteSpace(bookParameters.Collection) ||
+                            !string.IsNullOrWhiteSpace(bookParameters.Publisher))
+            {
+                books = (IQueryable<T>)_bookRepo.GetFilteredBooks(bookParameters);
+            }
         }
 
         private void Sort<T>(ref IQueryable<T> entities, string orderByQueryString)
@@ -87,13 +96,20 @@ namespace BookCatalog.Domain.Services
                 if (string.IsNullOrWhiteSpace(param))
                     continue;
 
-                var propertyFromQueryName = param.Split(" ")[0];
-                var objectProperty = propertyInfos.FirstOrDefault(pi => pi.Name.Equals(propertyFromQueryName, StringComparison.InvariantCultureIgnoreCase));
+                var categoryNameProperty = "category.name";
+                var sortingOrder = param.EndsWith(" desc") ? "descending" : "ascending"; ;
+                var propertyFromQuery = param.Split(" ")[0];
+                var objectProperty = propertyInfos.FirstOrDefault(pi => pi.Name.Equals(propertyFromQuery, StringComparison.InvariantCultureIgnoreCase));
 
                 if (objectProperty == null)
-                    continue;
+                {
+                    if(propertyFromQuery.Equals(categoryNameProperty, StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        entityQueryBuilder.Append($"{propertyFromQuery} {sortingOrder}, ");
+                    }
 
-                var sortingOrder = param.EndsWith(" desc") ? "descending" : "ascending";
+                    continue;
+                }
 
                 entityQueryBuilder.Append($"{objectProperty.Name} {sortingOrder}, ");
             }
@@ -119,6 +135,7 @@ namespace BookCatalog.Domain.Services
         public async Task<int> UpdateBook(BookEditBindingModel book, int id)
         {
             var bookEntity = await _bookRepo.GetBookById(id, true);
+            bookEntity.TimeOfLastChange = DateTime.Now.ToUniversalTime();
             _mapper.Map(book, bookEntity);
 
             return await _bookRepo.UpdateBook();
@@ -127,6 +144,9 @@ namespace BookCatalog.Domain.Services
         public async Task<int> InsertBook(BookEditBindingModel book)
         {
             var bookEntity = _mapper.Map<Book>(book);
+            bookEntity.TimeOfCreation = DateTime.Now.ToUniversalTime();
+            bookEntity.TimeOfLastChange = DateTime.Now.ToUniversalTime();
+
             return await _bookRepo.InsertBook(bookEntity);
         }
 
@@ -135,6 +155,13 @@ namespace BookCatalog.Domain.Services
             var book = await _bookRepo.GetBookById(id);
 
             return new SuccessResult<int>(await _bookRepo.DeleteBook(book));
+        }
+
+        public async Task<Result<int>> DeleteBookList(IEnumerable<int> idList)
+        {
+            var bookList = _bookRepo.GetBookListByIds(idList);
+
+            return new SuccessResult<int>(await _bookRepo.DeleteBookList(bookList));
         }
     }
 }

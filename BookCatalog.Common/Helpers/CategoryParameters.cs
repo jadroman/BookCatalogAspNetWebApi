@@ -8,7 +8,6 @@ namespace BookCatalog.Common.Helpers
             OrderBy = "name";
         }
 
-        // search by
         public string Name { get; set; }
 
         public string OrderBy { get; set; }

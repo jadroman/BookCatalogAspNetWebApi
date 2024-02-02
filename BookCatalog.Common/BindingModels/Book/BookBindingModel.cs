@@ -18,5 +18,7 @@ namespace BookCatalog.Common.BindingModels.Book
         public bool Read { get; set; }
         public int? CategoryId { get; set; }
         public CategoryBindingModel Category { get; set; }
+        public DateTime? TimeOfCreation { get; set; }
+        public DateTime? TimeOfLastChange { get; set; }
     }
 }

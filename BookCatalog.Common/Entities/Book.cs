@@ -36,5 +36,7 @@ namespace BookCatalog.Common.Entities
         public int? CategoryId { get; set; }
 
         public Category? Category { get; set; }
+        public DateTime? TimeOfCreation { get; set; }
+        public DateTime? TimeOfLastChange { get; set; }
     }
 }

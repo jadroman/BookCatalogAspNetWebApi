@@ -8,7 +8,7 @@ namespace BookCatalog.Common.Helpers
 {
     public abstract class QueryStringParameters
     {
-        const int maxPageSize = 50;
+        const int maxPageSize = 200;
         public int PageNumber { get; set; } = 0;
 
         private int _pageSize = 10;

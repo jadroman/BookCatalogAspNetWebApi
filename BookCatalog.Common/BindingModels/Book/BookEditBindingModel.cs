@@ -35,8 +35,6 @@ namespace BookCatalog.Common.BindingModels.Book
         public string Read { get; set; }
 
         public int? CategoryId { get; set; }
-
-        public CategoryBindingModel Category { get; set; }
     }
 
 }

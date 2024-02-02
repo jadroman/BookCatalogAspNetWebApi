@@ -1,30 +1,41 @@
 ﻿using AutoMapper;
 using BookCatalog.Common.Entities;
 using BookCatalog.Common.Helpers;
-using BookCatalog.Common.Interfaces;
 using BookCatalog.DAL;
 using BookCatalog.Domain.Services;
-using MockQueryable.Moq;
-using Moq;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
+using Microsoft.Data.Sqlite;
+using System.Data.Common;
+using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace BookCatalog.Tests.Domain.Services
 {
-    public class BookServiceTest
+    /// <summary>
+    /// using SQLite in-memory db for unit tests
+    /// </summary>
+    public class BookServiceTest : IDisposable
     {
-        private readonly Mock<IBookCatalogContext> _dbContext;
-        private readonly IBookRepository _bookRepo;
         private readonly IMapper _mapper;
-
-        private readonly IBookService _sut;
+        private readonly DbConnection _connection;
+        private readonly DbContextOptions<BookCatalogContext> _contextOptions;
 
         public BookServiceTest()
         {
-            _dbContext = new Mock<IBookCatalogContext>();
-            _bookRepo = new BookRepository(_dbContext.Object);
+            // SQLite in-memory
+            _connection = new SqliteConnection("Filename=:memory:");
+            _connection.Open();
+
+            _contextOptions = new DbContextOptionsBuilder<BookCatalogContext>()
+                .UseSqlite(_connection)
+                .Options;
+
+            // Create the schema and seed some data
+            using var context = new BookCatalogContext(_contextOptions);
+            context.Database.EnsureCreated();
 
             var config = new MapperConfiguration(c =>
             {
@@ -32,8 +43,6 @@ namespace BookCatalog.Tests.Domain.Services
             });
 
             _mapper = config.CreateMapper();
-
-            _sut = new BookService(_bookRepo, _mapper);
 
             var books = new List<Book>
                 {
@@ -64,11 +73,11 @@ namespace BookCatalog.Tests.Domain.Services
                     }
                 };
 
-            var bookMock = books.AsQueryable().BuildMockDbSet();
-
-            _dbContext.Setup(repo => repo.Books)
-                .Returns(bookMock.Object);
+            context.AddRange(books);
+            context.SaveChanges();
         }
+
+        public void Dispose() => _connection.Dispose();
 
         [Theory]
         [InlineData("Title1", "Author1", 1, "Note1")]
@@ -87,7 +96,8 @@ namespace BookCatalog.Tests.Domain.Services
             };
 
             // Act
-            var result = await _sut.GetBooks(_bookParams);
+            var srv = new BookService(new BookRepository(new BookCatalogContext(_contextOptions)), _mapper);
+            var result = await srv.GetBooks(_bookParams);
 
             // Assert
             Assert.True(result.Items.Count() == 1);

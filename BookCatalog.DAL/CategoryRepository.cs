@@ -1,6 +1,8 @@
 ﻿using BookCatalog.Common.Entities;
+using BookCatalog.Common.Helpers;
 using BookCatalog.Common.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -17,7 +19,7 @@ namespace BookCatalog.DAL
 
         public IQueryable<Category> GetCategories()
         {
-            return _context.Categories.AsNoTracking(); 
+            return _context.Categories.AsNoTracking();
         }
 
         public IQueryable<Category> GetCategoriesByName(string categoryName)
@@ -68,6 +70,23 @@ namespace BookCatalog.DAL
         {
             _context.Categories.Remove(category);
             return await _context.SaveChangesAsync();
+        }
+
+        public async Task<int> DeleteCategoryList(IEnumerable<Category> categoryList)
+        {
+
+            foreach (var category in categoryList)
+            {
+                _context.Categories.Remove(category);
+            }
+
+            return await _context.SaveChangesAsync();
+        }
+
+        public IQueryable<Category> GetCategoryListByIds(IEnumerable<int> idList)
+        {
+            return _context.Categories.Where(c => idList.Contains(c.Id));
+
         }
     }
 }

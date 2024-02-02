@@ -35,8 +35,8 @@ namespace BookCatalog.Domain.Services
         {
             var categories = _categoryRepo.GetCategories();
 
-            // 1. Search for specific
-            Search(ref categories, categoryParameters);
+            // 1. Filter for specific
+            Filter(ref categories, categoryParameters);
 
             // 2. Sort by params
             Sort(ref categories, categoryParameters.OrderBy);
@@ -54,7 +54,7 @@ namespace BookCatalog.Domain.Services
         }
 
 
-        private void Search<T>(ref IQueryable<T> categories, CategoryParameters categoryParameters)
+        private void Filter<T>(ref IQueryable<T> categories, CategoryParameters categoryParameters)
         {
             if (!categories.Any())
                 return;
@@ -135,6 +135,13 @@ namespace BookCatalog.Domain.Services
             }
 
             return new SuccessResult<int>(await _categoryRepo.DeleteCategory(category));
+        }
+
+        public async Task<Result<int>> DeleteCategoryList(IEnumerable<int> idList)
+        {
+            var categoryList = _categoryRepo.GetCategoryListByIds(idList);
+
+            return new SuccessResult<int>(await _categoryRepo.DeleteCategoryList(categoryList));
         }
     }
 }

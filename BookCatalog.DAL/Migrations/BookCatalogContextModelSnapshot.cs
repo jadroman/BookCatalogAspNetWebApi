@@ -47,6 +47,12 @@ namespace BookCatalog.DAL.Migrations
                     b.Property<bool>("Read")
                         .HasColumnType("bit");
 
+                    b.Property<DateTime?>("TimeOfCreation")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("TimeOfLastChange")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasMaxLength(200)
@@ -126,6 +132,12 @@ namespace BookCatalog.DAL.Migrations
 
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
+
+                    b.Property<string>("RefreshToken")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("RefreshTokenExpiryTime")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");

@@ -1,0 +1,1 @@
+export const categoryTableDefaultPageSize: number = 10;
