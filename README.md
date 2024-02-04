@@ -75,9 +75,10 @@ How to run?
   * From VS run just single project "BookCatalog.API"
 
   - Go to the folder "Bookcatalog.WebReact" using cmder or powershell 
-  - run "npm install" to install the packages
-    - if "unable to resolve dependency tree" error arise, then run "npm install --force"
-  - run "npm start" to run the React app
+  - Run "npm install" to install the packages
+    - If "unable to resolve dependency tree" error arise, then run "npm install --force"
+  - If you didn't already done, open the database and execute the sql script from the folder "doc => updateDatabase.sql"
+  - Run "npm start" to run the React app
   - Username and password for the app should be in my cover letter or proposal
       
 
@@ -87,6 +88,7 @@ How to run?
   - Go to the folder "BookCatalog.WebAng" using cmder or powershell 
   - run "npm install" to install the packages
     - if "unable to resolve dependency tree" error arise, then run "npm install --force" 
+  - If you didn't already done, open the database and execute the sql script from the folder "doc => updateDatabase.sql"
   - run "ng serve -o" to run the Angular app
   - Username and password for the app should be in my cover letter or proposal
 
