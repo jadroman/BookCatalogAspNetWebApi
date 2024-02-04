@@ -90,6 +90,7 @@ How to run?
     - if "unable to resolve dependency tree" error arise, then run "npm install --force" 
   - If you didn't already done, open the database and execute the sql script from the folder "doc => updateDatabase.sql"
   - run "ng serve -o" to run the Angular app
+    - if "...digital envelope routines::unsupported" error arise, then run "set NODE_OPTIONS=--openssl-legacy-provider"
   - Username and password for the app should be in my cover letter or proposal
 
 
