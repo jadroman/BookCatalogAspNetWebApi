@@ -61,7 +61,7 @@ How to run?
 
 * To run the Blazor app:
 
-  * Left click on solution => "Set startup projects"
+  * Left click on solution => "Configure startup projects"
   * "Multiple startup projects" => "multiple startup projects"
   * Pick two projects: "BookCatalog.API" and "BookCatalog.WebBlz" => "OK"
   * "BookCatalog.WebBlz" proj => left click "libman.json" => "Restore client-side libraries"
