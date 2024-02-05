@@ -1,17 +1,12 @@
 using Blazored.LocalStorage;
 using BookCatalog.WebBlz.Auth;
-using BookCatalog.WebBlz.Helpers;
 using BookCatalog.WebBlz.Services;
 using BookCatalog.WebBlz.Services.Interfaces;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using Toolbelt.Blazor.Extensions.DependencyInjection;
 
