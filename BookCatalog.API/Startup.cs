@@ -1,6 +1,8 @@
 using AutoMapper;
+using AutoMapper.Internal;
 using BookCatalog.Common.Entities;
 using BookCatalog.DAL;
+using BookCatalogAPI;
 using BookCatalogAPI.Extensions;
 using Microsoft.AspNetCore.Authentication.Certificate;
 using Microsoft.AspNetCore.Builder;
@@ -34,7 +36,7 @@ namespace BookCatalog
             services.ConfigureCors(Configuration);
             services.ConfigureDbContext(Configuration);
             services.ConfigureServices();
-            services.AddAutoMapper(typeof(Startup));
+            services.AddAutoMapper(cfg => cfg.Internal().MethodMappingEnabled = false, typeof(MappingProfile).Assembly);
             services.AddControllers().AddNewtonsoftJson(options =>
                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
             );
