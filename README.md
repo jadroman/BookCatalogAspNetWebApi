@@ -8,13 +8,16 @@ What is this?
 -------------
 
 Very simple book catalog web application I created for the purpose of exercise. 
+One backend and three different frontend technologies of the same app (Book Catalog app).
 
-- Web API 
+- ASP.NET Web API
+- React client
 - Blazor client
 - Angular client
 
 Live test versions:
 
+- React: https://bookcatalogreactstaging.jadro.space/
 - Blazor: https://bookcatalogblzstaging.jadro.space/
 - Angular: https://bookcatalogangstaging.jadro.space/
 
@@ -22,7 +25,7 @@ Live test versions:
 
 
 
-![screenshot](doc/blazorAppScreenshot.png "app screenshot")
+![screenshot](doc/reactAppScreenshot.png "app screenshot")
 
 
 
@@ -41,6 +44,9 @@ What is utilized?
 * Xunit
 * Http interceptors
 * Angular material
+* @tanstack/react-query
+* @mui/material
+* material-react-table
 
 
 
@@ -55,7 +61,7 @@ How to run?
 
 * To run the Blazor app:
 
-  * Left click on solution => "Set startup projects"
+  * Left click on solution => "Configure startup projects"
   * "Multiple startup projects" => "multiple startup projects"
   * Pick two projects: "BookCatalog.API" and "BookCatalog.WebBlz" => "OK"
   * "BookCatalog.WebBlz" proj => left click "libman.json" => "Restore client-side libraries"
@@ -64,14 +70,27 @@ How to run?
   * Open the database and execute the sql script from the folder "doc => updateDatabase.sql"
   * Username and password for the app should be in my cover letter or proposal
 
-  
+
+* To run the React app:
+  * From VS run just single project "BookCatalog.API"
+
+  - Go to the folder "Bookcatalog.WebReact" using cmder or powershell 
+  - Run "npm install" to install the packages
+    - <strong>If "unable to resolve dependency tree" error arise, then run "npm install --force"</strong>
+  - If you didn't already done, open the database and execute the sql script from the folder "doc => updateDatabase.sql"
+  - Run "npm start" to run the React app
+  - Username and password for the app should be in my cover letter or proposal
+      
 
 * To run the Angular app:
   * From VS run just single project "BookCatalog.API"
 
   - Go to the folder "BookCatalog.WebAng" using cmder or powershell 
   - run "npm install" to install the packages
+    - <strong>if "unable to resolve dependency tree" error arise, then run "npm install --force"</strong>
+  - If you didn't already done, open the database and execute the sql script from the folder "doc => updateDatabase.sql"
   - run "ng serve -o" to run the Angular app
+    - <strong>if "...digital envelope routines::unsupported" error arise, then run "set NODE_OPTIONS=--openssl-legacy-provider"</strong>
   - Username and password for the app should be in my cover letter or proposal
 
 
