@@ -2,8 +2,9 @@ import { getApiUrl } from "config/url";
 import { MRT_ColumnFiltersState, MRT_PaginationState, MRT_Row, MRT_SortingState } from "material-react-table";
 import moment from "moment";
 import { Book } from "types/book";
-import { number, object, string } from "yup";
+import { object, string } from "yup";
 import { Book as BookEntity } from "types/book";
+import { minBookYear } from "config/book";
 
 /**
     Prevents MaterialReactTable warnings if there are 'null' results
@@ -109,9 +110,21 @@ export const bookValidationSchema = object({
     author: string().max(55, `Author maximum length limit is 55`),
     note: string().max(4000, `Note maximum length limit is 4000`),
     publisher: string().max(55, `Publisher maximum length limit is 55`),
-    collection: string().max(55, `Collection maximum length limit is 55`),
-    year: number().moreThan(0).lessThan(2050).integer('Year must be an integer between 0 and 2050')
+    collection: string().max(55, `Collection maximum length limit is 55`)
 });
+
+export const getYearsSelectArray = () => {
+    const currentYear = new Date().getFullYear();
+    let years = new Map<string, number>();
+
+    years.set('Not Available', 1);
+
+    for (let i = currentYear; i >= minBookYear; i--) {
+        years.set(i.toString(), i);
+    }
+
+    return Array.from(years, ([label, value]) => ({ label, value }));
+}
 
 /**  
  * On the backend we are useng UTC(Coordinated Universal Time).

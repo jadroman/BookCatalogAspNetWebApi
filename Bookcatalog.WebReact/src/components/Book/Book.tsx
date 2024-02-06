@@ -15,7 +15,7 @@ import * as hooks from "data/bookHooks";
 import { bookTableDefaultPageSize } from "config/book";
 import {
     bookValidationSchema, calculateAndformatDateTime, cutStringIfTooLong, getAllRowArrayForExport,
-    getCurrentDateForExportedFileTitle, getSelectedRowArrayForExport
+    getCurrentDateForExportedFileTitle, getSelectedRowArrayForExport, getYearsSelectArray
 } from "utils/book";
 import { refreshToken } from "utils/auth";
 import styles from "./Book.module.scss"
@@ -253,9 +253,11 @@ export const Book = () => {
                 enableColumnFilter: false,
                 enableColumnActions: false,
                 enableColumnOrdering: false,
+                editVariant: 'select',
+                editSelectOptions: getYearsSelectArray(),
                 enableSorting: true,
                 muiEditTextFieldProps: {
-                    type: 'number',
+                    select: true,
                     inputProps: { autoComplete: 'off' },
                     error: !!validationErrors?.year,
                     helperText: validationErrors?.year,
@@ -264,7 +266,8 @@ export const Book = () => {
                             ...validationErrors,
                             year: undefined,
                         }),
-                }
+                },
+                Cell: ({ cell }) => cell.getValue<number>() === 1 ? 'Not Available' : cell.getValue<number>()
             },
             {
                 accessorKey: 'read',
