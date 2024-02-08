@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Book } from 'src/app/interfaces/book/book.model';
 import { RepositoryService } from 'src/app/shared/services/repository.service';
 import { Router } from '@angular/router';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-book-list',
@@ -12,7 +12,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 export class BookListComponent implements OnInit {
 
   public books: Book[] = []; 
-  public searchForm!: FormGroup;
+  public searchForm!: UntypedFormGroup;
 
   currentIndex = -1;
   page = 1;
@@ -26,9 +26,9 @@ export class BookListComponent implements OnInit {
     private router: Router) { }
 
   ngOnInit(): void {
-    this.searchForm = new FormGroup({
-      searchTerm: new FormControl('', [Validators.maxLength(200)]),
-      searchBy:new FormControl('', [])
+    this.searchForm = new UntypedFormGroup({
+      searchTerm: new UntypedFormControl('', [Validators.maxLength(200)]),
+      searchBy:new UntypedFormControl('', [])
     });
 
     this.searchForm.patchValue({

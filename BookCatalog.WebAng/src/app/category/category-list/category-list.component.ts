@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Category } from 'src/app/interfaces/category/category.model';
 import { RepositoryService } from 'src/app/shared/services/repository.service';
@@ -11,7 +11,7 @@ import { RepositoryService } from 'src/app/shared/services/repository.service';
 })
 export class CategoryListComponent implements OnInit {
   public categories: Category[] = []; 
-  public searchForm!: FormGroup;
+  public searchForm!: UntypedFormGroup;
   currentIndex = -1;
   page = 1;
   count = 0;
@@ -23,9 +23,9 @@ export class CategoryListComponent implements OnInit {
     private router: Router) { }
 
   ngOnInit(): void {
-    this.searchForm = new FormGroup({
-      searchTerm: new FormControl('', [Validators.maxLength(200)]),
-      searchBy:new FormControl('', [])
+    this.searchForm = new UntypedFormGroup({
+      searchTerm: new UntypedFormControl('', [Validators.maxLength(200)]),
+      searchBy:new UntypedFormControl('', [])
     });
     
     this.searchForm.patchValue({

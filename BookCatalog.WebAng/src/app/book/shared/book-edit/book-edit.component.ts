@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { BookForCommit } from 'src/app/interfaces/book/book-for-commit.model';
 import { Category } from 'src/app/interfaces/category/category.model';
 
@@ -9,7 +9,7 @@ import { Category } from 'src/app/interfaces/category/category.model';
   styleUrls: ['./book-edit.component.css']
 })
 export class BookEditComponent implements OnInit, OnChanges {
-  public bookForm!: FormGroup;
+  public bookForm!: UntypedFormGroup;
 
   @Input() categories?:Category[];
   @Input() bookToUpdate?:BookForCommit;
@@ -19,15 +19,15 @@ export class BookEditComponent implements OnInit, OnChanges {
   constructor() { }
 
   ngOnInit(): void {
-    this.bookForm = new FormGroup({
-      title: new FormControl('', [Validators.required, Validators.maxLength(200)]),
-      author: new FormControl('', [Validators.maxLength(56)]),
-      year: new FormControl('', [Validators.max((new Date()).getFullYear())]),
-      publisher: new FormControl('', [Validators.maxLength(56)]),
-      collection: new FormControl('', [Validators.maxLength(56)]),
-      read: new FormControl('', []),
-      category: new FormControl('', []),
-      note: new FormControl('', [Validators.maxLength(1000)])
+    this.bookForm = new UntypedFormGroup({
+      title: new UntypedFormControl('', [Validators.required, Validators.maxLength(200)]),
+      author: new UntypedFormControl('', [Validators.maxLength(56)]),
+      year: new UntypedFormControl('', [Validators.max((new Date()).getFullYear())]),
+      publisher: new UntypedFormControl('', [Validators.maxLength(56)]),
+      collection: new UntypedFormControl('', [Validators.maxLength(56)]),
+      read: new UntypedFormControl('', []),
+      category: new UntypedFormControl('', []),
+      note: new UntypedFormControl('', [Validators.maxLength(1000)])
     });
 
     this.bookForm.patchValue({

@@ -110,5 +110,7 @@
       }
     }
   },
-  "defaultProject": "BookCatalog"
+  "cli": {
+    "analytics": false
+  }
 }

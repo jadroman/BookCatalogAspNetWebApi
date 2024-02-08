@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthResponse } from 'src/app/interfaces/response/authResponse.model';
 import { UserForAuthentication } from 'src/app/interfaces/user/userForAuthentication.model';
@@ -12,16 +12,16 @@ import { AuthenticationService } from 'src/app/shared/services/authentication.se
 })
 
 export class LoginComponent implements OnInit {
-  public loginForm!: FormGroup;
+  public loginForm!: UntypedFormGroup;
   private _returnUrl!: string;
 
   constructor(private _authService: AuthenticationService, private _router: Router, 
     private _route: ActivatedRoute) { }
 
   ngOnInit(): void {
-    this.loginForm = new FormGroup({
-      username: new FormControl("", [Validators.required]),
-      password: new FormControl("", [Validators.required])
+    this.loginForm = new UntypedFormGroup({
+      username: new UntypedFormControl("", [Validators.required]),
+      password: new UntypedFormControl("", [Validators.required])
     })
     this._returnUrl = this._route.snapshot.queryParams['returnUrl'] || '/';
   }

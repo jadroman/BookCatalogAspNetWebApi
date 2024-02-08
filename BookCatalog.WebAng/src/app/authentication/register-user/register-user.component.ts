@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UserForRegistration } from 'src/app/interfaces/user/userForRegistration.model';
 import { PasswordConfirmationValidatorService } from 'src/app/shared/custom-validators/password-confirmation-validator.service';
@@ -11,19 +11,19 @@ import { AuthenticationService } from 'src/app/shared/services/authentication.se
   styleUrls: ['./register-user.component.css']
 })
 export class RegisterUserComponent implements OnInit {
-  public registerForm!: FormGroup;  
+  public registerForm!: UntypedFormGroup;  
 
   constructor(private _authService: AuthenticationService, 
               private _passConfValidator: PasswordConfirmationValidatorService,
               private _router: Router) { }
 
   ngOnInit(): void {
-    this.registerForm = new FormGroup({
-      firstName: new FormControl('', [Validators.maxLength(56)]),
-      lastName: new FormControl('', [Validators.maxLength(56)]),
-      email: new FormControl('', [Validators.required, Validators.email]),
-      password: new FormControl('', [Validators.required, Validators.maxLength(56)]),
-      confirm: new FormControl('')
+    this.registerForm = new UntypedFormGroup({
+      firstName: new UntypedFormControl('', [Validators.maxLength(56)]),
+      lastName: new UntypedFormControl('', [Validators.maxLength(56)]),
+      email: new UntypedFormControl('', [Validators.required, Validators.email]),
+      password: new UntypedFormControl('', [Validators.required, Validators.maxLength(56)]),
+      confirm: new UntypedFormControl('')
     });
 
     this.registerForm.get('confirm')!.setValidators([Validators.required,

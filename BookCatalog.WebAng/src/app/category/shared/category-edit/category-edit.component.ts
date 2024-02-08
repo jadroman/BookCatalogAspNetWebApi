@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { CategoryForCommit } from 'src/app/interfaces/category/category-for-commit.model';
 
 @Component({
@@ -8,7 +8,7 @@ import { CategoryForCommit } from 'src/app/interfaces/category/category-for-comm
   styleUrls: ['./category-edit.component.css']
 })
 export class CategoryEditComponent implements OnInit, OnChanges {
-  public categoryForm!: FormGroup;
+  public categoryForm!: UntypedFormGroup;
 
   @Input() categToUpdate?:CategoryForCommit;
   @Output() commitCategoryRequest = new EventEmitter<CategoryForCommit>();
@@ -17,8 +17,8 @@ export class CategoryEditComponent implements OnInit, OnChanges {
   constructor() { }
 
   ngOnInit() {
-    this.categoryForm = new FormGroup({
-      name: new FormControl('', [Validators.required, Validators.maxLength(60)])
+    this.categoryForm = new UntypedFormGroup({
+      name: new UntypedFormControl('', [Validators.required, Validators.maxLength(60)])
     });
   }
 
