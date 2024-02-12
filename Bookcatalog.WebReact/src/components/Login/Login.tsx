@@ -6,9 +6,11 @@ import { loginValidationSchema } from "utils/login";
 import bookShelf from 'images/bookshelf.png';
 import { LoginProps } from "types/props";
 import { useState } from "react";
+import { Backdrop, CircularProgress } from '@mui/material';
 
 export const Login = (props: LoginProps) => {
     const [wrongUsernameOrPassword, setWrongUsernameOrPassword] = useState<boolean>(false);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const formik = useFormik({
         initialValues: {
@@ -22,9 +24,10 @@ export const Login = (props: LoginProps) => {
     });
 
     const handleSubmit = async (username: string, password: string) => {
-
+        setIsLoading(true);
         const loginData: LoginType = { username: username, password: password };
         const authInfo = await loginUser(loginData);
+        setIsLoading(false);
 
         if (authInfo && !authInfo.isError) {
             const token = authInfo.token;
@@ -47,9 +50,21 @@ export const Login = (props: LoginProps) => {
     const { mutateAsync: loginUser } =
         hooks.useLoginUser();
 
+    const showWaitProgress = () => {
+        return (
+            <Backdrop
+                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                open={isLoading}
+            >
+                <CircularProgress color="inherit" />
+            </Backdrop>
+        )
+    }
+
     return (
         <>
             <form onSubmit={formik.handleSubmit}>
+                {isLoading && showWaitProgress()}
                 <div className={styles.loginWrapper}>
                     <img
                         src={bookShelf}
