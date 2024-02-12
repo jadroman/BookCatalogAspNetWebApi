@@ -199,16 +199,26 @@ export const Book = () => {
 
                 muiEditTextFieldProps: {
                     type: 'text',
-                    inputProps: { autoComplete: 'off' },
+                    inputProps: {
+                        autoComplete: 'off',
+                        onKeyDown: (e) => {
+                            if (e.keyCode === 13) {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                e.currentTarget.value += '\n'
+                            }
+                        }
+                    },
                     multiline: true,
                     rows: 4,
                     error: !!validationErrors?.note,
                     helperText: validationErrors?.note,
-                    onFocus: () =>
+                    onFocus: () => {
                         setValidationErrors({
                             ...validationErrors,
                             note: undefined,
-                        }),
+                        });
+                    }
                 },
                 Cell: ({ cell }) => {
                     if (cell.getValue()) {
