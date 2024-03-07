@@ -38,7 +38,7 @@ namespace BookCatalogAPI.Extensions
             services.AddScoped<IBookService, BookService>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<IBookRepository, BookRepository>();
-            services.AddScoped<IBookCatalogContext, BookCatalogContext>(); 
+            services.AddScoped<IBookCatalogContext, BookCatalogContext>();
             services.AddScoped<JwtHandler>();
         }
 
