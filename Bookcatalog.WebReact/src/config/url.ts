@@ -3,7 +3,7 @@ export const refreshTokenUrl = 'accounts/RefreshToken';
 
 const enum ApiUrl {
     Local = 'https://localhost:5001/api/',
-    Production = 'https://bookcatalogwebapistaging.jadro.space/api/'
+    Production = 'https://bookcatalogwebapi.jadro.space/api/'
 }
 
 
