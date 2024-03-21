@@ -68,4 +68,6 @@ How to run?
     - <strong>if "unable to resolve dependency tree" error arise, then run "npm install --force"</strong>
   - run "ng serve -o" to run the Angular app
     - <strong>if "...digital envelope routines::unsupported" error arise, then run "set NODE_OPTIONS=--openssl-legacy-provider"</strong>
-  - Username and password for the app should be in my cover letter or proposal
+  - Username and password for the app:
+    - username: "octopus@yahoo.com"
+    - password: "2xSNzSa$"
