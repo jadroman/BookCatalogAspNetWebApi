@@ -15,16 +15,6 @@ One backend and three different frontend technologies of the same app (Book Cata
 - Blazor client
 - Angular client
 
-Live test versions:
-
-- React: https://bookcatalogreactstaging.jadro.space/
-- Blazor: https://bookcatalogblzstaging.jadro.space/
-- Angular: https://bookcatalogangstaging.jadro.space/
-
-- Username and password for the app should be in my cover letter or proposal
-
-
-
 ![screenshot](doc/reactAppScreenshot.png "app screenshot")
 
 
@@ -33,11 +23,11 @@ Live test versions:
 What is utilized?
 -------------------
 
-* .NET 5.0 Web API
+* .NET 8 Web API
 * MS SQL 2019
 * Entity framework 5
 * ASP.NET Identity
-* Two front-end versions of the same application: Blazor WebAssembly 5 and Angular 12
+* Three front-end versions of the same application: Blazor WebAssembly 5, Angular 14, React 18
 * Server-side paging and searching
 * Twitter-bootstrap 
 * Serilog
