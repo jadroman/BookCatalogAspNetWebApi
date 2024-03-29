@@ -36,6 +36,15 @@ services:
       mynetwork:
         aliases:
           - bookcatalog.api
+          
+  web:
+    build:
+      context: Bookcatalog.WebReact
+    ports:
+      - 3000:3000
+    depends_on:
+      - bookcatalog.api 
+
 
 volumes:
   mysqlservervolume:
