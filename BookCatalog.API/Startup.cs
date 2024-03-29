@@ -1,4 +1,3 @@
-using AutoMapper;
 using AutoMapper.Internal;
 using BookCatalog.Common.Entities;
 using BookCatalog.DAL;
@@ -45,7 +44,7 @@ namespace BookCatalog
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
+            if (env.IsDevelopment() || env.IsEnvironment("Container"))
             {
                 using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
                 {
