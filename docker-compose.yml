@@ -29,9 +29,9 @@ services:
     environment:
       ASPNETCORE_URLS: "https://+:443;http://+:80"
       ASPNETCORE_HTTPS_PORT: 5001
-      ASPNETCORE_Kestrel__Certificates__Default__Password: "526247"
+      ASPNETCORE_Kestrel__Certificates__Default__Password: "mypass123"
       ASPNETCORE_ENVIRONMENT: Container 
-      ASPNETCORE_Kestrel__Certificates__Default__Path: /https/dockerdemo.pfx
+      ASPNETCORE_Kestrel__Certificates__Default__Path: /https/httpsDevCert.pfx
     networks:
       mynetwork:
         aliases:
