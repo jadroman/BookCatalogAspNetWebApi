@@ -29,7 +29,7 @@ What is utilized?
 * Two front-end versions of the same application: Angular 14 and React 18
 * Few backend unit tests using SQLite in-memory db as a DbContext mock
 * Using docker compose to run project in three different containers: WebAPI, SQL server and React web frontend
-* Server-side paging, sorting and searching using SQLite in-memory db
+* Server-side paging, sorting and searching
 * Twitter-bootstrap 
 * Serilog
 * Xunit
