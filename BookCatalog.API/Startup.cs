@@ -7,9 +7,12 @@ using Microsoft.AspNetCore.Authentication.Certificate;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System.IO;
+using System.Linq;
 
 namespace BookCatalog
 {
@@ -49,7 +52,21 @@ namespace BookCatalog
                 using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
                 {
                     var context = serviceScope.ServiceProvider.GetService<BookCatalogContext>();
-                    context.Database.EnsureCreated();
+                    if (context.Database.EnsureCreated())
+                    {
+                        // seed data
+                        if (!context.Users.AsQueryable().Any())
+                        {
+                            if (env.IsEnvironment("Container"))
+                            {
+                                context.Database.ExecuteSqlRaw(File.ReadAllText(@"../doc/updateDatabase.sql"));
+                            }
+                            else
+                            {
+                                context.Database.ExecuteSqlRaw(File.ReadAllText(@"..\doc\updateDatabase.sql"));
+                            }
+                        }
+                    }
                 }
                 app.UseDeveloperExceptionPage();
             }
