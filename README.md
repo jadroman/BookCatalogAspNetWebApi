@@ -46,9 +46,7 @@ How to run?
 
 * Clone or download code
 
-* Open solution (Visual studio 2019 or later)
-
-* To run using docker:
+* To run using docker (Web Api backend and React frontend):
   - Open BookCatalog.sln in VS
   - Run "docker-compose" from top menu
   - Wait until the "web" container logs "...Compiled successfully!..." appears and follow the URL provided in the logs
@@ -58,7 +56,7 @@ How to run?
     - username: "octopus@yahoo.com"
     - password: "2xSNzSa$"
 
-* To run the React app:
+* To run the React app (without docker):
   - Open BookCatalog.sln in VS
   - Run just single project "BookCatalog.API" from top menu
   - When app starts, database is created (migration is executed) with few tables and sone testing data is seeded also
@@ -71,7 +69,7 @@ How to run?
     - password: "2xSNzSa$"
       
 
-* To run the Angular app:
+* To run the Angular app (without docker):
   - Open BookCatalog.sln in VS
   - Run just single project "BookCatalog.API" from top menu
   - When app starts, database is created (migration is executed) with few tables and sone testing data is seeded also
