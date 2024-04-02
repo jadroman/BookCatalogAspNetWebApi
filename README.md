@@ -27,7 +27,9 @@ What is utilized?
 * Entity framework 5
 * ASP.NET Identity
 * Two front-end versions of the same application: Angular 14 and React 18
-* Server-side paging, sorting and searching
+* Few backend unit tests using SQLite in-memory db as a DbContext mock
+* Using docker compose to run project in three different containers: WebAPI, SQL server and React web frontend
+* Server-side paging, sorting and searching using SQLite in-memory db
 * Twitter-bootstrap 
 * Serilog
 * Xunit
@@ -46,10 +48,20 @@ How to run?
 
 * Open solution (Visual studio 2019 or later)
 
+* To run using docker:
+  - Open BookCatalog.sln in VS
+  - Run "docker-compose" from top menu
+  - Wait until the "web" container logs "...Compiled successfully!..." appears and follow the URL provided in the logs
+    
+  - ![screenshot](doc/dockersScreenshots.png "running dockers screenshot")
+  - Username and password for the app:
+    - username: "octopus@yahoo.com"
+    - password: "2xSNzSa$"
+
 * To run the React app:
-  - From VS run just single project "BookCatalog.API"
-  - When app starts, database is created (migration is executed) with few tables
-  - Open the database "BookCatalogWebApi" and execute the sql script from the folder "doc => updateDatabase.sql"
+  - Open BookCatalog.sln in VS
+  - Run just single project "BookCatalog.API" from top menu
+  - When app starts, database is created (migration is executed) with few tables and sone testing data is seeded also
   - Go to the folder "Bookcatalog.WebReact" using cmder or powershell 
   - Run "npm install" to install the packages
     - <strong>If "unable to resolve dependency tree" error arise, then run "npm install --force"</strong>
@@ -60,9 +72,9 @@ How to run?
       
 
 * To run the Angular app:
-  - From VS run just single project "BookCatalog.API"
-  - When app starts, database is created (migration is executed) with few tables
-  - Open the database "BookCatalogWebApi" and execute the sql script from the folder "doc => updateDatabase.sql"
+  - Open BookCatalog.sln in VS
+  - Run just single project "BookCatalog.API" from top menu
+  - When app starts, database is created (migration is executed) with few tables and sone testing data is seeded also
   - Go to the folder "BookCatalog.WebAng" using cmder or powershell 
   - run "npm install" to install the packages
     - <strong>if "unable to resolve dependency tree" error arise, then run "npm install --force"</strong>
