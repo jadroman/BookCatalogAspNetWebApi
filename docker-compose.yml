@@ -15,17 +15,26 @@ services:
       mynetwork:
         aliases:
           - mysqlserver
+    healthcheck:
+      test: /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "$${MSSQL_SA_PASSWORD}" -Q "SELECT 1" -b -o /dev/null
+      interval: 10s
+      timeout: 3s
+      retries: 10
+      start_period: 10s
  
   bookcatalog.api:
     build:
       context: BookCatalog.API
     depends_on:
-      - mysqlserver
+      mysqlserver:
+        condition: service_healthy
+    restart: on-failure
     ports:
       - "5000:80"
       - "5001:443"
     volumes: 
       - ${USERPROFILE}\.aspnet\https:/https:ro
+      - .\doc:/doc:ro
     environment:
       ASPNETCORE_URLS: "https://+:443;http://+:80"
       ASPNETCORE_HTTPS_PORT: 5001

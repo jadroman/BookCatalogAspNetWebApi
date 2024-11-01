@@ -3,14 +3,14 @@ using BookCatalog.Common.Entities;
 using BookCatalog.Common.Helpers;
 using BookCatalog.DAL;
 using BookCatalog.Domain.Services;
+using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
-using Microsoft.Data.Sqlite;
-using System.Data.Common;
-using Microsoft.EntityFrameworkCore;
-using System;
 
 namespace BookCatalog.Tests.Domain.Services
 {
