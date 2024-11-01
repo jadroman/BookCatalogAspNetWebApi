@@ -50,6 +50,13 @@ namespace BookCatalog
                 {
                     var context = serviceScope.ServiceProvider.GetService<BookCatalogContext>();
                     context.Database.EnsureCreated();
+
+                    /*
+                    if (!context.Books.Any())
+                    {
+                        context.Database.ExecuteSqlRaw(File.ReadAllText(@"..\doc\updateDatabase.sql"));
+                    }
+                    */
                 }
                 app.UseDeveloperExceptionPage();
             }
