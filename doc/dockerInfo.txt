@@ -1,0 +1,3 @@
+- running on debian errors
+	- ${USERPROFILE}\.aspnet\https:/https
+		- USERPROFILE var not found
