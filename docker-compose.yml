@@ -1,13 +1,13 @@
 version: '3.4'
 
-services: 
+services:
   mysqlserver:
     image: mcr.microsoft.com/mssql/server:2022-latest
     ports:
       - "1433:1433"
-    volumes: 
+    volumes:
       - mysqlservervolume:/var/opt/mssql
-      - ${USERPROFILE}\.aspnet\https:/https
+      - ${HOME}\.aspnet\https:/https
     environment:
       MSSQL_SA_PASSWORD: "vV5r9tn0M4@"
       ACCEPT_EULA: Y
@@ -21,7 +21,7 @@ services:
       timeout: 3s
       retries: 10
       start_period: 10s
- 
+
   bookcatalog.api:
     build:
       context: BookCatalog.API
@@ -32,31 +32,31 @@ services:
     ports:
       - "5000:80"
       - "5001:443"
-    volumes: 
-      - ${USERPROFILE}\.aspnet\https:/https:ro
+    volumes:
+      - ${HOME}\.aspnet\https:/https:ro
       - .\doc:/doc:ro
     environment:
       ASPNETCORE_URLS: "https://+:443;http://+:80"
       ASPNETCORE_HTTPS_PORT: 5001
       ASPNETCORE_Kestrel__Certificates__Default__Password: "mypass123"
-      ASPNETCORE_ENVIRONMENT: Container 
+      ASPNETCORE_ENVIRONMENT: Container
       ASPNETCORE_Kestrel__Certificates__Default__Path: /https/httpsDevCert.pfx
     networks:
       mynetwork:
         aliases:
           - bookcatalog.api
-          
+
   web:
     build:
       context: Bookcatalog.WebReact
     ports:
       - 3000:3000
     depends_on:
-      - bookcatalog.api 
-
+      - bookcatalog.api
 
 volumes:
   mysqlservervolume:
- 
+
+
 networks:
-  mynetwork: {} 
+  mynetwork: {}
