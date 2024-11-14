@@ -17,14 +17,14 @@ services:
           - mysqlserver
     healthcheck:
       test: /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "$${MSSQL_SA_PASSWORD}" -Q "SELECT 1" -b -o /dev/null
-      interval: 10s
-      timeout: 3s
-      retries: 10
-      start_period: 10s
+      interval: 20s
+      timeout: 15s
+      retries: 5
+      start_period: 60s
 
   bookcatalog.api:
     build:
-      context: BookCatalog.API
+      context: .
     depends_on:
       mysqlserver:
         condition: service_healthy
